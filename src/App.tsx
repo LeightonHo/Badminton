@@ -1,24 +1,35 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { useState } from 'react';
 import './App.css';
+import PlayerForm from './components/PlayerForm';
+import PlayerList from "./components/PlayerList";
+import RoundRobin from './components/RoundRobin';
+
+export interface IState {
+  players: {
+    name: string,
+    win: number,
+    loss: number,
+    games: number
+  }[]
+}
 
 function App() {
+
+  const [players, setPlayers] = useState<IState["players"]>([
+    {
+      name: "Leighton",
+      win: 0,
+      loss: 0,
+      games: 0
+    }
+  ]);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <h1>Players</h1>
+      <PlayerForm players={players} setPlayers={setPlayers}/>
+      <PlayerList players={players} />
+      <RoundRobin />
     </div>
   );
 }
