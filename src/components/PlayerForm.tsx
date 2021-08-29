@@ -41,7 +41,7 @@ const PlayerForm: React.FC<IProps> = ({ players, setPlayers }) => {
 
     const isDuplicate = (name: string): boolean => {
         for (const player of players) {
-            if (player.name === input.name) {
+            if (player.name.toLowerCase() === input.name.toLowerCase()) {
                 return true;
             }
         }

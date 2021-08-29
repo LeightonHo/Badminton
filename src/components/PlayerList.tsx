@@ -1,5 +1,9 @@
 import React from "react";
-import {IState as IProps} from "../App";
+import {IState as Props} from "../App";
+
+interface IProps {
+    players: Props["players"]
+}
 
 const PlayerList: React.FC<IProps> = ({ players }) => {
 
