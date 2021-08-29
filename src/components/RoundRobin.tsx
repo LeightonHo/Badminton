@@ -1,9 +1,22 @@
 import React from "react";
+import {IState as Props} from "../App";
 
-const RoundRobin = () => {
+interface IProps {
+    courts: Props["courts"],
+    players: Props["players"]
+}
+
+const RoundRobin: React.FC<IProps> = ({ courts, players }) => {
+
+    // Leighton, Seth, JB, 
+
+    const generateBracket = () => {
+
+    }
+
     return (
         <div>
-            round robin
+            This is the round robin list.
         </div>
     )
 }
