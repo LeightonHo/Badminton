@@ -29,8 +29,7 @@ const PlayerForm: React.FC<IProps> = ({ players, setPlayers }) => {
             {
                 name: input.name,
                 win: 0,
-                loss: 0,
-                games: 0
+                loss: 0
             }
         ])
 

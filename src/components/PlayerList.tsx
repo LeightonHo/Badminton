@@ -14,7 +14,7 @@ const PlayerList: React.FC<IProps> = ({ players }) => {
                     className="list-item"
                     key={player.name}
                 >
-                    <span>{player.name} {player.win}:{player.loss}</span>
+                    <span>{player.name} ({player.win}-{player.loss})</span>
                 </div>
             )
         })

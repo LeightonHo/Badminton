@@ -10,8 +10,7 @@ export interface IState {
   players: {
     name: string,
     win: number,
-    loss: number,
-    games: number
+    loss: number
   }[]
 }
 
@@ -21,29 +20,28 @@ function App() {
     {
       name: "Leighton",
       win: 0,
-      loss: 0,
-      games: 0
+      loss: 0
     },
     {
       name: "Seth",
       win: 0,
-      loss: 0,
-      games: 0
-    },{
-      name: "JB",
-      win: 0,
-      loss: 0,
-      games: 0
+      loss: 0
     },{
       name: "Blake",
       win: 0,
-      loss: 0,
-      games: 0
+      loss: 0
+    },{
+      name: "JB",
+      win: 0,
+      loss: 0
     },{
       name: "Ains",
       win: 0,
-      loss: 0,
-      games: 0
+      loss: 0
+    },{
+      name: "Kaia",
+      win: 0,
+      loss: 0
     }
   ]);
 
@@ -57,7 +55,7 @@ function App() {
       <PlayerForm players={players} setPlayers={setPlayers}/>
       <PlayerList players={players} />
 
-      <h1>Round Robin</h1>
+      <h1>Games</h1>
       <RoundRobin courts={courts} players={players}/>
     </div>
   );

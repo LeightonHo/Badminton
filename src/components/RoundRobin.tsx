@@ -1,23 +1,36 @@
 import React from "react";
 import {IState as Props} from "../App";
+import Match from "./Match";
 
 interface IProps {
     courts: Props["courts"],
-    players: Props["players"]
+    players: Props["players"],
+}
+
+export interface IMatch {
+    game: number,
+    court: string,
+    team1: {
+        player1: string,
+        player2: string,
+        score: number
+    },
+    team2: {
+        player3: string,
+        player4: string,
+        score: number
+    }
 }
 
 const RoundRobin: React.FC<IProps> = ({ courts, players }) => {
 
-    const generateBracket = (): string => {
-        let playersAlreadyOnBye: IProps["players"] = [];
+    const generateBracket = () => {
+        let result: IMatch[][] = []
         const courts = 1;
         const matches = 10;
         const bye = players.length % (courts * 4);
-        let result = "";
+        let playersAlreadyOnBye: IProps["players"] = [];
 
-        console.log(players.length, courts, bye);
-
-        // loop for the number of matches
         for (let i = 1; i < matches + 1; i++)
         {
             // Work out who is on bye this round.
@@ -50,10 +63,28 @@ const RoundRobin: React.FC<IProps> = ({ courts, players }) => {
 
             currentPlayers = shuffleArray(currentPlayers);
 
-            console.log(`Match: ${i}, Players: ${currentPlayers}, Bye: ${currentPlayersOnBye}`);
+            let matches: IMatch[] = generateMatches(courts, currentPlayers);
+
+            result.push(matches);
         }
 
-        return result;
+        console.log(result);
+
+        return (
+            <div>
+                {result.map((matches, i) => {
+                    return (
+                        <div key={i}>
+                            {matches.map((match, j) => {
+                                return (
+                                    <Match key={j} match={match}/>
+                                )
+                            })}
+                        </div>
+                    )
+                })}
+            </div>
+        )
     }
 
     const shuffleArray = (array: IProps["players"]): IProps["players"] => {
@@ -66,6 +97,32 @@ const RoundRobin: React.FC<IProps> = ({ courts, players }) => {
     }
 
     // Function for rendering each match takes in a list of players and generates the bracket
+    // TODO: courts should be an array of actual court numbers
+    const generateMatches = (courts: number, players: IProps["players"]): IMatch[] => {
+        let result: IMatch[] = []
+
+        for (let i = 0; i < courts; i++) {
+            const currentPlayers = players.splice(0, 4);
+            const match: IMatch = {
+                game: 1,
+                court: "1",
+                team1: {
+                    player1: currentPlayers[0].name,
+                    player2: currentPlayers[1].name,
+                    score: 0
+                },
+                team2: { 
+                    player3: currentPlayers[2].name,
+                    player4: currentPlayers[3].name,
+                    score: 0
+                }
+            }
+
+            result.push(match);
+        }
+
+        return result;
+    }
 
     const renderPlayers = () => {
         return (
@@ -83,9 +140,7 @@ const RoundRobin: React.FC<IProps> = ({ courts, players }) => {
 
     return (
         <div>
-            This is the round robin list.
             {generateBracket()}
-            {renderPlayers()}
         </div>
     )
 }
