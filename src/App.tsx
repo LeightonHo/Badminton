@@ -17,7 +17,36 @@ export interface IState {
 
 function App() {
   const [courts, setCourts] = useState<IState["courts"]>(1);
-  const [players, setPlayers] = useState<IState["players"]>([]);
+  const [players, setPlayers] = useState<IState["players"]>([
+    {
+      name: "Leighton",
+      win: 0,
+      loss: 0,
+      games: 0
+    },
+    {
+      name: "Seth",
+      win: 0,
+      loss: 0,
+      games: 0
+    },{
+      name: "JB",
+      win: 0,
+      loss: 0,
+      games: 0
+    },{
+      name: "Blake",
+      win: 0,
+      loss: 0,
+      games: 0
+    },{
+      name: "Ains",
+      win: 0,
+      loss: 0,
+      games: 0
+    }
+  ]);
+
 
   return (
     <div className="App">
