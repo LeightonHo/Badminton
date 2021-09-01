@@ -1,14 +1,14 @@
 import React from "react";
 import {IState as Props} from "../App";
+import Bye from "./Bye";
 import Match from "./Match";
 
-interface IProps {
+export interface IProps {
     courts: Props["courts"],
-    players: Props["players"],
+    players: Props["players"]
 }
 
 export interface IMatch {
-    game: number,
     court: string,
     team1: {
         player1: string,
@@ -22,10 +22,16 @@ export interface IMatch {
     }
 }
 
+interface ITimeslot {
+    game: number,
+    matches: IMatch[],
+    byes: Props["players"]
+}
+
 const RoundRobin: React.FC<IProps> = ({ courts, players }) => {
 
     const generateBracket = () => {
-        let result: IMatch[][] = []
+        let result: ITimeslot[] = [];
         const courts = 1;
         const matches = 10;
         const bye = players.length % (courts * 4);
@@ -63,23 +69,30 @@ const RoundRobin: React.FC<IProps> = ({ courts, players }) => {
 
             currentPlayers = shuffleArray(currentPlayers);
 
-            let matches: IMatch[] = generateMatches(courts, currentPlayers);
+            const matches: IMatch[] = generateMatches(courts, currentPlayers);
+            const timeslot: ITimeslot = {
+                game: i,
+                matches: matches,
+                byes: currentPlayersOnBye
+            }
 
-            result.push(matches);
+            result.push(timeslot);
         }
 
         console.log(result);
 
         return (
             <div>
-                {result.map((matches, i) => {
+                {result.map((timeslot, i) => {
                     return (
                         <div key={i}>
-                            {matches.map((match, j) => {
+                            Game {timeslot.game}
+                            {timeslot.matches.map((match, j) => {
                                 return (
                                     <Match key={j} match={match}/>
                                 )
                             })}
+                            <Bye players={timeslot.byes}></Bye>
                         </div>
                     )
                 })}
@@ -104,7 +117,6 @@ const RoundRobin: React.FC<IProps> = ({ courts, players }) => {
         for (let i = 0; i < courts; i++) {
             const currentPlayers = players.splice(0, 4);
             const match: IMatch = {
-                game: 1,
                 court: "1",
                 team1: {
                     player1: currentPlayers[0].name,
