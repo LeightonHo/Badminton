@@ -1,3 +1,4 @@
+import { Box, Grid } from '@material-ui/core';
 import React, { useState } from 'react';
 import './App.css';
 import CourtForm from './components/CourtForm';
@@ -15,7 +16,7 @@ export interface IState {
 }
 
 function App() {
-  const [courts, setCourts] = useState<IState["courts"]>(1);
+  const [courts, setCourts] = useState<IState["courts"]>(2);
   const [players, setPlayers] = useState<IState["players"]>([
     {
       name: "Leighton",
@@ -42,22 +43,40 @@ function App() {
       name: "Kaia",
       win: 0,
       loss: 0
+    },{
+      name: "Kris",
+      win: 0,
+      loss: 0
+    },{
+      name: "Jerry",
+      win: 0,
+      loss: 0
+    },{
+      name: "Jenny",
+      win: 0,
+      loss: 0
+    },{
+      name: "Ace",
+      win: 0,
+      loss: 0
     }
   ]);
 
 
   return (
-    <div className="App">
+    <Box className="App">
       <h1>Courts ({courts})</h1>
       <CourtForm courts={courts} setCourts={setCourts} />
 
-      <h1>Players ({players.length})</h1>
-      <PlayerForm players={players} setPlayers={setPlayers}/>
-      <PlayerList players={players} />
+      <Box>
+        <h1>Players ({players.length})</h1>
+        <PlayerForm players={players} setPlayers={setPlayers}/>
+        <PlayerList players={players} />
+      </Box>
 
       <h1>Games</h1>
       <RoundRobin courts={courts} players={players}/>
-    </div>
+    </Box>
   );
 }
 

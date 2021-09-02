@@ -2,6 +2,7 @@ import React from "react";
 import {IState as Props} from "../App";
 import Bye from "./Bye";
 import Match from "./Match";
+import { Button } from "@material-ui/core";
 
 export interface IProps {
     courts: Props["courts"],
@@ -22,8 +23,8 @@ export interface IMatch {
     }
 }
 
-interface ITimeslot {
-    game: number,
+interface IRound {
+    number: number,
     matches: IMatch[],
     byes: Props["players"]
 }
@@ -31,11 +32,16 @@ interface ITimeslot {
 const RoundRobin: React.FC<IProps> = ({ courts, players }) => {
 
     const generateBracket = () => {
-        let result: ITimeslot[] = [];
-        const courts = 1;
+        let result: IRound[] = [];
         const matches = 10;
         const bye = players.length % (courts * 4);
         let playersAlreadyOnBye: IProps["players"] = [];
+
+        if (players.length / 4 < courts) {
+            return (
+                <div>There are not enough players for {courts} courts.</div>
+            )
+        }
 
         for (let i = 1; i < matches + 1; i++)
         {
@@ -70,29 +76,29 @@ const RoundRobin: React.FC<IProps> = ({ courts, players }) => {
             currentPlayers = shuffleArray(currentPlayers);
 
             const matches: IMatch[] = generateMatches(courts, currentPlayers);
-            const timeslot: ITimeslot = {
-                game: i,
+            const round: IRound = {
+                number: i,
                 matches: matches,
                 byes: currentPlayersOnBye
             }
 
-            result.push(timeslot);
+            result.push(round);
         }
 
         console.log(result);
 
         return (
             <div>
-                {result.map((timeslot, i) => {
+                {result.map((round, i) => {
                     return (
-                        <div key={i}>
-                            Game {timeslot.game}
-                            {timeslot.matches.map((match, j) => {
+                        <div key={i} className="divRound">
+                            <span className="spnGameLabel">Round {round.number}</span>
+                            {round.matches.map((match, j) => {
                                 return (
                                     <Match key={j} match={match}/>
                                 )
                             })}
-                            <Bye players={timeslot.byes}></Bye>
+                            <Bye players={round.byes}></Bye>
                         </div>
                     )
                 })}
@@ -117,7 +123,7 @@ const RoundRobin: React.FC<IProps> = ({ courts, players }) => {
         for (let i = 0; i < courts; i++) {
             const currentPlayers = players.splice(0, 4);
             const match: IMatch = {
-                court: "1",
+                court: i.toString(),
                 team1: {
                     player1: currentPlayers[0].name,
                     player2: currentPlayers[1].name,

@@ -8,7 +8,7 @@ interface IProps {
 const Bye: React.FC<IProps> = ({ players }) => {
 
     return (
-        <div>{players.map((player, i) => {
+        <div className="divBye">{players.map((player, i) => {
             return (
                 <div key={i}>
                     <p>{player.name}</p>

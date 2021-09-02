@@ -9,7 +9,12 @@ interface IProps {
 const CourtForm: React.FC<IProps> = ({ courts, setCourts }) => {
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-        setCourts(parseInt(e.target.value))
+        const input = parseInt(e.target.value);
+
+        if (!isNaN(input))
+        {
+            setCourts(input);
+        }
     }
 
     return (
@@ -17,6 +22,7 @@ const CourtForm: React.FC<IProps> = ({ courts, setCourts }) => {
             Number of courts: 
             <input 
                 type="number"
+                value={courts}
                 onChange={handleChange}
             />
         </div>

@@ -1,5 +1,5 @@
 import React from "react";
-import {IMatch} from "./RoundRobin";
+import { IMatch } from "./RoundRobin";
 
 interface IProps {
     match: IMatch
@@ -7,8 +7,25 @@ interface IProps {
 
 const Match: React.FC<IProps> = ({ match }) => {
     return (
-        <div>
-            {match.team1.player1}, {match.team1.player2} vs {match.team2.player3}, {match.team2.player4}
+        <div className="divMatch">
+            <div className="divTeamA">
+                <span>{match.team1.player1}</span>
+                <span>{match.team1.player2}</span>
+                <input 
+                    type="number"
+                    min="0"
+                    max="21"
+                />
+            </div>
+            <div className="divTeamB">
+                <span>{match.team2.player3}</span>
+                <span>{match.team2.player4}</span>
+                <input 
+                    type="number"
+                    min="0"
+                    max="21"
+                />
+            </div>
         </div>
     )
 }

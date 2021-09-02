@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import {IState as Props} from "../App";
+import { Box, Button, TextField } from "@material-ui/core";
 
 interface IProps {
     players: Props["players"],
@@ -49,20 +50,19 @@ const PlayerForm: React.FC<IProps> = ({ players, setPlayers }) => {
     }
 
     return (
-        <div>
-            <input 
+        <Box>
+            <TextField id="inputPlayer" className="text-input" label="Name" variant="outlined" size="small"
                 type="text" 
-                placeholder="Name"
                 value={input.name}
                 onChange={handleChange}
                 name="name"
             />
-            <button
+            <Button variant="contained" color="primary"
                 onClick={handleClick}
             >
                 Add
-            </button>
-        </div>
+            </Button>
+        </Box>
     )
 }
 

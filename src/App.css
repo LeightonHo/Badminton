@@ -2,10 +2,17 @@
   text-align: center;
 }
 
-.list-item {
-  padding: 5px;
-  background: red;
+/* .text-input {
+  margin-right: 20px;
+} */
+
+.player-list-grid {
+  margin-top: 20px !important;
+  background-color: lightblue;
+  width: 50% !important;
+  margin: auto;
+}
+
+.player-list-grid-item {
   width: 100%;
-  height: 20px;
-  text-align: left;
 }
