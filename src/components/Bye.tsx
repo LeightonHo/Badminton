@@ -11,7 +11,7 @@ const Bye: React.FC<IProps> = ({ players }) => {
         <div className="divBye">{players.map((player, i) => {
             return (
                 <div key={i}>
-                    <p>{player.name}</p>
+                    <span>{player.name}</span>
                 </div>
             )
         })}</div>

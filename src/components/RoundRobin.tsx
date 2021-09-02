@@ -2,7 +2,7 @@ import React from "react";
 import {IState as Props} from "../App";
 import Bye from "./Bye";
 import Match from "./Match";
-import { Button } from "@material-ui/core";
+import { Box, Button, Grid } from "@material-ui/core";
 
 export interface IProps {
     courts: Props["courts"],
@@ -88,21 +88,29 @@ const RoundRobin: React.FC<IProps> = ({ courts, players }) => {
         console.log(result);
 
         return (
-            <div>
+            <Box>
                 {result.map((round, i) => {
                     return (
-                        <div key={i} className="divRound">
-                            <span className="spnGameLabel">Round {round.number}</span>
+                        <Grid container key={i} className="divRound">
+                            <Grid item xs={1}>
+                                <span className="spnGameLabel">{round.number}</span>
+                            </Grid>
+                            
                             {round.matches.map((match, j) => {
                                 return (
-                                    <Match key={j} match={match}/>
+                                    <Grid item key={j}>
+                                        <Match match={match}/>
+                                    </Grid>
                                 )
                             })}
-                            <Bye players={round.byes}></Bye>
-                        </div>
+                            
+                            <Grid item xs={1}>
+                                <Bye players={round.byes}></Bye>
+                            </Grid>
+                        </Grid>
                     )
                 })}
-            </div>
+            </Box>
         )
     }
 
@@ -142,24 +150,14 @@ const RoundRobin: React.FC<IProps> = ({ courts, players }) => {
         return result;
     }
 
-    const renderPlayers = () => {
-        return (
-            <div>
-                {players.map((player, i) => {
-                    return (
-                        <div key={i}>
-                            {player.name}
-                        </div>
-                    )
-                })}
-            </div>
-        )
-    }
-
     return (
-        <div>
+        <Grid
+            container
+            direction="row"
+            justifyContent="space-evenly"
+        >
             {generateBracket()}
-        </div>
+        </Grid>
     )
 }
 
