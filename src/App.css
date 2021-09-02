@@ -17,3 +17,7 @@
 .player-list-grid-item {
   width: 100%;
 }
+
+.match {
+  outline: 1px dotted gray;
+}

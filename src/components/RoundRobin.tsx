@@ -91,20 +91,31 @@ const RoundRobin: React.FC<IProps> = ({ courts, players }) => {
             <Box>
                 {result.map((round, i) => {
                     return (
-                        <Grid container key={i} className="divRound">
+                        <Grid 
+                            key={i}
+                            container
+                            direction="row"
+                            className="divRound"
+                            spacing={2}
+                        >
                             <Grid item xs={1}>
                                 <span className="spnGameLabel">{round.number}</span>
                             </Grid>
                             
                             {round.matches.map((match, j) => {
                                 return (
-                                    <Grid item key={j}>
+                                    <Grid 
+                                        key={j}
+                                        item 
+                                        xs
+                                        className="match"
+                                    >
                                         <Match match={match}/>
                                     </Grid>
                                 )
                             })}
                             
-                            <Grid item xs={1}>
+                            <Grid item xs={2}>
                                 <Bye players={round.byes}></Bye>
                             </Grid>
                         </Grid>
@@ -152,7 +163,6 @@ const RoundRobin: React.FC<IProps> = ({ courts, players }) => {
 
     return (
         <Grid
-            container
             direction="row"
             justifyContent="space-evenly"
         >

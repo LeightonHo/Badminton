@@ -8,12 +8,17 @@ interface IProps {
 
 const Match: React.FC<IProps> = ({ match }) => {
     return (
-        <Box>
+        <Grid
+            container
+            direction="row"
+            spacing={1}
+        >
             <Grid 
                 container
+                item xs
                 direction="column"
             >
-                <Grid item xs>
+                <Grid item xs >
                     <span>{match.team1.player1}</span>
                 </Grid>
                 <Grid item xs>
@@ -26,10 +31,10 @@ const Match: React.FC<IProps> = ({ match }) => {
                         max="21"
                     />
                 </Grid>
-                
             </Grid>
             <Grid 
                 container
+                item xs
                 direction="column"
             >
                 <Grid item xs>
@@ -46,7 +51,7 @@ const Match: React.FC<IProps> = ({ match }) => {
                     />
                 </Grid>
             </Grid>
-        </Box>
+        </Grid>
     )
 }
 
