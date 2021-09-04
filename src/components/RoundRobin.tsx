@@ -2,7 +2,7 @@ import React from "react";
 import {IState as Props} from "../App";
 import Bye from "./Bye";
 import Match from "./Match";
-import { Box, Button, Grid } from "@material-ui/core";
+import { Box, Grid } from "@material-ui/core";
 
 export interface IProps {
     courts: Props["courts"],
@@ -34,13 +34,19 @@ const RoundRobin: React.FC<IProps> = ({ courts, players }) => {
     const generateBracket = () => {
         let result: IRound[] = [];
         const matches = 10;
-        const bye = players.length % (courts * 4);
+        const bye = players.length % (courts.length * 4);
         let playersAlreadyOnBye: IProps["players"] = [];
 
-        if (players.length / 4 < courts) {
+        if (courts.length == 0) {
             return (
-                <div>There are not enough players for {courts} courts.</div>
-            )
+                <div>Enter some courts and players to begin</div>
+            );
+        }
+
+        if (players.length / 4 < courts.length) {
+            return (
+                <div>There are not enough players for {courts.length} courts.</div>
+            );
         }
 
         for (let i = 1; i < matches + 1; i++)
@@ -61,7 +67,8 @@ const RoundRobin: React.FC<IProps> = ({ courts, players }) => {
 
             for (let y = 0; y < iterations; y++)
             {
-                let player = eligiblePlayers[eligiblePlayers.length * Math.random() | 0];
+                // let player = eligiblePlayers[eligiblePlayers.length * Math.random() | 0];
+                let player = eligiblePlayers[y];
                 let indexOfPlayer = eligiblePlayers.indexOf(player);
     
                 currentPlayersOnBye.push(player);
@@ -73,7 +80,7 @@ const RoundRobin: React.FC<IProps> = ({ courts, players }) => {
             // Pass list of active players into a function for generating the match up
             let currentPlayers: IProps["players"] = players.filter(x => !currentPlayersOnBye.includes(x));
 
-            currentPlayers = shuffleArray(currentPlayers);
+            // currentPlayers = shuffleArray(currentPlayers);
 
             const matches: IMatch[] = generateMatches(courts, currentPlayers);
             const round: IRound = {
@@ -136,13 +143,13 @@ const RoundRobin: React.FC<IProps> = ({ courts, players }) => {
 
     // Function for rendering each match takes in a list of players and generates the bracket
     // TODO: courts should be an array of actual court numbers
-    const generateMatches = (courts: number, players: IProps["players"]): IMatch[] => {
+    const generateMatches = (courts: IProps["courts"], players: IProps["players"]): IMatch[] => {
         let result: IMatch[] = []
 
-        for (let i = 0; i < courts; i++) {
+        for (let i = 0; i < courts.length; i++) {
             const currentPlayers = players.splice(0, 4);
             const match: IMatch = {
-                court: i.toString(),
+                court: courts[i],
                 team1: {
                     player1: currentPlayers[0].name,
                     player2: currentPlayers[1].name,
@@ -162,12 +169,9 @@ const RoundRobin: React.FC<IProps> = ({ courts, players }) => {
     }
 
     return (
-        <Grid
-            direction="row"
-            justifyContent="space-evenly"
-        >
+        <Box>
             {generateBracket()}
-        </Grid>
+        </Box>
     )
 }
 

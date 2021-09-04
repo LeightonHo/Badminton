@@ -11,7 +11,7 @@ const PlayerForm: React.FC<IProps> = ({ players, setPlayers }) => {
 
     const [input, setInput] = useState({
         name: ""
-    })
+    });
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
         setInput({
@@ -22,7 +22,7 @@ const PlayerForm: React.FC<IProps> = ({ players, setPlayers }) => {
 
     const handleClick = (): void => {
         if (!input.name || isDuplicate(input.name)) {
-            return
+            return;
         }
 
         setPlayers([
@@ -32,7 +32,7 @@ const PlayerForm: React.FC<IProps> = ({ players, setPlayers }) => {
                 win: 0,
                 loss: 0
             }
-        ])
+        ]);
 
         setInput({
             name: ""
@@ -51,7 +51,12 @@ const PlayerForm: React.FC<IProps> = ({ players, setPlayers }) => {
 
     return (
         <Box>
-            <TextField id="inputPlayer" className="text-input" label="Name" variant="outlined" size="small"
+            <TextField 
+                id="inputPlayer" 
+                className="text-input" 
+                label="Name" 
+                variant="outlined" 
+                size="small"
                 type="text" 
                 value={input.name}
                 onChange={handleChange}
