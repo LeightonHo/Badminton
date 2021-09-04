@@ -8,19 +8,25 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import { Grid, ListItemText } from "@material-ui/core";
 
 interface IProps {
-    players: Props["players"],
-    setPlayers: React.Dispatch<React.SetStateAction<Props["players"]>>
+    courts: Props["courts"],
+    setCourts: React.Dispatch<React.SetStateAction<Props["courts"]>>
 }
 
-const PlayerList: React.FC<IProps> = ({ players, setPlayers }) => {
+const CourtList: React.FC<IProps> = ({ courts, setCourts }) => {
+
+    const handleDelete = (i: number): void => {
+        console.log(courts.splice(i, 1));
+
+        setCourts(courts);
+    }
 
     const renderList = (): JSX.Element[] => {
-        return players.map((player) => {
+        return courts.map((court, i) => {
             return (
-                <ListItem key={player.name}>
-                    <ListItemText>{player.name} ({player.win}-{player.loss})</ListItemText>
+                <ListItem key={i}>
+                    <ListItemText>{court}</ListItemText>
                     <ListItemSecondaryAction>
-                        <IconButton edge="end" aria-label="delete">
+                        <IconButton edge="end" aria-label="delete" onClick={() => { handleDelete(i); }}>
                             <DeleteIcon /> 
                         </IconButton>
                     </ListItemSecondaryAction>
@@ -44,4 +50,4 @@ const PlayerList: React.FC<IProps> = ({ players, setPlayers }) => {
     )
 }
 
-export default PlayerList;
+export default CourtList;

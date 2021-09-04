@@ -37,9 +37,9 @@ const RoundRobin: React.FC<IProps> = ({ courts, players }) => {
         const bye = players.length % (courts.length * 4);
         let playersAlreadyOnBye: IProps["players"] = [];
 
-        if (courts.length == 0) {
+        if (courts.length === 0) {
             return (
-                <div>Enter some courts and players to begin</div>
+                <div>Enter a court and some players to begin.</div>
             );
         }
 

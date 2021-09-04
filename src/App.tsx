@@ -1,13 +1,14 @@
-import { Box, Grid } from '@material-ui/core';
-import React, { useState } from 'react';
+import { Box } from '@material-ui/core';
+import { useState } from 'react';
 import './App.css';
 import CourtForm from './components/CourtForm';
+import CourtList from './components/CourtList';
 import PlayerForm from './components/PlayerForm';
 import PlayerList from "./components/PlayerList";
 import RoundRobin from './components/RoundRobin';
 
 export interface IState {
-  courts: number,
+  courts: string[],
   players: {
     name: string,
     win: number,
@@ -16,7 +17,7 @@ export interface IState {
 }
 
 function App() {
-  const [courts, setCourts] = useState<IState["courts"]>(2);
+  const [courts, setCourts] = useState<IState["courts"]>([]);
   const [players, setPlayers] = useState<IState["players"]>([
     {
       name: "Leighton",
@@ -62,16 +63,18 @@ function App() {
     }
   ]);
 
-
   return (
     <Box className="App">
-      <h1>Courts ({courts})</h1>
-      <CourtForm courts={courts} setCourts={setCourts} />
+      <Box>
+        <h1>Courts ({courts.length})</h1>
+        <CourtForm courts={courts} setCourts={setCourts} />
+        <CourtList courts={courts} setCourts={setCourts} />
+      </Box>
 
       <Box>
         <h1>Players ({players.length})</h1>
-        <PlayerForm players={players} setPlayers={setPlayers}/>
-        <PlayerList players={players} />
+        <PlayerForm players={players} setPlayers={setPlayers} />
+        <PlayerList players={players} setPlayers={setPlayers} />
       </Box>
 
       <h1>Games</h1>
