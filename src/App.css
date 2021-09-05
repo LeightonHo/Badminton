@@ -21,3 +21,7 @@
 .match {
   outline: 1px dotted gray;
 }
+
+.games {
+  font-size: 14px;
+}

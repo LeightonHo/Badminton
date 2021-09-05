@@ -17,7 +17,10 @@ export interface IState {
 }
 
 function App() {
-  const [courts, setCourts] = useState<IState["courts"]>([]);
+  const [courts, setCourts] = useState<IState["courts"]>([
+    "10",
+    "12"
+  ]);
   const [players, setPlayers] = useState<IState["players"]>([
     {
       name: "Leighton",
@@ -78,7 +81,7 @@ function App() {
       </Box>
 
       <h1>Games</h1>
-      <RoundRobin courts={courts} players={players}/>
+      <RoundRobin courts={courts} players={players} setPlayers={setPlayers}/>
     </Box>
   );
 }

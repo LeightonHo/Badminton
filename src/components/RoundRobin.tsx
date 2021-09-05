@@ -6,7 +6,8 @@ import { Box, Grid } from "@material-ui/core";
 
 export interface IProps {
     courts: Props["courts"],
-    players: Props["players"]
+    players: Props["players"],
+    setPlayers: React.Dispatch<React.SetStateAction<Props["players"]>>
 }
 
 export interface IMatch {
@@ -29,7 +30,7 @@ interface IRound {
     byes: Props["players"]
 }
 
-const RoundRobin: React.FC<IProps> = ({ courts, players }) => {
+const RoundRobin: React.FC<IProps> = ({ courts, players, setPlayers }) => {
 
     const generateBracket = () => {
         let result: IRound[] = [];
@@ -95,7 +96,7 @@ const RoundRobin: React.FC<IProps> = ({ courts, players }) => {
         console.log(result);
 
         return (
-            <Box>
+            <Box className="games">
                 {result.map((round, i) => {
                     return (
                         <Grid 
@@ -117,16 +118,16 @@ const RoundRobin: React.FC<IProps> = ({ courts, players }) => {
                                         xs
                                         className="match"
                                     >
-                                        <Match match={match}/>
+                                        <Match match={match} players={players} setPlayers={setPlayers}/>
                                     </Grid>
-                                )
+                                );
                             })}
                             
                             <Grid item xs={2}>
                                 <Bye players={round.byes}></Bye>
                             </Grid>
                         </Grid>
-                    )
+                    );
                 })}
             </Box>
         );
