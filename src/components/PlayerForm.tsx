@@ -17,7 +17,7 @@ const PlayerForm: React.FC<IProps> = ({ players, setPlayers }) => {
         setInput({
             ...input,
             [e.target.name]: e.target.value
-        })
+        });
     }
 
     const handleClick = (): void => {
@@ -68,7 +68,7 @@ const PlayerForm: React.FC<IProps> = ({ players, setPlayers }) => {
                 Add
             </Button>
         </Box>
-    )
+    );
 }
 
 export default PlayerForm;

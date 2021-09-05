@@ -14,10 +14,12 @@ interface IProps {
 
 const CourtList: React.FC<IProps> = ({ courts, setCourts }) => {
 
-    const handleDelete = (i: number): void => {
-        console.log(courts.splice(i, 1));
+    const handleDelete = (index: number): void => {
+        courts.splice(index, 1);
 
-        setCourts(courts);
+        setCourts([
+            ...courts
+        ]);
     }
 
     const renderList = (): JSX.Element[] => {
@@ -26,13 +28,17 @@ const CourtList: React.FC<IProps> = ({ courts, setCourts }) => {
                 <ListItem key={i}>
                     <ListItemText>{court}</ListItemText>
                     <ListItemSecondaryAction>
-                        <IconButton edge="end" aria-label="delete" onClick={() => { handleDelete(i); }}>
+                        <IconButton 
+                            edge="end" 
+                            aria-label="delete"
+                            onClick={() => { handleDelete(i); }}
+                        >
                             <DeleteIcon /> 
                         </IconButton>
                     </ListItemSecondaryAction>
                 </ListItem>
             )
-        })
+        });
     }
 
     return (
@@ -47,7 +53,7 @@ const CourtList: React.FC<IProps> = ({ courts, setCourts }) => {
                 {renderList()}
             </List>
         </Grid>
-    )
+    );
 }
 
 export default CourtList;

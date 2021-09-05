@@ -129,7 +129,7 @@ const RoundRobin: React.FC<IProps> = ({ courts, players }) => {
                     )
                 })}
             </Box>
-        )
+        );
     }
 
     const shuffleArray = (array: IProps["players"]): IProps["players"] => {
@@ -172,7 +172,7 @@ const RoundRobin: React.FC<IProps> = ({ courts, players }) => {
         <Box>
             {generateBracket()}
         </Box>
-    )
+    );
 }
 
 export default RoundRobin;

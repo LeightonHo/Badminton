@@ -66,7 +66,7 @@ const CourtForm: React.FC<IProps> = ({ courts, setCourts }) => {
                 Add
             </Button>
         </Box>
-    )
+    );
 }
 
 export default CourtForm;

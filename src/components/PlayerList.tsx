@@ -14,19 +14,31 @@ interface IProps {
 
 const PlayerList: React.FC<IProps> = ({ players, setPlayers }) => {
 
+    const handleDelete = (index: number): void => {
+        players.splice(index, 1);
+
+        setPlayers([
+            ...players
+        ]);
+    }
+
     const renderList = (): JSX.Element[] => {
-        return players.map((player) => {
+        return players.map((player, i) => {
             return (
-                <ListItem key={player.name}>
+                <ListItem key={i}>
                     <ListItemText>{player.name} ({player.win}-{player.loss})</ListItemText>
                     <ListItemSecondaryAction>
-                        <IconButton edge="end" aria-label="delete">
+                        <IconButton 
+                            edge="end" 
+                            aria-label="delete" 
+                            onClick={(() => { handleDelete(i); })}
+                        >
                             <DeleteIcon /> 
                         </IconButton>
                     </ListItemSecondaryAction>
                 </ListItem>
             )
-        })
+        });
     }
 
     return (
@@ -41,7 +53,7 @@ const PlayerList: React.FC<IProps> = ({ players, setPlayers }) => {
                 {renderList()}
             </List>
         </Grid>
-    )
+    );
 }
 
 export default PlayerList;
