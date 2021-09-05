@@ -15,7 +15,7 @@ const Bye: React.FC<IProps> = ({ players }) => {
                 </div>
             )
         })}</div>
-    )
+    );
 }
 
 export default Bye;

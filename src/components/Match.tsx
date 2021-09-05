@@ -52,7 +52,7 @@ const Match: React.FC<IProps> = ({ match }) => {
                 </Grid>
             </Grid>
         </Grid>
-    )
+    );
 }
 
 export default Match;
