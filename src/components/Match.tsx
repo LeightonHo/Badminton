@@ -1,5 +1,5 @@
 import { Grid } from "@material-ui/core";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { IMatch, IProps as Props } from "./RoundRobin";
 
 interface IProps {
@@ -11,50 +11,54 @@ interface IProps {
 const Match: React.FC<IProps> = ({ match, players, setPlayers }) => {
 
     const [input, setInput] = useState({
+        updateRequired: false,
         hasUpdated: false,
         team1Score: 0,
-        team2Score: 0
+        team2Score: 0,
+        team1ScorePrev: 0,
+        team2ScorePrev: 0
     });
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
         setInput({
             ...input,
-            [e.target.name]: e.target.value
-        });
-
-        console.log({ [e.target.name]: e.target.value });
-
-        console.log(input.team1Score)
-        console.log(input.team2Score)
-
-        if (input.hasUpdated) {
-            // Reverse the scores;
-            updateScores(-1);
-        }
-
-        // TODO: potentially make this threshold settings driven since sometimes we play to 17.
-        if (input.team1Score < 21 && input.team2Score < 21) {
-            return;
-        }
-
-        updateScores(1);
-
-        setInput({
-            ...input,
-            hasUpdated: true
+            updateRequired: true,
+            [e.target.name]: parseInt(e.target.value),
+            [e.target.name + "Prev"]: parseInt(e.target.value)
         });
     }
 
-    const updateScores = (points: number): void => {
+    useEffect(() => {
+        if (!input.updateRequired && (input.team1Score < 21 && input.team2Score)) {
+            return;
+        }
+
+        // if (input.hasUpdated) {
+        //     updateScores(input.team1ScorePrev, input.team2ScorePrev, -1);
+        // }
+
+        // updateScores(input.team1Score, input.team2Score, 1);
+
+        // setInput({
+        //     ...input,
+        //     updateRequired: false,
+        //     hasUpdated: true
+        // });
+    });
+
+    const updateScores = (team1Score: number, team2Score: number, points: number): void => {
         let winners = [];
         let losers = [];
 
-        if (input.team1Score > input.team2Score) {
-            // team 1 wins
+        if (team1Score > team2Score) {
             // if team1 score is higher than 21 then get the players in team 1 and +1 to their wins
+            console.log("Team 1 wins")
+
             winners = [match.team1.player1, match.team1.player2];
             losers = [match.team2.player3, match.team2.player4];
         } else {
+            console.log("Team 2 wins")
+
             winners = [match.team2.player3, match.team2.player4];
             losers = [match.team1.player1, match.team1.player2];
         }

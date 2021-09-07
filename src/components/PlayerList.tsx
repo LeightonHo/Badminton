@@ -26,7 +26,8 @@ const PlayerList: React.FC<IProps> = ({ players, setPlayers }) => {
         return players.map((player, i) => {
             return (
                 <ListItem key={i}>
-                    <ListItemText>{player.name} ({player.win}-{player.loss})</ListItemText>
+                    {/* <ListItemText>{player.name} ({player.win}-{player.loss})</ListItemText> */}
+                    {formatPlayerInfo(i, player.name, player.win, player.loss)}
                     <ListItemSecondaryAction>
                         <IconButton 
                             edge="end" 
@@ -39,6 +40,26 @@ const PlayerList: React.FC<IProps> = ({ players, setPlayers }) => {
                 </ListItem>
             )
         });
+    }
+
+    const formatPlayerInfo = (index: number, name: string, win: number, loss: number) => {
+        let trophy = "";
+
+        if (index === 0) {
+            trophy = "🥇 ";
+        }
+
+        if (index === 1) {
+            trophy = "🥈 ";
+        }
+
+        if (index === 2) {
+            trophy = "🥉 ";  
+        }
+
+        return (
+            <ListItemText>{trophy}{name} ({win}-{loss})</ListItemText>
+        )
     }
 
     return (
