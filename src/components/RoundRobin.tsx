@@ -24,7 +24,7 @@ export interface IMatch {
     }
 }
 
-interface IRound {
+export interface IRound {
     number: number,
     matches: IMatch[],
     byes: Props["players"]

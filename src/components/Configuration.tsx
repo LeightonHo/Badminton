@@ -1,35 +1,35 @@
 import { Box, TextField } from "@material-ui/core";
-// import { React } from "react";
 import CourtForm from "./CourtForm";
 import CourtList from "./CourtList";
 import PlayerForm from "./PlayerForm";
 import PlayerList from "./PlayerList";
-import {IState as Props} from "./Main";
+import { IState as Props } from "./Main";
+import { useState } from "react";
 
 interface IProps {
-    matches: Props["matches"],
-    courts: Props["courts"],
-    players: Props["players"],
-    setMatches: React.Dispatch<React.SetStateAction<Props["matches"]>>,
-    setCourts: React.Dispatch<React.SetStateAction<Props["courts"]>>,
-    setPlayers: React.Dispatch<React.SetStateAction<Props["players"]>>
+    config: Props["config"],
+    setConfig: React.Dispatch<React.SetStateAction<Props["config"]>>
 }
 
-const Configuration:React.FC<IProps> = ({ matches, courts, players, setMatches, setCourts, setPlayers }) => {
+const Configuration:React.FC<IProps> = ({ config, setConfig }) => {
+
+    const [rounds, setRounds] = useState<Props["rounds"]>(config.rounds);
+    const [courts, setCourts] = useState<Props["courts"]>(config.courts);
+    const [players, setPlayers] = useState<Props["players"]>(config.players);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
         if (!isNaN(parseInt(e.target.value))) {
-            setMatches(parseInt(e.target.value));
+            setRounds(parseInt(e.target.value));
         }
     }
 
     return (
         <Box>
             <Box>
-                <h1>Matches ({matches})</h1>
+                <h1>Rounds ({rounds})</h1>
                 <TextField 
                     id="inputMatches" 
-                    label="Matches" 
+                    label="Rounds" 
                     type="number"
                     variant="outlined" 
                     size="small"
@@ -41,8 +41,8 @@ const Configuration:React.FC<IProps> = ({ matches, courts, players, setMatches, 
 
             <Box>
                 <h1>Courts ({courts.length})</h1>
-                <CourtForm courts={courts} setCourts={setCourts} />
-                <CourtList courts={courts} setCourts={setCourts} />
+                <CourtForm config={config} setConfig={setConfig} />
+                <CourtList config={config} setConfig={setConfig} />
             </Box>
 
             <Box>

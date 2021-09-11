@@ -1,13 +1,13 @@
 import { Box, Button, TextField } from "@material-ui/core";
 import React, { useState } from "react";
-import {IState as Props} from "../App";
+import { IState as Props } from "./Main";
 
 interface IProps {
-    courts: Props["courts"],
-    setCourts: React.Dispatch<React.SetStateAction<string[]>>
+    config: Props["config"],
+    setConfig: React.Dispatch<React.SetStateAction<Props["config"]>>
 }
 
-const CourtForm: React.FC<IProps> = ({ courts, setCourts }) => {
+const CourtForm: React.FC<IProps> = ({ config, setConfig }) => {
 
     const [input, setInput] = useState({
         court: ""
@@ -25,10 +25,18 @@ const CourtForm: React.FC<IProps> = ({ courts, setCourts }) => {
             return;
         }
 
-        setCourts([
-            ...courts,
-            input.court
-        ]);
+        // setCourts([
+        //     ...courts,
+        //     input.court
+        // ]);
+
+        setConfig({
+            ...config,
+            courts: [
+                ...config.courts,
+                input.court
+            ]
+        })
 
         setInput({
             court: ""
@@ -36,7 +44,7 @@ const CourtForm: React.FC<IProps> = ({ courts, setCourts }) => {
     }
 
     const isDuplicate = (name: string): boolean => {
-        for (const court of courts) {
+        for (const court of config.courts) {
             if (court.toLowerCase() === input.court.toLowerCase()) {
                 return true;
             }

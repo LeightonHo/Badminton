@@ -1,5 +1,5 @@
 import React from "react";
-import {IState as Props} from "../App";
+import { IState as Props } from "./Main";
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
@@ -8,22 +8,29 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import { Grid, ListItemText } from "@material-ui/core";
 
 interface IProps {
-    courts: Props["courts"],
-    setCourts: React.Dispatch<React.SetStateAction<Props["courts"]>>
+    config: Props["config"],
+    setConfig: React.Dispatch<React.SetStateAction<Props["config"]>>
 }
 
-const CourtList: React.FC<IProps> = ({ courts, setCourts }) => {
+const CourtList: React.FC<IProps> = ({ config, setConfig }) => {
 
     const handleDelete = (index: number): void => {
-        courts.splice(index, 1);
+        config.courts.splice(index, 1);
 
-        setCourts([
-            ...courts
-        ]);
+        setConfig({
+            ...config,
+            courts: [
+                ...config.courts
+            ]
+        });
+
+        // setCourts([
+        //     ...courts
+        // ]);
     }
 
     const renderList = (): JSX.Element[] => {
-        return courts.map((court, i) => {
+        return config.courts.map((court, i) => {
             return (
                 <ListItem key={i}>
                     <ListItemText>{court}</ListItemText>

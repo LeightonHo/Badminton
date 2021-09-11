@@ -1,33 +1,35 @@
-import { alpha, makeStyles } from '@material-ui/core/styles';
 import React, { useState } from "react";
-import { Route, NavLink, HashRouter, useHistory, BrowserRouter } from "react-router-dom";
+import { alpha, makeStyles } from '@material-ui/core/styles';
+import { Route, useHistory } from "react-router-dom";
 import Box from "@material-ui/core/Box";
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
 import Configuration from "./Configuration";
-import RoundRobin from "./RoundRobin";
-
-import InputBase from '@material-ui/core/InputBase';
-import Badge from '@material-ui/core/Badge';
+import RoundRobin, { IMatch, IRound } from "./RoundRobin";
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
-import SearchIcon from '@material-ui/icons/Search';
-import AccountCircle from '@material-ui/icons/AccountCircle';
-import MailIcon from '@material-ui/icons/Mail';
-import NotificationsIcon from '@material-ui/icons/Notifications';
 import MoreIcon from '@material-ui/icons/MoreVert';
 
 export interface IState {
-    matches: number,
+    config: {
+      rounds: number,
+      courts: string[],
+      players: {
+        name: string,
+        win: number,
+        loss: number
+      }[]
+    },
+    rounds: number,
     courts: string[],
     players: {
       name: string,
       win: number,
       loss: number
-    }[]
+    }[],
+    test: IRound[]
 }
 
 const Main = () => {
@@ -38,12 +40,10 @@ const Main = () => {
     }
 
     // Default values
-    const [matches, setMatches] = useState<IState["matches"]>(10);
-    const [courts, setCourts] = useState<IState["courts"]>([
-        "10",
-        "12"
-    ]);
-    const [players, setPlayers] = useState<IState["players"]>([
+    const [config, setConfig] = useState<IState["config"]>({
+      rounds: 10,
+      courts: ["10, 12"],
+      players: [
         {
           name: "Leighton",
           win: 0,
@@ -86,7 +86,10 @@ const Main = () => {
           win: 0,
           loss: 0
         }
-      ]);
+      ]
+    });
+
+    console.log(config);
 
       const useStyles = makeStyles((theme) => ({
         grow: {
@@ -156,28 +159,15 @@ const Main = () => {
         const classes = useStyles();
         const [anchorEl, setAnchorEl] = React.useState(null);
         const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
-      
-        const isMenuOpen = Boolean(anchorEl);
         const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
-      
-        const handleProfileMenuOpen = (event: any) => {
-          setAnchorEl(event.currentTarget);
-        };
       
         const handleMobileMenuClose = () => {
           setMobileMoreAnchorEl(null);
         };
       
-        const handleMenuClose = () => {
-          setAnchorEl(null);
-          handleMobileMenuClose();
-        };
-      
         const handleMobileMenuOpen = (event: any) => {
           setMobileMoreAnchorEl(event.currentTarget);
         };
-      
-        const menuId = 'primary-search-account-menu';
       
         const mobileMenuId = 'primary-search-account-menu-mobile';
         const renderMobileMenu = (
@@ -192,7 +182,7 @@ const Main = () => {
           >
             <MenuItem>
                 <IconButton color="inherit" onClick={(() => { handleNavigation("/round-robin") })}>
-                    <span>Round Robin</span>
+                    <span>Games</span>
                 </IconButton>
             </MenuItem>
             <MenuItem>
@@ -209,59 +199,40 @@ const Main = () => {
         );
       
         return (
-          <div className={classes.grow}>
-            <AppBar position="sticky">
-              <Toolbar>
-                <IconButton
-                  edge="start"
-                  className={classes.menuButton}
-                  color="inherit"
-                  aria-label="open drawer"
-                >
-                  <MenuIcon />
-                </IconButton>
-                <Typography className={classes.title} variant="h6" noWrap>
-                  Sunday Badminton
-                </Typography>
-                <div className={classes.grow} />
-                <div className={classes.sectionDesktop}>
-                  <IconButton color="inherit" onClick={(() => { handleNavigation("/round-robin") })}>
-                    <span>Round Robin</span>
-                  </IconButton>
-                  <IconButton color="inherit" onClick={(() => { handleNavigation("/scoreboard") })}>
-                    <span>Scoreboard</span>
-                  </IconButton>
-                  <IconButton color="inherit" onClick={(() => { handleNavigation("/configuration") })}>
-                    <span>Config</span>
-                  </IconButton>
-                </div>
-                <div className={classes.sectionMobile}>
-                  <IconButton
-                    aria-label="show more"
-                    aria-controls={mobileMenuId}
-                    aria-haspopup="true"
-                    onClick={handleMobileMenuOpen}
-                    color="inherit"
-                  >
-                    <MoreIcon />
-                  </IconButton>
-                </div>
-              </Toolbar>
+            <div className={classes.grow}>
+                <AppBar position="sticky">
+                    <Toolbar>
+                        <Typography className={classes.title} variant="h6" noWrap>
+                            Sunday Badminton
+                        </Typography>
+                    <div className={classes.grow} />
+                    <div className={classes.sectionDesktop}>
+                        <IconButton color="inherit" onClick={(() => { handleNavigation("/round-robin") })}>
+                            <span>Games</span>
+                        </IconButton>
+                        <IconButton color="inherit" onClick={(() => { handleNavigation("/scoreboard") })}>
+                            <span>Scoreboard</span>
+                        </IconButton>
+                        <IconButton color="inherit" onClick={(() => { handleNavigation("/configuration") })}>
+                            <span>Config</span>
+                        </IconButton>
+                    </div>
+                    <div className={classes.sectionMobile}>
+                        <IconButton
+                            aria-label="show more"
+                            aria-controls={mobileMenuId}
+                            aria-haspopup="true"
+                            onClick={handleMobileMenuOpen}
+                            color="inherit"
+                        >
+                            <MoreIcon />
+                        </IconButton>
+                    </div>
+                </Toolbar>
             </AppBar>
             {renderMobileMenu}
-          </div>
+        </div>
         );
-
-        // return (
-        //     <AppBar position="sticky">
-        //         <Toolbar>
-        //             <IconButton edge="start" color="inherit" aria-label="menu">
-        //             <MenuIcon />
-        //             </IconButton>
-        //             <Typography variant="h6">Sunday Badminton</Typography>
-        //         </Toolbar>
-        //     </AppBar>
-        // );
     }
 
     return (
@@ -269,11 +240,11 @@ const Main = () => {
             { BuildNavBar() }
 
             <Box className="content">
-                <Route path="/configuration">
-                    <Configuration matches={matches} courts={courts} players={players} setMatches={setMatches} setCourts={setCourts} setPlayers={setPlayers} />
-                </Route>
                 <Route path="/round-robin">
-                    <RoundRobin courts={courts} players={players} setPlayers={setPlayers} />
+                    {/* <RoundRobin courts={courts} players={players} setPlayers={setPlayers} /> */}
+                </Route>
+                <Route path="/configuration">
+                    <Configuration config={config} setConfig={setConfig} />
                 </Route>
             </Box>
         </Box>
