@@ -7,6 +7,7 @@ import PlayerList from './components/PlayerList';
 import RoundRobin from './components/RoundRobin';
 import Main from './components/Main';
 import './App.css';
+import { BrowserRouter } from 'react-router-dom';
 
 export interface IState {
   courts: string[],
@@ -20,9 +21,9 @@ export interface IState {
 function App() {
   
   return (
-    <Box className="App">
+    <BrowserRouter>
       <Main />
-    </Box>
+    </BrowserRouter>
   );
 }
 

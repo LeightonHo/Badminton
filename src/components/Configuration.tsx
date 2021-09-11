@@ -1,4 +1,4 @@
-import { Box } from "@material-ui/core";
+import { Box, TextField } from "@material-ui/core";
 // import { React } from "react";
 import CourtForm from "./CourtForm";
 import CourtList from "./CourtList";
@@ -7,18 +7,36 @@ import PlayerList from "./PlayerList";
 import {IState as Props} from "./Main";
 
 interface IProps {
+    matches: Props["matches"],
     courts: Props["courts"],
     players: Props["players"],
+    setMatches: React.Dispatch<React.SetStateAction<Props["matches"]>>,
     setCourts: React.Dispatch<React.SetStateAction<Props["courts"]>>,
     setPlayers: React.Dispatch<React.SetStateAction<Props["players"]>>
 }
 
-const Configuration:React.FC<IProps> = ({ courts, players, setCourts, setPlayers }) => {
+const Configuration:React.FC<IProps> = ({ matches, courts, players, setMatches, setCourts, setPlayers }) => {
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+        if (!isNaN(parseInt(e.target.value))) {
+            setMatches(parseInt(e.target.value));
+        }
+    }
+
     return (
         <Box>
             <Box>
-                <h1>Games ({courts.length})</h1>
-                
+                <h1>Matches ({matches})</h1>
+                <TextField 
+                    id="inputMatches" 
+                    label="Matches" 
+                    type="number"
+                    variant="outlined" 
+                    size="small"
+                    fullWidth
+                    onChange={handleChange}
+                    name="name"
+                />
             </Box>
 
             <Box>
