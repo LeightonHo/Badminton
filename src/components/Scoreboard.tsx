@@ -1,14 +1,12 @@
 import { Box } from "@material-ui/core";
-import React, { FC } from "react";
+import React from "react";
 import { IState as Props } from "./Main";
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
-import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
-import TableSortLabel from '@material-ui/core/TableSortLabel';
 
 interface IPlayerStats {
     [id: string]: {
@@ -26,7 +24,6 @@ const Scoreboard:React.FC<IProps> = ({ config, gameData }) => {
     console.log(gameData);
 
     const generateTableBody = () => {
-        // let result: IPlayerStats[] = [];
         let result: IPlayerStats = {}
 
         for (const player of config.players) {
@@ -38,17 +35,15 @@ const Scoreboard:React.FC<IProps> = ({ config, gameData }) => {
 
         for (const round of gameData) {
             for (const match of round.matches) {
-                // check if match is finished
+                // Check if the match is finished, based on the configured winning score.
                 if (match.team1.score >= config.winningScore || match.team2.score >= config.winningScore) {
-                    // figure out who the winners & losers are
+                    // Adjust player stats.
                     if (match.team1.score > match.team2.score) {
-                        // team 1 win
                         result[match.team1.player1].win++;
                         result[match.team1.player2].win++;
                         result[match.team2.player3].loss++;
                         result[match.team2.player4].loss++;
                     } else {
-                        // team 2 win
                         result[match.team1.player1].loss++;
                         result[match.team1.player2].loss++;
                         result[match.team2.player3].win++;
@@ -59,8 +54,6 @@ const Scoreboard:React.FC<IProps> = ({ config, gameData }) => {
         }
 
         const sortedResults = sortPlayerStats(result);
-
-        console.log(sortedResults);
 
         return (
             <TableBody>
