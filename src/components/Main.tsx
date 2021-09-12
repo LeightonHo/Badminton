@@ -8,6 +8,7 @@ import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import Configuration from "./Configuration";
 import RoundRobin, { IRound } from "./RoundRobin";
+import Scoreboard from "./Scoreboard";
 import { IConfig } from "./Configuration";
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
@@ -227,6 +228,9 @@ const Main = () => {
             <Box className="content">
                 <Route path="/round-robin">
                     <RoundRobin config={config} gameData={gameData} setGameData={setGameData} />
+                </Route>
+                <Route path="/scoreboard">
+                    <Scoreboard gameData={gameData} />
                 </Route>
                 <Route path="/configuration">
                     <Configuration config={config} setConfig={setConfig} />

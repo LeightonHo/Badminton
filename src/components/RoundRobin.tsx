@@ -44,7 +44,7 @@ const RoundRobin: React.FC<IProps> = ({ config, gameData, setGameData }) => {
     }
 
     const generateBracket = (): Props["gameData"] => {
-        const matches = 10;
+        const rounds = config.rounds;
         const bye = config?.players?.length % (config?.courts?.length * 4);
         let playersAlreadyOnBye: Props["config"]["players"] = [];
 
@@ -60,7 +60,7 @@ const RoundRobin: React.FC<IProps> = ({ config, gameData, setGameData }) => {
         //     );
         // }
 
-        for (let i = 1; i < matches + 1; i++)
+        for (let i = 1; i < rounds + 1; i++)
         {
             // Work out who is on bye this round.
             let currentPlayersOnBye: Props["config"]["players"] = [];
@@ -106,43 +106,6 @@ const RoundRobin: React.FC<IProps> = ({ config, gameData, setGameData }) => {
         console.log(gameData);
 
         return gameData;
-
-        // return (
-        //     <Box className="games">
-        //         {gameData.map((round, i) => {
-        //             return (
-        //                 <Grid 
-        //                     key={i}
-        //                     container
-        //                     direction="row"
-        //                     className="divRound"
-        //                     spacing={2}
-        //                 >
-        //                     <Grid item xs={1}>
-        //                         <span className="spnGameLabel">{round.number}</span>
-        //                     </Grid>
-                            
-        //                     {round.matches.map((match, j) => {
-        //                         return (
-        //                             <Grid 
-        //                                 key={j}
-        //                                 item 
-        //                                 xs
-        //                                 className="match"
-        //                             >
-        //                                 <Match match={match} />
-        //                             </Grid>
-        //                         );
-        //                     })}
-                            
-        //                     <Grid item xs={2}>
-        //                         <Bye players={round.byes}></Bye>
-        //                     </Grid>
-        //                 </Grid>
-        //             );
-        //         })}
-        //     </Box>
-        // );
     }
 
     const shuffleArray = (array: Props["config"]["players"]): Props["config"]["players"] => {
@@ -155,7 +118,6 @@ const RoundRobin: React.FC<IProps> = ({ config, gameData, setGameData }) => {
     }
 
     // Function for rendering each match takes in a list of players and generates the bracket
-    // TODO: courts should be an array of actual court numbers
     const generateMatches = (courts: Props["config"]["courts"], players: Props["config"]["players"]): IMatch[] => {
         let result: IMatch[] = []
 
@@ -208,7 +170,7 @@ const RoundRobin: React.FC<IProps> = ({ config, gameData, setGameData }) => {
                                         xs
                                         className="match"
                                     >
-                                        <Match match={match} />
+                                        <Match match={match} gameData={gameData} setGameData={setGameData} roundKey={i} matchKey={j} />
                                     </Grid>
                                 );
                             })}

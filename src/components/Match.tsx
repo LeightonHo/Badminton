@@ -1,64 +1,48 @@
 import { Grid } from "@material-ui/core";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { IMatch, IProps as Props } from "./RoundRobin";
 
 interface IProps {
-    match: IMatch
+    match: IMatch,
+    gameData: Props["gameData"],
+    setGameData: React.Dispatch<React.SetStateAction<Props["gameData"]>>,
+    roundKey: number,
+    matchKey: number
 }
 
-const Match: React.FC<IProps> = ({ match }) => {
-
-    const [input, setInput] = useState({
-        updateRequired: false,
-        hasUpdated: false,
-        team1Score: 0,
-        team2Score: 0,
-        team1ScorePrev: 0,
-        team2ScorePrev: 0
-    });
+const Match: React.FC<IProps> = ({ match, gameData, setGameData, roundKey, matchKey }) => {
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-        setInput({
-            ...input,
-            updateRequired: true,
-            [e.target.name]: parseInt(e.target.value),
-            [e.target.name + "Prev"]: parseInt(e.target.value)
-        });
-    }
-
-    const updateScores = (team1Score: number, team2Score: number, points: number): void => {
-        let winners = [];
-        let losers = [];
-
-        if (team1Score > team2Score) {
-            // if team1 score is higher than 21 then get the players in team 1 and +1 to their wins
-            console.log("Team 1 wins")
-
-            winners = [match.team1.player1, match.team1.player2];
-            losers = [match.team2.player3, match.team2.player4];
+        // Update the game data state
+        if (e.target.name === "team1Score") { 
+            gameData[roundKey].matches[matchKey] = {
+                ...match,
+                team1: {
+                    ...match.team1,
+                    score: parseInt(e.target.value)
+                }
+            }
         } else {
-            console.log("Team 2 wins")
-
-            winners = [match.team2.player3, match.team2.player4];
-            losers = [match.team1.player1, match.team1.player2];
+            gameData[roundKey].matches[matchKey] = {
+                ...match,
+                team2: {
+                    ...match.team2,
+                    score: parseInt(e.target.value)
+                }
+            }
         }
 
-        // //  update scores of the players
-        // for (let i = 0; i < players.length; i++) {
-        //     if (winners.indexOf(players[i].name) >= 0) {
-        //         console.log(`Adding ${points} to ${players[i].name}'s wins`)
-        //         players[i].win += points;
-        //     }
+        setGameData([
+            ...gameData
+        ]);
+    }
 
-        //     if (losers.indexOf(players[i].name) >= 0) {
-        //         console.log(`Adding ${points} to ${players[i].name}'s losses`)
-        //         players[i].loss += points;
-        //     }
-        // }
+    const showValue = (score: number): string => {
+        if (score > 0) {
+            return score.toString();
+        }
 
-        // setPlayers([
-        //     ...players
-        // ]);
+        return "";
     }
 
     return (
@@ -85,6 +69,7 @@ const Match: React.FC<IProps> = ({ match }) => {
                         max="21"
                         onBlur={handleChange}
                         name="team1Score"
+                        placeholder={showValue(match.team1.score)}
                     />
                 </Grid>
             </Grid>
@@ -106,6 +91,7 @@ const Match: React.FC<IProps> = ({ match }) => {
                         max="21"
                         onBlur={handleChange}
                         name="team2Score"
+                        placeholder={showValue(match.team2.score)}
                     />
                 </Grid>
             </Grid>
