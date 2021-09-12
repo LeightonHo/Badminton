@@ -1,3 +1,4 @@
+import { Box, Typography } from "@material-ui/core";
 import React from "react";
 import { IState as Props} from "./Main";
 
@@ -8,13 +9,22 @@ interface IProps {
 const Bye: React.FC<IProps> = ({ players }) => {
 
     return (
-        <div className="divBye">{players.map((player, i) => {
-            return (
-                <div key={i}>
-                    <span>{player.name}</span>
-                </div>
-            )
-        })}</div>
+        <Box 
+            className="divBye"
+        >
+            {players.map((player, i) => {
+                return (
+                    <Box key={i}>
+                        <Typography
+                            variant="overline"
+                            align="center"
+                        >
+                            {player.name}
+                        </Typography>
+                    </Box>
+                )
+            })}
+        </Box>
     );
 }
 

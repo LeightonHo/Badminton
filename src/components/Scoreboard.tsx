@@ -63,7 +63,7 @@ const Scoreboard:React.FC<IProps> = ({ config, gameData }) => {
                             hover
                             key={key}
                         >
-                            <TableCell>{playerStat.name}</TableCell>
+                            <TableCell>{playerStat.name} {displayEmoji(key, config.players.length)}</TableCell>
                             <TableCell align="right">{playerStat.win}</TableCell>
                             <TableCell align="right">{playerStat.loss}</TableCell>
                             <TableCell align="right">{calculateWinRate(playerStat.win, playerStat.loss)}%</TableCell>
@@ -72,6 +72,26 @@ const Scoreboard:React.FC<IProps> = ({ config, gameData }) => {
                 }) }
             </TableBody>
         );
+    }
+
+    const displayEmoji = (key: number, players: number): string => {
+        if (key === 0) {
+            return "🥇";
+        }
+
+        if (key === 1) {
+            return "🥈";
+        }
+
+        if (key === 2) {
+            return "🥉";
+        }
+
+        if (key === players - 1) {
+            return "🍀";
+        }
+
+        return "";
     }
 
     const sortPlayerStats = (playerStats: IPlayerStats) => {
@@ -107,14 +127,14 @@ const Scoreboard:React.FC<IProps> = ({ config, gameData }) => {
             return 0;
         }
 
-        return win / (win + loss) * 100;
+        return Math.round(win / (win + loss) * 100);
     }
 
     return (
         <Box>
             <TableContainer>
                 <Table>
-                    <TableHead>
+                    <TableHead className="scoreboard-header">
                         <TableRow>
                             <TableCell>Name</TableCell>
                             <TableCell align="right">Win</TableCell>

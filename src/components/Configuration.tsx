@@ -44,6 +44,7 @@ const Configuration:React.FC<IProps> = ({ config, setConfig }) => {
                     size="small"
                     fullWidth
                     onChange={handleChange}
+                    placeholder={config.rounds.toString()}
                     name="name"
                 />
             </Box>

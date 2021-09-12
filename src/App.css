@@ -1,5 +1,6 @@
 .App {
   text-align: center;
+  background: rgb(245, 245, 245);
 }
 
 /* .text-input {
@@ -18,10 +19,50 @@
   width: 100%;
 }
 
+/* Round Robin */
 .match {
-  outline: 1px dotted gray;
+  padding-bottom: 15px !important;
+  margin-bottom: 10px !important;
+  outline: 1px solid rgb(190, 190, 190);
+}
+
+.spnGameLabel {
+  text-align: center;
+}
+
+.round-card {
+  margin-top: 20px;
+  margin-left: 10px;
+  margin-right: 10px;
+  padding-left: 10px;
+  padding-right: 10px;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+}
+
+.vertical-align-center {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.score-input {
+  width: 50px;
+  text-align: center;
+}
+
+.match {
+  padding-top: 10px;
+}
+
+.player-name {
+  font-size: 18px;
 }
 
 .games {
   font-size: 14px;
+}
+
+/* Scoreboard */
+.scoreboard-header {
+  font-weight: bold;
 }

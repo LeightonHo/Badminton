@@ -1,8 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import { IState as Props } from "./Main";
 import Bye from "./Bye";
 import Match from "./Match";
-import { Box, Grid } from "@material-ui/core";
+import { Box, Card, CardContent, Grid, Typography } from "@material-ui/core";
 
 export interface IProps {
     config: Props["config"],
@@ -31,6 +31,8 @@ export interface IRound {
 }
 
 const RoundRobin: React.FC<IProps> = ({ config, gameData, setGameData }) => {
+
+    // const [current, setCurrent] = useState<number>(0);
 
     const initRoundRobin = (): void => {
         // If there is no game data, generate the brackets.
@@ -78,8 +80,8 @@ const RoundRobin: React.FC<IProps> = ({ config, gameData, setGameData }) => {
 
             for (let y = 0; y < iterations; y++)
             {
-                // let player = eligiblePlayers[eligiblePlayers.length * Math.random() | 0];
-                let player = eligiblePlayers[y];
+                let player = eligiblePlayers[eligiblePlayers.length * Math.random() | 0];
+                // let player = eligiblePlayers[y];
                 let indexOfPlayer = eligiblePlayers.indexOf(player);
     
                 currentPlayersOnBye.push(player);
@@ -91,7 +93,7 @@ const RoundRobin: React.FC<IProps> = ({ config, gameData, setGameData }) => {
             // Pass list of active players into a function for generating the match up
             let currentPlayers: Props["config"]["players"] = config.players.filter(x => !currentPlayersOnBye.includes(x));
 
-            // currentPlayers = shuffleArray(currentPlayers);
+            currentPlayers = shuffleArray(currentPlayers);
 
             const matches: IMatch[] = generateMatches(config.courts, currentPlayers);
             const round: IRound = {
@@ -102,8 +104,6 @@ const RoundRobin: React.FC<IProps> = ({ config, gameData, setGameData }) => {
 
             gameData.push(round);
         }
-
-        console.log(gameData);
 
         return gameData;
     }
@@ -143,11 +143,60 @@ const RoundRobin: React.FC<IProps> = ({ config, gameData, setGameData }) => {
         return result;
     }
 
-    return (
-        
-        <Box>
-            { initRoundRobin() }
-            
+    const renderMobileView = () => {
+        return (
+            <Box>
+                {gameData.map((round, i) => {
+                    return (
+                        <Card 
+                            key={i}
+                            variant="outlined"
+                            className="round-card"
+                            elevation={4}
+                        >
+                            <CardContent>
+                                <Grid 
+                                    container
+                                    direction="column"
+                                    className="divRound"
+                                    spacing={2}
+                                >
+                                    <Grid item>
+                                        <Typography 
+                                            variant="h4"
+                                            className="spnGameLabel"
+                                            gutterBottom={true}
+                                        >
+                                            Round {round.number}
+                                        </Typography>
+                                    </Grid>
+                                    
+                                    {round.matches.map((match, j) => {
+                                        return (
+                                            <Grid 
+                                                key={j}
+                                                item xs
+                                                className="match"
+                                            >
+                                                <Match match={match} gameData={gameData} setGameData={setGameData} roundKey={i} matchKey={j} />
+                                            </Grid>
+                                        );
+                                    })}
+                                    
+                                    <Grid item xs>
+                                        <Bye players={round.byes}></Bye>
+                                    </Grid>
+                                </Grid>
+                            </CardContent>
+                        </Card>
+                    );
+                })}
+            </Box>
+        );
+    }
+
+    const renderDesktopView = () => {
+        return (
             <Box className="games">
                 {gameData.map((round, i) => {
                     return (
@@ -182,6 +231,16 @@ const RoundRobin: React.FC<IProps> = ({ config, gameData, setGameData }) => {
                     );
                 })}
             </Box>
+        );
+    }
+
+    return (
+        <Box>
+            {initRoundRobin()}
+
+            {renderMobileView()}
+            
+            {/* {renderDesktopView()} */}
         </Box>
     );
 }
