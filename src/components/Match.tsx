@@ -3,12 +3,10 @@ import React, { useEffect, useState } from "react";
 import { IMatch, IProps as Props } from "./RoundRobin";
 
 interface IProps {
-    match: IMatch,
-    players: Props["players"],
-    setPlayers: React.Dispatch<React.SetStateAction<Props["players"]>>
+    match: IMatch
 }
 
-const Match: React.FC<IProps> = ({ match, players, setPlayers }) => {
+const Match: React.FC<IProps> = ({ match }) => {
 
     const [input, setInput] = useState({
         updateRequired: false,
@@ -28,24 +26,6 @@ const Match: React.FC<IProps> = ({ match, players, setPlayers }) => {
         });
     }
 
-    useEffect(() => {
-        if (!input.updateRequired && (input.team1Score < 21 && input.team2Score)) {
-            return;
-        }
-
-        // if (input.hasUpdated) {
-        //     updateScores(input.team1ScorePrev, input.team2ScorePrev, -1);
-        // }
-
-        // updateScores(input.team1Score, input.team2Score, 1);
-
-        // setInput({
-        //     ...input,
-        //     updateRequired: false,
-        //     hasUpdated: true
-        // });
-    });
-
     const updateScores = (team1Score: number, team2Score: number, points: number): void => {
         let winners = [];
         let losers = [];
@@ -63,22 +43,22 @@ const Match: React.FC<IProps> = ({ match, players, setPlayers }) => {
             losers = [match.team1.player1, match.team1.player2];
         }
 
-        //  update scores of the players
-        for (let i = 0; i < players.length; i++) {
-            if (winners.indexOf(players[i].name) >= 0) {
-                console.log(`Adding ${points} to ${players[i].name}'s wins`)
-                players[i].win += points;
-            }
+        // //  update scores of the players
+        // for (let i = 0; i < players.length; i++) {
+        //     if (winners.indexOf(players[i].name) >= 0) {
+        //         console.log(`Adding ${points} to ${players[i].name}'s wins`)
+        //         players[i].win += points;
+        //     }
 
-            if (losers.indexOf(players[i].name) >= 0) {
-                console.log(`Adding ${points} to ${players[i].name}'s losses`)
-                players[i].loss += points;
-            }
-        }
+        //     if (losers.indexOf(players[i].name) >= 0) {
+        //         console.log(`Adding ${points} to ${players[i].name}'s losses`)
+        //         players[i].loss += points;
+        //     }
+        // }
 
-        setPlayers([
-            ...players
-        ]);
+        // setPlayers([
+        //     ...players
+        // ]);
     }
 
     return (

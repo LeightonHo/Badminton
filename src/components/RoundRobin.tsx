@@ -1,13 +1,11 @@
 import React from "react";
-import {IState as Props} from "../App";
+import { IState as Props } from "./Main";
 import Bye from "./Bye";
 import Match from "./Match";
 import { Box, Grid } from "@material-ui/core";
 
 export interface IProps {
-    courts: Props["courts"],
-    players: Props["players"],
-    setPlayers: React.Dispatch<React.SetStateAction<Props["players"]>>
+    config: Props["config"]
 }
 
 export interface IMatch {
@@ -27,34 +25,34 @@ export interface IMatch {
 export interface IRound {
     number: number,
     matches: IMatch[],
-    byes: Props["players"]
+    byes: Props["config"]["players"]
 }
 
-const RoundRobin: React.FC<IProps> = ({ courts, players, setPlayers }) => {
+const RoundRobin: React.FC<IProps> = ({ config }) => {
 
     const generateBracket = () => {
         let result: IRound[] = [];
         const matches = 10;
-        const bye = players.length % (courts.length * 4);
-        let playersAlreadyOnBye: IProps["players"] = [];
+        const bye = config?.players?.length % (config?.courts?.length * 4);
+        let playersAlreadyOnBye: Props["config"]["players"] = [];
 
-        if (courts.length === 0) {
+        if (config?.courts?.length === 0) {
             return (
                 <div>Enter a court and some players to begin.</div>
             );
         }
 
-        if (players.length / 4 < courts.length) {
+        if (config?.players?.length / 4 < config?.courts?.length) {
             return (
-                <div>There are not enough players for {courts.length} courts.</div>
+                <div>There are not enough players for {config?.courts?.length} courts.</div>
             );
         }
 
         for (let i = 1; i < matches + 1; i++)
         {
             // Work out who is on bye this round.
-            let currentPlayersOnBye: IProps["players"] = [];
-            let eligiblePlayers: IProps["players"] = players.filter(x => !playersAlreadyOnBye.includes(x));
+            let currentPlayersOnBye: Props["config"]["players"] = [];
+            let eligiblePlayers: Props["config"]["players"] = config.players.filter(x => !playersAlreadyOnBye.includes(x));
             let iterations: number = bye;
     
             // If the number of eligible players is less than the number of byes, then we'll need to take all eligible players and then start the process again.
@@ -63,7 +61,7 @@ const RoundRobin: React.FC<IProps> = ({ courts, players, setPlayers }) => {
                 iterations = bye - eligiblePlayers.length;
                 currentPlayersOnBye = eligiblePlayers;
                 playersAlreadyOnBye = eligiblePlayers;
-                eligiblePlayers = players.filter(x => !playersAlreadyOnBye.includes(x));
+                eligiblePlayers = config.players.filter(x => !playersAlreadyOnBye.includes(x));
             }
 
             for (let y = 0; y < iterations; y++)
@@ -79,11 +77,11 @@ const RoundRobin: React.FC<IProps> = ({ courts, players, setPlayers }) => {
             playersAlreadyOnBye = playersAlreadyOnBye.concat(currentPlayersOnBye);
 
             // Pass list of active players into a function for generating the match up
-            let currentPlayers: IProps["players"] = players.filter(x => !currentPlayersOnBye.includes(x));
+            let currentPlayers: Props["config"]["players"] = config.players.filter(x => !currentPlayersOnBye.includes(x));
 
             // currentPlayers = shuffleArray(currentPlayers);
 
-            const matches: IMatch[] = generateMatches(courts, currentPlayers);
+            const matches: IMatch[] = generateMatches(config.courts, currentPlayers);
             const round: IRound = {
                 number: i,
                 matches: matches,
@@ -118,7 +116,7 @@ const RoundRobin: React.FC<IProps> = ({ courts, players, setPlayers }) => {
                                         xs
                                         className="match"
                                     >
-                                        <Match match={match} players={players} setPlayers={setPlayers}/>
+                                        <Match match={match} />
                                     </Grid>
                                 );
                             })}
@@ -133,7 +131,7 @@ const RoundRobin: React.FC<IProps> = ({ courts, players, setPlayers }) => {
         );
     }
 
-    const shuffleArray = (array: IProps["players"]): IProps["players"] => {
+    const shuffleArray = (array: Props["config"]["players"]): Props["config"]["players"] => {
         for (let i = array.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
             [array[i], array[j]] = [array[j], array[i]];
@@ -144,7 +142,7 @@ const RoundRobin: React.FC<IProps> = ({ courts, players, setPlayers }) => {
 
     // Function for rendering each match takes in a list of players and generates the bracket
     // TODO: courts should be an array of actual court numbers
-    const generateMatches = (courts: IProps["courts"], players: IProps["players"]): IMatch[] => {
+    const generateMatches = (courts: Props["config"]["courts"], players: Props["config"]["players"]): IMatch[] => {
         let result: IMatch[] = []
 
         for (let i = 0; i < courts.length; i++) {

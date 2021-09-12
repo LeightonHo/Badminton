@@ -1,13 +1,13 @@
 import React, { useState } from "react";
-import {IState as Props} from "../App";
+import {IState as Props} from "./Main";
 import { Box, Button, TextField } from "@material-ui/core";
 
 interface IProps {
-    players: Props["players"],
-    setPlayers: React.Dispatch<React.SetStateAction<Props["players"]>>
+    config: Props["config"],
+    setConfig: React.Dispatch<React.SetStateAction<Props["config"]>>
 }
 
-const PlayerForm: React.FC<IProps> = ({ players, setPlayers }) => {
+const PlayerForm: React.FC<IProps> = ({ config, setConfig }) => {
 
     const [input, setInput] = useState({
         name: ""
@@ -25,14 +25,17 @@ const PlayerForm: React.FC<IProps> = ({ players, setPlayers }) => {
             return;
         }
 
-        setPlayers([
-            ...players,
-            {
-                name: input.name,
-                win: 0,
-                loss: 0
-            }
-        ]);
+        setConfig({
+            ...config,
+            players: [
+                ...config.players,
+                {
+                    name: input.name,
+                    win: 0,
+                    loss: 0
+                }
+            ]
+        });
 
         setInput({
             name: ""
@@ -40,7 +43,7 @@ const PlayerForm: React.FC<IProps> = ({ players, setPlayers }) => {
     }
 
     const isDuplicate = (name: string): boolean => {
-        for (const player of players) {
+        for (const player of config.players) {
             if (player.name.toLowerCase() === input.name.toLowerCase()) {
                 return true;
             }

@@ -8,28 +8,14 @@ import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import Configuration from "./Configuration";
 import RoundRobin, { IMatch, IRound } from "./RoundRobin";
+import { IConfig } from "./Configuration";
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import MoreIcon from '@material-ui/icons/MoreVert';
 
 export interface IState {
-    config: {
-      rounds: number,
-      courts: string[],
-      players: {
-        name: string,
-        win: number,
-        loss: number
-      }[]
-    },
-    rounds: number,
-    courts: string[],
-    players: {
-      name: string,
-      win: number,
-      loss: number
-    }[],
-    test: IRound[]
+    config: IConfig,
+    gameData: IRound[]
 }
 
 const Main = () => {
@@ -89,71 +75,69 @@ const Main = () => {
       ]
     });
 
-    console.log(config);
-
-      const useStyles = makeStyles((theme) => ({
-        grow: {
-          flexGrow: 1,
+    const useStyles = makeStyles((theme) => ({
+      grow: {
+        flexGrow: 1,
+      },
+      menuButton: {
+        marginRight: theme.spacing(2),
+      },
+      title: {
+        display: 'none',
+        [theme.breakpoints.up('sm')]: {
+          display: 'block',
         },
-        menuButton: {
-          marginRight: theme.spacing(2),
+      },
+      search: {
+        position: 'relative',
+        borderRadius: theme.shape.borderRadius,
+        backgroundColor: alpha(theme.palette.common.white, 0.15),
+        '&:hover': {
+          backgroundColor: alpha(theme.palette.common.white, 0.25),
         },
-        title: {
-          display: 'none',
-          [theme.breakpoints.up('sm')]: {
-            display: 'block',
-          },
+        marginRight: theme.spacing(2),
+        marginLeft: 0,
+        width: '100%',
+        [theme.breakpoints.up('sm')]: {
+          marginLeft: theme.spacing(3),
+          width: 'auto',
         },
-        search: {
-          position: 'relative',
-          borderRadius: theme.shape.borderRadius,
-          backgroundColor: alpha(theme.palette.common.white, 0.15),
-          '&:hover': {
-            backgroundColor: alpha(theme.palette.common.white, 0.25),
-          },
-          marginRight: theme.spacing(2),
-          marginLeft: 0,
-          width: '100%',
-          [theme.breakpoints.up('sm')]: {
-            marginLeft: theme.spacing(3),
-            width: 'auto',
-          },
+      },
+      searchIcon: {
+        padding: theme.spacing(0, 2),
+        height: '100%',
+        position: 'absolute',
+        pointerEvents: 'none',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+      },
+      inputRoot: {
+        color: 'inherit',
+      },
+      inputInput: {
+        padding: theme.spacing(1, 1, 1, 0),
+        // vertical padding + font size from searchIcon
+        paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
+        transition: theme.transitions.create('width'),
+        width: '100%',
+        [theme.breakpoints.up('md')]: {
+          width: '20ch',
         },
-        searchIcon: {
-          padding: theme.spacing(0, 2),
-          height: '100%',
-          position: 'absolute',
-          pointerEvents: 'none',
+      },
+      sectionDesktop: {
+        display: 'none',
+        [theme.breakpoints.up('md')]: {
           display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
         },
-        inputRoot: {
-          color: 'inherit',
-        },
-        inputInput: {
-          padding: theme.spacing(1, 1, 1, 0),
-          // vertical padding + font size from searchIcon
-          paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
-          transition: theme.transitions.create('width'),
-          width: '100%',
-          [theme.breakpoints.up('md')]: {
-            width: '20ch',
-          },
-        },
-        sectionDesktop: {
+      },
+      sectionMobile: {
+        display: 'flex',
+        [theme.breakpoints.up('md')]: {
           display: 'none',
-          [theme.breakpoints.up('md')]: {
-            display: 'flex',
-          },
         },
-        sectionMobile: {
-          display: 'flex',
-          [theme.breakpoints.up('md')]: {
-            display: 'none',
-          },
-        },
-      }));
+      },
+    }));
 
     const BuildNavBar = () => {
         const classes = useStyles();
@@ -241,7 +225,7 @@ const Main = () => {
 
             <Box className="content">
                 <Route path="/round-robin">
-                    {/* <RoundRobin courts={courts} players={players} setPlayers={setPlayers} /> */}
+                    <RoundRobin config={config} />
                 </Route>
                 <Route path="/configuration">
                     <Configuration config={config} setConfig={setConfig} />

@@ -1,8 +1,8 @@
 import React from "react";
-import { IProps as Props} from "./RoundRobin";
+import { IState as Props} from "./Main";
 
 interface IProps {
-    players: Props["players"]
+    players: Props["config"]["players"]
 }
 
 const Bye: React.FC<IProps> = ({ players }) => {

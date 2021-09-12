@@ -1,5 +1,5 @@
 import React from "react";
-import {IState as Props} from "../App";
+import {IState as Props} from "./Main";
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
@@ -8,22 +8,25 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import { Grid, ListItemText } from "@material-ui/core";
 
 interface IProps {
-    players: Props["players"],
-    setPlayers: React.Dispatch<React.SetStateAction<Props["players"]>>
+    config: Props["config"],
+    setConfig: React.Dispatch<React.SetStateAction<Props["config"]>>
 }
 
-const PlayerList: React.FC<IProps> = ({ players, setPlayers }) => {
+const PlayerList: React.FC<IProps> = ({ config, setConfig }) => {
 
     const handleDelete = (index: number): void => {
-        players.splice(index, 1);
+        config.players.splice(index, 1);
 
-        setPlayers([
-            ...players
-        ]);
+        setConfig({
+            ...config,
+            players: [
+                ...config.players
+            ]
+        });
     }
 
     const renderList = (): JSX.Element[] => {
-        return players.map((player, i) => {
+        return config.players.map((player, i) => {
             return (
                 <ListItem key={i}>
                     {/* <ListItemText>{player.name} ({player.win}-{player.loss})</ListItemText> */}

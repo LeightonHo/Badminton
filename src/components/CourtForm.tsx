@@ -25,11 +25,6 @@ const CourtForm: React.FC<IProps> = ({ config, setConfig }) => {
             return;
         }
 
-        // setCourts([
-        //     ...courts,
-        //     input.court
-        // ]);
-
         setConfig({
             ...config,
             courts: [

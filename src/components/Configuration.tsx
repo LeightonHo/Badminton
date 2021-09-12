@@ -4,7 +4,16 @@ import CourtList from "./CourtList";
 import PlayerForm from "./PlayerForm";
 import PlayerList from "./PlayerList";
 import { IState as Props } from "./Main";
-import { useState } from "react";
+
+export interface IConfig {
+    rounds: number,
+    courts: string[],
+    players: {
+      name: string,
+      win: number,
+      loss: number
+    }[]
+}
 
 interface IProps {
     config: Props["config"],
@@ -13,20 +22,19 @@ interface IProps {
 
 const Configuration:React.FC<IProps> = ({ config, setConfig }) => {
 
-    const [rounds, setRounds] = useState<Props["rounds"]>(config.rounds);
-    const [courts, setCourts] = useState<Props["courts"]>(config.courts);
-    const [players, setPlayers] = useState<Props["players"]>(config.players);
-
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
         if (!isNaN(parseInt(e.target.value))) {
-            setRounds(parseInt(e.target.value));
+            setConfig({
+                ...config,
+                rounds: parseInt(e.target.value)
+            });
         }
     }
 
     return (
         <Box>
             <Box>
-                <h1>Rounds ({rounds})</h1>
+                <h1>Rounds ({config.rounds})</h1>
                 <TextField 
                     id="inputMatches" 
                     label="Rounds" 
@@ -40,15 +48,15 @@ const Configuration:React.FC<IProps> = ({ config, setConfig }) => {
             </Box>
 
             <Box>
-                <h1>Courts ({courts.length})</h1>
+                <h1>Courts ({config.courts.length})</h1>
                 <CourtForm config={config} setConfig={setConfig} />
                 <CourtList config={config} setConfig={setConfig} />
             </Box>
 
             <Box>
-                <h1>Players ({players.length})</h1>
-                <PlayerForm players={players} setPlayers={setPlayers} />
-                <PlayerList players={players} setPlayers={setPlayers} />
+                <h1>Players ({config.players.length})</h1>
+                <PlayerForm config={config} setConfig={setConfig} />
+                <PlayerList config={config} setConfig={setConfig} />
             </Box>
         </Box>
     );
