@@ -5,7 +5,9 @@ import Match from "./Match";
 import { Box, Grid } from "@material-ui/core";
 
 export interface IProps {
-    config: Props["config"]
+    config: Props["config"],
+    gameData: Props["gameData"],
+    setGameData: React.Dispatch<React.SetStateAction<Props["gameData"]>>
 }
 
 export interface IMatch {
@@ -28,25 +30,35 @@ export interface IRound {
     byes: Props["config"]["players"]
 }
 
-const RoundRobin: React.FC<IProps> = ({ config }) => {
+const RoundRobin: React.FC<IProps> = ({ config, gameData, setGameData }) => {
 
-    const generateBracket = () => {
-        let result: IRound[] = [];
+    const initRoundRobin = (): void => {
+        // If there is no game data, generate the brackets.
+        if (gameData.length === 0) {
+            console.log("Generating brackets.");
+
+            const bracket = generateBracket();
+
+            setGameData(bracket);
+        }
+    }
+
+    const generateBracket = (): Props["gameData"] => {
         const matches = 10;
         const bye = config?.players?.length % (config?.courts?.length * 4);
         let playersAlreadyOnBye: Props["config"]["players"] = [];
 
-        if (config?.courts?.length === 0) {
-            return (
-                <div>Enter a court and some players to begin.</div>
-            );
-        }
+        // if (config?.courts?.length === 0) {
+        //     return (
+        //         <div>Enter a court and some players to begin.</div>
+        //     );
+        // }
 
-        if (config?.players?.length / 4 < config?.courts?.length) {
-            return (
-                <div>There are not enough players for {config?.courts?.length} courts.</div>
-            );
-        }
+        // if (config?.players?.length / 4 < config?.courts?.length) {
+        //     return (
+        //         <div>There are not enough players for {config?.courts?.length} courts.</div>
+        //     );
+        // }
 
         for (let i = 1; i < matches + 1; i++)
         {
@@ -88,47 +100,49 @@ const RoundRobin: React.FC<IProps> = ({ config }) => {
                 byes: currentPlayersOnBye
             }
 
-            result.push(round);
+            gameData.push(round);
         }
 
-        console.log(result);
+        console.log(gameData);
 
-        return (
-            <Box className="games">
-                {result.map((round, i) => {
-                    return (
-                        <Grid 
-                            key={i}
-                            container
-                            direction="row"
-                            className="divRound"
-                            spacing={2}
-                        >
-                            <Grid item xs={1}>
-                                <span className="spnGameLabel">{round.number}</span>
-                            </Grid>
+        return gameData;
+
+        // return (
+        //     <Box className="games">
+        //         {gameData.map((round, i) => {
+        //             return (
+        //                 <Grid 
+        //                     key={i}
+        //                     container
+        //                     direction="row"
+        //                     className="divRound"
+        //                     spacing={2}
+        //                 >
+        //                     <Grid item xs={1}>
+        //                         <span className="spnGameLabel">{round.number}</span>
+        //                     </Grid>
                             
-                            {round.matches.map((match, j) => {
-                                return (
-                                    <Grid 
-                                        key={j}
-                                        item 
-                                        xs
-                                        className="match"
-                                    >
-                                        <Match match={match} />
-                                    </Grid>
-                                );
-                            })}
+        //                     {round.matches.map((match, j) => {
+        //                         return (
+        //                             <Grid 
+        //                                 key={j}
+        //                                 item 
+        //                                 xs
+        //                                 className="match"
+        //                             >
+        //                                 <Match match={match} />
+        //                             </Grid>
+        //                         );
+        //                     })}
                             
-                            <Grid item xs={2}>
-                                <Bye players={round.byes}></Bye>
-                            </Grid>
-                        </Grid>
-                    );
-                })}
-            </Box>
-        );
+        //                     <Grid item xs={2}>
+        //                         <Bye players={round.byes}></Bye>
+        //                     </Grid>
+        //                 </Grid>
+        //             );
+        //         })}
+        //     </Box>
+        // );
     }
 
     const shuffleArray = (array: Props["config"]["players"]): Props["config"]["players"] => {
@@ -168,8 +182,44 @@ const RoundRobin: React.FC<IProps> = ({ config }) => {
     }
 
     return (
+        
         <Box>
-            {generateBracket()}
+            { initRoundRobin() }
+            
+            <Box className="games">
+                {gameData.map((round, i) => {
+                    return (
+                        <Grid 
+                            key={i}
+                            container
+                            direction="row"
+                            className="divRound"
+                            spacing={2}
+                        >
+                            <Grid item xs={1}>
+                                <span className="spnGameLabel">{round.number}</span>
+                            </Grid>
+                            
+                            {round.matches.map((match, j) => {
+                                return (
+                                    <Grid 
+                                        key={j}
+                                        item 
+                                        xs
+                                        className="match"
+                                    >
+                                        <Match match={match} />
+                                    </Grid>
+                                );
+                            })}
+                            
+                            <Grid item xs={2}>
+                                <Bye players={round.byes}></Bye>
+                            </Grid>
+                        </Grid>
+                    );
+                })}
+            </Box>
         </Box>
     );
 }

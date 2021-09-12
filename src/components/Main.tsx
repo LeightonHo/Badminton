@@ -7,7 +7,7 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import Configuration from "./Configuration";
-import RoundRobin, { IMatch, IRound } from "./RoundRobin";
+import RoundRobin, { IRound } from "./RoundRobin";
 import { IConfig } from "./Configuration";
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
@@ -24,11 +24,12 @@ const Main = () => {
     const handleNavigation = (path: string) => {
         history.push(path);
     }
+    const [gameData, setGameData] = useState<IState["gameData"]>([]);
 
     // Default values
     const [config, setConfig] = useState<IState["config"]>({
       rounds: 10,
-      courts: ["10, 12"],
+      courts: ["10", "12"],
       players: [
         {
           name: "Leighton",
@@ -225,7 +226,7 @@ const Main = () => {
 
             <Box className="content">
                 <Route path="/round-robin">
-                    <RoundRobin config={config} />
+                    <RoundRobin config={config} gameData={gameData} setGameData={setGameData} />
                 </Route>
                 <Route path="/configuration">
                     <Configuration config={config} setConfig={setConfig} />

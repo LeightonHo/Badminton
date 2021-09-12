@@ -23,10 +23,6 @@ const CourtList: React.FC<IProps> = ({ config, setConfig }) => {
                 ...config.courts
             ]
         });
-
-        // setCourts([
-        //     ...courts
-        // ]);
     }
 
     const renderList = (): JSX.Element[] => {
