@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { IState as Props } from "./Main";
 import Bye from "./Bye";
 import Match from "./Match";
-import { Box, Card, CardContent, Grid, Typography } from "@material-ui/core";
+import { Box, Card, CardContent, Grid, styled, Typography } from "@material-ui/core";
 
 export interface IProps {
     config: Props["config"],
@@ -126,13 +126,13 @@ const RoundRobin: React.FC<IProps> = ({ config, gameData, setGameData }) => {
             const match: IMatch = {
                 court: courts[i],
                 team1: {
-                    player1: currentPlayers[0].name,
-                    player2: currentPlayers[1].name,
+                    player1: currentPlayers[0],
+                    player2: currentPlayers[1],
                     score: 0
                 },
                 team2: { 
-                    player3: currentPlayers[2].name,
-                    player4: currentPlayers[3].name,
+                    player3: currentPlayers[2],
+                    player4: currentPlayers[3],
                     score: 0
                 }
             }
@@ -142,7 +142,7 @@ const RoundRobin: React.FC<IProps> = ({ config, gameData, setGameData }) => {
 
         return result;
     }
-
+    
     const renderMobileView = () => {
         return (
             <Box>
@@ -152,7 +152,6 @@ const RoundRobin: React.FC<IProps> = ({ config, gameData, setGameData }) => {
                             key={i}
                             variant="outlined"
                             className="round-card"
-                            elevation={4}
                         >
                             <CardContent>
                                 <Grid 
@@ -163,9 +162,8 @@ const RoundRobin: React.FC<IProps> = ({ config, gameData, setGameData }) => {
                                 >
                                     <Grid item>
                                         <Typography 
-                                            variant="h4"
+                                            variant="h6"
                                             className="spnGameLabel"
-                                            gutterBottom={true}
                                         >
                                             Round {round.number}
                                         </Typography>

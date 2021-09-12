@@ -27,7 +27,7 @@ const Scoreboard:React.FC<IProps> = ({ config, gameData }) => {
         let result: IPlayerStats = {}
 
         for (const player of config.players) {
-            result[player.name] = {
+            result[player] = {
                 win: 0,
                 loss: 0
             };

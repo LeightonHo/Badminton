@@ -9,11 +9,7 @@ export interface IConfig {
     rounds: number,
     winningScore: number,
     courts: string[],
-    players: {
-      name: string,
-      win: number,
-      loss: number
-    }[]
+    players: string[]
 }
 
 interface IProps {

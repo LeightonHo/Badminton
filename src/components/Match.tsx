@@ -72,18 +72,21 @@ const Match: React.FC<IProps> = ({ match, gameData, setGameData, roundKey, match
                 justifyContent="center"
             >
                 <Grid item xs>
-                    <Typography 
-                        variant="overline"
-                        className="player-name"
-                    >
-                        {match.team1.player1}
-                    </Typography>
+                    <Typography variant="overline">{match.team1.player1}</Typography>
                 </Grid>
                 <Grid item xs>
                     <Typography variant="overline">{match.team1.player2}</Typography>
                 </Grid>
                 <Grid item xs>
-                    <TextField
+                    <input 
+                        type="number"
+                        min="0"
+                        max="21"
+                        onBlur={handleChange}
+                        name="team1Score"
+                        placeholder={showValue(match.team1.score)}
+                    />
+                    {/* <TextField
                         variant="outlined"
                         type="number"
                         onChange={handleChange}
@@ -91,7 +94,7 @@ const Match: React.FC<IProps> = ({ match, gameData, setGameData, roundKey, match
                         placeholder={showValue(match.team2.score)}
                         size="small"
                         className="score-input"
-                    />
+                    /> */}
                 </Grid>
             </Grid>
             <Grid
@@ -112,7 +115,15 @@ const Match: React.FC<IProps> = ({ match, gameData, setGameData, roundKey, match
                     <Typography variant="overline">{match.team2.player4}</Typography>
                 </Grid>
                 <Grid item xs>
-                    <TextField
+                    <input 
+                        type="number"
+                        min="0"
+                        max="21"
+                        onBlur={handleChange}
+                        name="team2Score"
+                        placeholder={showValue(match.team2.score)}
+                    />
+                    {/* <TextField
                         variant="outlined"
                         type="number"
                         onChange={handleChange}
@@ -120,7 +131,7 @@ const Match: React.FC<IProps> = ({ match, gameData, setGameData, roundKey, match
                         placeholder={showValue(match.team2.score)}
                         size="small"
                         className="score-input"
-                    />
+                    /> */}
                 </Grid>
             </Grid>
         </Grid>

@@ -31,50 +31,19 @@ const Main = () => {
     const [config, setConfig] = useState<IState["config"]>({
       rounds: 10,
       winningScore: 21,
-      courts: ["10", "12"],
+      courts: ["9", "10"],
       players: [
-        {
-          name: "Leighton",
-          win: 0,
-          loss: 0
-        },
-        {
-          name: "Seth",
-          win: 0,
-          loss: 0
-        },{
-          name: "Blake",
-          win: 0,
-          loss: 0
-        },{
-          name: "JB",
-          win: 0,
-          loss: 0
-        },{
-          name: "Ains",
-          win: 0,
-          loss: 0
-        },{
-          name: "Kaia",
-          win: 0,
-          loss: 0
-        },{
-          name: "Kris",
-          win: 0,
-          loss: 0
-        },{
-          name: "Jerry",
-          win: 0,
-          loss: 0
-        },{
-          name: "Jenny",
-          win: 0,
-          loss: 0
-        },{
-          name: "Ace",
-          win: 0,
-          loss: 0
-        }
+        "Leighton",
+        "Seth",
+        "Blake",
+        "Jenny",
+        "Ace",
+        "Kris D",
+        "Kris P",
+        "Ed",
+        "Deborah",
+        "Calvin",
+        // "Kyvin"
       ]
     });
 

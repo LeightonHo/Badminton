@@ -29,7 +29,7 @@ const PlayerList: React.FC<IProps> = ({ config, setConfig }) => {
         return config.players.map((player, i) => {
             return (
                 <ListItem key={i}>
-                    <ListItemText>{player.name}</ListItemText>
+                    <ListItemText>{player}</ListItemText>
                     <ListItemSecondaryAction>
                         <IconButton 
                             edge="end" 

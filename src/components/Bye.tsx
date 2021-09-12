@@ -19,7 +19,7 @@ const Bye: React.FC<IProps> = ({ players }) => {
                             variant="overline"
                             align="center"
                         >
-                            {player.name}
+                            {player}
                         </Typography>
                     </Box>
                 )

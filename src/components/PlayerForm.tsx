@@ -29,11 +29,7 @@ const PlayerForm: React.FC<IProps> = ({ config, setConfig }) => {
             ...config,
             players: [
                 ...config.players,
-                {
-                    name: input.name,
-                    win: 0,
-                    loss: 0
-                }
+                input.name
             ]
         });
 
@@ -44,7 +40,7 @@ const PlayerForm: React.FC<IProps> = ({ config, setConfig }) => {
 
     const isDuplicate = (name: string): boolean => {
         for (const player of config.players) {
-            if (player.name.toLowerCase() === input.name.toLowerCase()) {
+            if (player.toLowerCase() === input.name.toLowerCase()) {
                 return true;
             }
         }
