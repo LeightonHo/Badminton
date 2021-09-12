@@ -30,6 +30,7 @@ const Main = () => {
     // Default values
     const [config, setConfig] = useState<IState["config"]>({
       rounds: 10,
+      winningScore: 21,
       courts: ["10", "12"],
       players: [
         {
@@ -230,7 +231,7 @@ const Main = () => {
                     <RoundRobin config={config} gameData={gameData} setGameData={setGameData} />
                 </Route>
                 <Route path="/scoreboard">
-                    <Scoreboard gameData={gameData} />
+                    <Scoreboard config={config} gameData={gameData} />
                 </Route>
                 <Route path="/configuration">
                     <Configuration config={config} setConfig={setConfig} />
