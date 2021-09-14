@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React from "react";
 import { IState as Props } from "./Main";
 import Bye from "./Bye";
 import Match from "./Match";
-import { Box, Card, CardContent, Divider, Grid, styled, Typography } from "@material-ui/core";
+import { Box, Card, CardContent, Divider, Grid, Typography } from "@material-ui/core";
 
 export interface IProps {
     config: Props["config"],
@@ -31,8 +31,6 @@ export interface IRound {
 }
 
 const RoundRobin: React.FC<IProps> = ({ config, gameData, setGameData }) => {
-
-    // const [current, setCurrent] = useState<number>(0);
 
     const initRoundRobin = (): void => {
         // If there is no game data, generate the brackets.
