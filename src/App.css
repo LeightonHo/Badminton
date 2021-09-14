@@ -1,5 +1,4 @@
 .App {
-  text-align: center;
   background: rgb(245, 245, 245);
 }
 
@@ -7,16 +6,49 @@
   margin-right: 20px;
 } */
 
+/* Configuration */
+
+.general-card > div {
+  margin-top: 15px;
+}
+
+.config-card-header {
+  text-align: left;
+  margin-bottom: 20px;
+}
+
+.config-card {
+  margin-top: 15px;
+  margin-left: 10px;
+  margin-right: 10px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+.courts-card {
+  min-height: 200px;
+}
+
+.players-card {
+  min-height: 300px;
+}
+
 .player-list-grid {
   margin-top: 20px !important;
-  background-color: lightblue;
   width: 100% !important;
-  /* width: 50% !important; */
   margin: auto;
+}
+
+.player-list-grid li:nth-of-type(odd) {
+  background-color: rgb(241, 241, 241);
 }
 
 .player-list-grid-item {
   width: 100%;
+}
+
+.icon-delete {
+  background-color: white;
 }
 
 /* Round Robin */
@@ -31,6 +63,7 @@
 }
 
 .round-card {
+  text-align: center;
   margin-top: 15px;
   margin-left: 10px;
   margin-right: 10px;

@@ -1,4 +1,4 @@
-import { Box, TextField } from "@material-ui/core";
+import { Box, Card, CardContent, CardHeader, TextField, Typography } from "@material-ui/core";
 import CourtForm from "./CourtForm";
 import CourtList from "./CourtList";
 import PlayerForm from "./PlayerForm";
@@ -30,32 +30,72 @@ const Configuration:React.FC<IProps> = ({ config, setConfig }) => {
 
     return (
         <Box>
-            <Box>
-                <h1>Rounds ({config.rounds})</h1>
-                <TextField 
-                    id="inputMatches" 
-                    label="Rounds" 
-                    type="number"
-                    variant="outlined" 
-                    size="small"
-                    fullWidth
-                    onChange={handleChange}
-                    placeholder={config.rounds.toString()}
-                    name="name"
-                />
-            </Box>
+            <Card
+                className="config-card"
+            >
+                <CardContent className="general-card">
+                    <Typography
+                        variant="h5"
+                    >
+                        General
+                    </Typography>
+                    <TextField 
+                        id="inputMatches" 
+                        label="Rounds" 
+                        type="number"
+                        variant="outlined" 
+                        size="small"
+                        fullWidth
+                        onChange={handleChange}
+                        placeholder={config.rounds.toString()}
+                        name="name"
+                        className="general-input"
+                    />
+                    <TextField 
+                        id="inputWinningScore" 
+                        label="Winning Score" 
+                        type="number"
+                        variant="outlined" 
+                        size="small"
+                        fullWidth
+                        onChange={handleChange}
+                        placeholder={config.winningScore.toString()}
+                        name="name"
+                        className="general-input"
+                    />
+                </CardContent>
+            </Card>
 
-            <Box>
-                <h1>Courts ({config.courts.length})</h1>
-                <CourtForm config={config} setConfig={setConfig} />
-                <CourtList config={config} setConfig={setConfig} />
-            </Box>
+            <Card
+                className="config-card courts-card"
+            >
+                <CardContent>
+                    <Typography
+                        variant="h5"
+                        gutterBottom
+                    >
+                        Courts ({config.courts.length})
+                    </Typography>
+                    <CourtForm config={config} setConfig={setConfig} />
+                    <CourtList config={config} setConfig={setConfig} />
+                </CardContent>
+            </Card>
 
-            <Box>
-                <h1>Players ({config.players.length})</h1>
-                <PlayerForm config={config} setConfig={setConfig} />
-                <PlayerList config={config} setConfig={setConfig} />
-            </Box>
+            <Card
+                className="config-card players-card"
+            >
+                <CardContent>
+                    <Typography
+                        variant="h5"
+                        gutterBottom
+                        className="config-card-header"
+                    >
+                        Players ({config.players.length})
+                    </Typography>
+                    <PlayerForm config={config} setConfig={setConfig} />
+                    <PlayerList config={config} setConfig={setConfig} />
+                </CardContent>
+            </Card>
         </Box>
     );
 }

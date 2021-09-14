@@ -26,15 +26,19 @@ const PlayerList: React.FC<IProps> = ({ config, setConfig }) => {
     }
 
     const renderList = (): JSX.Element[] => {
-        return config.players.map((player, i) => {
+        return config.players.map((player, key) => {
             return (
-                <ListItem key={i}>
+                <ListItem 
+                    key={key}
+                    className="player-list-grid-item"
+                >
                     <ListItemText>{player}</ListItemText>
                     <ListItemSecondaryAction>
                         <IconButton 
                             edge="end" 
                             aria-label="delete" 
-                            onClick={(() => { handleDelete(i); })}
+                            onClick={(() => { handleDelete(key); })}
+                            className="icon-delete"
                         >
                             <DeleteIcon /> 
                         </IconButton>
@@ -45,17 +49,9 @@ const PlayerList: React.FC<IProps> = ({ config, setConfig }) => {
     }
 
     return (
-        <Grid
-            className="player-list-grid"
-            container
-            direction="row"
-            alignItems="center"
-            justifyContent="center"
-        >
-            <List className="player-list-grid-item">
-                {renderList()}
-            </List>
-        </Grid>
+        <List className="player-list-grid">
+            {renderList()}
+        </List>
     );
 }
 
