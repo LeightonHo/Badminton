@@ -9,12 +9,10 @@ interface IProps {
 const Bye: React.FC<IProps> = ({ players }) => {
 
     return (
-        <Box 
-            className="divBye"
-        >
-            {players.map((player, i) => {
+        <Box className="divBye">
+            {players.map((player, key) => {
                 return (
-                    <Box key={i}>
+                    <Box key={key}>
                         <Typography
                             variant="overline"
                             align="center"

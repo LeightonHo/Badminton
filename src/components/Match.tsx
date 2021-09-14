@@ -1,5 +1,5 @@
 import { Grid, TextField, Typography } from "@material-ui/core";
-import React, { useState } from "react";
+import React from "react";
 import { IMatch, IProps as Props } from "./RoundRobin";
 
 interface IProps {
@@ -41,14 +41,6 @@ const Match: React.FC<IProps> = ({ match, gameData, setGameData, roundKey, match
         ]);
     }
 
-    const showValue = (score: number): string => {
-        if (score > 0) {
-            return score.toString();
-        }
-
-        return "";
-    }
-
     return (
         <Grid
             container
@@ -61,6 +53,7 @@ const Match: React.FC<IProps> = ({ match, gameData, setGameData, roundKey, match
             >
                 <Typography
                     variant="h6"
+                    className="court-number"
                 >
                     {match.court}
                 </Typography>
@@ -72,29 +65,31 @@ const Match: React.FC<IProps> = ({ match, gameData, setGameData, roundKey, match
                 justifyContent="center"
             >
                 <Grid item xs>
-                    <Typography variant="overline">{match.team1.player1}</Typography>
+                    <Typography 
+                        variant="overline"
+                        className="player-name"
+                    >
+                        {match.team1.player1}
+                    </Typography>
                 </Grid>
                 <Grid item xs>
-                    <Typography variant="overline">{match.team1.player2}</Typography>
+                    <Typography 
+                        variant="overline"
+                        className="player-name"
+                    >
+                        {match.team1.player2}
+                    </Typography>
                 </Grid>
-                <Grid item xs>
-                    <input 
-                        type="number"
-                        min="0"
-                        max="21"
-                        onBlur={handleChange}
-                        name="team1Score"
-                        placeholder={showValue(match.team1.score)}
-                    />
-                    {/* <TextField
+                <Grid item xs className="score-input-grid-item">
+                    <TextField
                         variant="outlined"
                         type="number"
                         onChange={handleChange}
                         name="team1Score"
-                        placeholder={showValue(match.team2.score)}
+                        placeholder={match.team2.score.toString()}
                         size="small"
                         className="score-input"
-                    /> */}
+                    />
                 </Grid>
             </Grid>
             <Grid
@@ -102,36 +97,38 @@ const Match: React.FC<IProps> = ({ match, gameData, setGameData, roundKey, match
                 className="vertical-align-center"
             >
                 <Typography variant="overline">vs</Typography>
-            </Grid>            
+            </Grid>
             <Grid 
                 container
                 item xs
                 direction="column"
             >
                 <Grid item xs>
-                    <Typography variant="overline">{match.team2.player3}</Typography>
+                    <Typography 
+                        variant="overline"
+                        className="player-name"
+                    >
+                        {match.team2.player3}
+                    </Typography>
                 </Grid>
                 <Grid item xs>
-                    <Typography variant="overline">{match.team2.player4}</Typography>
+                    <Typography 
+                        variant="overline"
+                        className="player-name"
+                    >
+                        {match.team2.player4}
+                    </Typography>
                 </Grid>
-                <Grid item xs>
-                    <input 
-                        type="number"
-                        min="0"
-                        max="21"
-                        onBlur={handleChange}
-                        name="team2Score"
-                        placeholder={showValue(match.team2.score)}
-                    />
-                    {/* <TextField
+                <Grid item xs className="score-input-grid-item">
+                    <TextField
                         variant="outlined"
                         type="number"
                         onChange={handleChange}
                         name="team2Score"
-                        placeholder={showValue(match.team2.score)}
+                        placeholder={match.team2.score.toString()}
                         size="small"
                         className="score-input"
-                    /> */}
+                    />
                 </Grid>
             </Grid>
         </Grid>

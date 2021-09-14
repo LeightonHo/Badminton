@@ -5,7 +5,7 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
-import { Grid, ListItemText } from "@material-ui/core";
+import { ListItemText } from "@material-ui/core";
 
 interface IProps {
     config: Props["config"],
@@ -30,7 +30,6 @@ const PlayerList: React.FC<IProps> = ({ config, setConfig }) => {
             return (
                 <ListItem 
                     key={key}
-                    className="player-list-grid-item"
                 >
                     <ListItemText>{player}</ListItemText>
                     <ListItemSecondaryAction>
@@ -38,7 +37,6 @@ const PlayerList: React.FC<IProps> = ({ config, setConfig }) => {
                             edge="end" 
                             aria-label="delete" 
                             onClick={(() => { handleDelete(key); })}
-                            className="icon-delete"
                         >
                             <DeleteIcon /> 
                         </IconButton>

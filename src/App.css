@@ -2,12 +2,22 @@
   background: rgb(245, 245, 245);
 }
 
-/* .text-input {
-  margin-right: 20px;
-} */
+/* GENERAL */
+.card {
+  margin-top: 15px;
+  margin-left: 10px;
+  margin-right: 10px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
 
-/* Configuration */
+.vertical-align-center {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
 
+/* CONFIGURATION SCREEN */
 .general-card > div {
   margin-top: 15px;
 }
@@ -15,14 +25,6 @@
 .config-card-header {
   text-align: left;
   margin-bottom: 20px;
-}
-
-.config-card {
-  margin-top: 15px;
-  margin-left: 10px;
-  margin-right: 10px;
-  padding-left: 5px;
-  padding-right: 5px;
 }
 
 .courts-card {
@@ -43,59 +45,77 @@
   background-color: rgb(241, 241, 241);
 }
 
-.player-list-grid-item {
-  width: 100%;
+.player-list-grid li:nth-of-type(even) {
+  background-color: rgb(250, 250, 250);
 }
 
-.icon-delete {
-  background-color: white;
+.box-text-input {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
-/* Round Robin */
+/* ROUND ROBIN SCREEN */
+.round-card {
+  text-align: center;
+}
+
+.round-card > div {
+  padding: 10px 15px 10px 15px !important;
+}
+
+.match-box > div {
+  padding: 5px 0 5px 0 !important;
+}
+
 .match {
   padding-bottom: 15px !important;
   margin-bottom: 10px !important;
-  outline: 1px solid rgb(190, 190, 190);
 }
 
 .spnGameLabel {
   text-align: center;
+  font-size: 16px !important;
+  font-weight: bold !important;
 }
 
-.round-card {
-  text-align: center;
-  margin-top: 15px;
-  margin-left: 10px;
-  margin-right: 10px;
-  padding-left: 5px;
-  padding-right: 5px;
-  box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+.score-input-grid-item {
+  margin-top: 10px;
 }
 
-.vertical-align-center {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-
-.score-input {
+.score-input > div > input {
   width: 50px;
   text-align: center;
+  height: 5px;
 }
 
 .match {
   padding-top: 10px;
 }
 
+.court-number {
+  font-size: 16px !important;
+}
+
 .player-name {
-  font-size: 18px;
+  font-size: 14px !important;
+  font-weight: 200 !important;
 }
 
 .games {
   font-size: 14px;
 }
 
-/* Scoreboard */
-.scoreboard-header {
+/* SCOREBOARD SCREEN */
+.scoreboard-table > thead > tr > th {
   font-weight: bold;
+  padding: 5px 5px 5px 5px;
+}
+
+.scoreboard-table > tbody > tr > td:nth-child(1) {
+  padding: 5px 5px 5px 5px;
+}
+
+.scoreboard-table > tbody > tr > td {
+  font-size: 16px;
 }

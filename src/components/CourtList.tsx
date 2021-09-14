@@ -5,7 +5,7 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
-import { Grid, ListItemText } from "@material-ui/core";
+import { ListItemText } from "@material-ui/core";
 
 interface IProps {
     config: Props["config"],
@@ -45,17 +45,9 @@ const CourtList: React.FC<IProps> = ({ config, setConfig }) => {
     }
 
     return (
-        <Grid
-            className="player-list-grid"
-            container
-            direction="row"
-            alignItems="center"
-            justifyContent="center"
-        >
-            <List className="player-list-grid-item">
-                {renderList()}
-            </List>
-        </Grid>
+        <List className="player-list-grid">
+            {renderList()}
+        </List>
     );
 }
 

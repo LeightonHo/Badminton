@@ -49,7 +49,9 @@ const CourtForm: React.FC<IProps> = ({ config, setConfig }) => {
     }
 
     return (
-        <Box>
+        <Box
+            className="box-text-input"
+        >
             <TextField 
                 id="inputPlayer" 
                 className="text-input" 

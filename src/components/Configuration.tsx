@@ -30,9 +30,7 @@ const Configuration:React.FC<IProps> = ({ config, setConfig }) => {
 
     return (
         <Box>
-            <Card
-                className="config-card"
-            >
+            <Card className="card">
                 <CardContent className="general-card">
                     <Typography
                         variant="h5"
@@ -66,9 +64,7 @@ const Configuration:React.FC<IProps> = ({ config, setConfig }) => {
                 </CardContent>
             </Card>
 
-            <Card
-                className="config-card courts-card"
-            >
+            <Card className="card courts-card">
                 <CardContent>
                     <Typography
                         variant="h5"
@@ -81,9 +77,7 @@ const Configuration:React.FC<IProps> = ({ config, setConfig }) => {
                 </CardContent>
             </Card>
 
-            <Card
-                className="config-card players-card"
-            >
+            <Card className="card players-card">
                 <CardContent>
                     <Typography
                         variant="h5"

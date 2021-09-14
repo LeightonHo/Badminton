@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { IState as Props } from "./Main";
 import Bye from "./Bye";
 import Match from "./Match";
-import { Box, Card, CardContent, Grid, styled, Typography } from "@material-ui/core";
+import { Box, Card, CardContent, Divider, Grid, styled, Typography } from "@material-ui/core";
 
 export interface IProps {
     config: Props["config"],
@@ -146,41 +146,47 @@ const RoundRobin: React.FC<IProps> = ({ config, gameData, setGameData }) => {
     const renderMobileView = () => {
         return (
             <Box>
-                {gameData.map((round, i) => {
+                {gameData.map((round, roundKey) => {
                     return (
                         <Card 
-                            key={i}
-                            variant="outlined"
-                            className="round-card"
+                            key={roundKey}
+                            className="card round-card"
                         >
                             <CardContent>
                                 <Grid 
                                     container
                                     direction="column"
                                     className="divRound"
-                                    spacing={2}
+                                    spacing={1}
                                 >
                                     <Grid item>
                                         <Typography 
                                             variant="h6"
                                             className="spnGameLabel"
+                                            gutterBottom
                                         >
-                                            Round {round.number}
+                                            ROUND {round.number}
                                         </Typography>
                                     </Grid>
-                                    
-                                    {round.matches.map((match, j) => {
+
+                                    <Divider />
+
+                                    {round.matches.map((match, matchKey) => {
                                         return (
-                                            <Grid 
-                                                key={j}
-                                                item xs
-                                                className="match"
-                                            >
-                                                <Match match={match} gameData={gameData} setGameData={setGameData} roundKey={i} matchKey={j} />
-                                            </Grid>
+                                            <Box key={matchKey} className="match-box">
+                                                <Grid 
+                                                    item xs
+                                                    className="match"
+                                                >
+                                                    <Match match={match} gameData={gameData} setGameData={setGameData} roundKey={roundKey} matchKey={matchKey} />
+                                                </Grid>
+                                                {addMatchDivider(matchKey, round.matches.length)}
+                                            </Box>
                                         );
                                     })}
                                     
+                                    <Divider />
+
                                     <Grid item xs>
                                         <Bye players={round.byes}></Bye>
                                     </Grid>
@@ -191,6 +197,14 @@ const RoundRobin: React.FC<IProps> = ({ config, gameData, setGameData }) => {
                 })}
             </Box>
         );
+    }
+
+    const addMatchDivider = (matchKey: number, totalMatches: number) => {
+        if (matchKey !== totalMatches - 1) {
+            return (
+              <Divider />
+            );
+        }
     }
 
     const renderDesktopView = () => {

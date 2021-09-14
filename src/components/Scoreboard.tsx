@@ -1,4 +1,4 @@
-import { Box } from "@material-ui/core";
+import { Box, Card, CardContent, Typography } from "@material-ui/core";
 import React from "react";
 import { IState as Props } from "./Main";
 import Table from '@material-ui/core/Table';
@@ -131,21 +131,29 @@ const Scoreboard:React.FC<IProps> = ({ config, gameData }) => {
     }
 
     return (
-        <Box>
-            <TableContainer>
-                <Table>
-                    <TableHead className="scoreboard-header">
-                        <TableRow>
-                            <TableCell>Name</TableCell>
-                            <TableCell align="right">Win</TableCell>
-                            <TableCell align="right">Loss</TableCell>
-                            <TableCell align="right">Win Rate</TableCell>
-                        </TableRow>
-                    </TableHead>
-                    {generateTableBody()}
-                </Table>
-            </TableContainer>
-        </Box>
+        <Card className="card">
+            <CardContent>
+                <Typography 
+                    variant="h5"
+                    gutterBottom
+                >
+                    Scoreboard
+                </Typography>
+                <TableContainer>
+                    <Table padding="none" className="scoreboard-table">
+                        <TableHead className="scoreboard-header">
+                            <TableRow>
+                                <TableCell>Name</TableCell>
+                                <TableCell align="right">Win</TableCell>
+                                <TableCell align="right">Loss</TableCell>
+                                <TableCell align="right">Win Rate</TableCell>
+                            </TableRow>
+                        </TableHead>
+                        {generateTableBody()}
+                    </Table>
+                </TableContainer>
+            </CardContent>
+        </Card>
     );
 }
 

@@ -49,7 +49,7 @@ const PlayerForm: React.FC<IProps> = ({ config, setConfig }) => {
     }
 
     return (
-        <Box>
+        <Box className="box-text-input">
             <TextField 
                 id="inputPlayer" 
                 className="text-input" 
@@ -61,7 +61,9 @@ const PlayerForm: React.FC<IProps> = ({ config, setConfig }) => {
                 onChange={handleChange}
                 name="name"
             />
-            <Button variant="contained" color="primary"
+            <Button 
+                variant="contained" 
+                color="primary"
                 onClick={handleClick}
             >
                 Add
