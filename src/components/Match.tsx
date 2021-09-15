@@ -36,6 +36,8 @@ const Match: React.FC<IProps> = ({ match, gameData, setGameData, roundKey, match
             }
         }
 
+        console.log(gameData);
+
         setGameData([
             ...gameData
         ]);
@@ -86,7 +88,7 @@ const Match: React.FC<IProps> = ({ match, gameData, setGameData, roundKey, match
                         type="number"
                         onChange={handleChange}
                         name="team1Score"
-                        placeholder={match.team2.score.toString()}
+                        placeholder={match.team1.score.toString()}
                         size="small"
                         className="score-input"
                     />
