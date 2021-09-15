@@ -22,9 +22,6 @@ export interface IState {
 const Main = () => {
     const history = useHistory();
 
-    const handleNavigation = (path: string) => {
-        history.push(path);
-    }
     const [gameData, setGameData] = useState<IState["gameData"]>([]);
 
     // Default values
@@ -60,43 +57,6 @@ const Main = () => {
           display: 'block',
         },
       },
-      search: {
-        position: 'relative',
-        borderRadius: theme.shape.borderRadius,
-        backgroundColor: alpha(theme.palette.common.white, 0.15),
-        '&:hover': {
-          backgroundColor: alpha(theme.palette.common.white, 0.25),
-        },
-        marginRight: theme.spacing(2),
-        marginLeft: 0,
-        width: '100%',
-        [theme.breakpoints.up('sm')]: {
-          marginLeft: theme.spacing(3),
-          width: 'auto',
-        },
-      },
-      searchIcon: {
-        padding: theme.spacing(0, 2),
-        height: '100%',
-        position: 'absolute',
-        pointerEvents: 'none',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-      },
-      inputRoot: {
-        color: 'inherit',
-      },
-      inputInput: {
-        padding: theme.spacing(1, 1, 1, 0),
-        // vertical padding + font size from searchIcon
-        paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
-        transition: theme.transitions.create('width'),
-        width: '100%',
-        [theme.breakpoints.up('md')]: {
-          width: '20ch',
-        },
-      },
       sectionDesktop: {
         display: 'none',
         [theme.breakpoints.up('md')]: {
@@ -124,6 +84,11 @@ const Main = () => {
         const handleMobileMenuOpen = (event: any) => {
           setMobileMoreAnchorEl(event.currentTarget);
         };
+
+        const handleNavigation = (path: string) => {
+          handleMobileMenuClose();
+          history.push(path);
+        }
       
         const mobileMenuId = 'primary-search-account-menu-mobile';
         const renderMobileMenu = (
@@ -137,18 +102,18 @@ const Main = () => {
             onClose={handleMobileMenuClose}
           >
             <MenuItem>
-                <IconButton color="inherit" onClick={(() => { handleNavigation("/round-robin") })}>
-                    <span>Games</span>
+                <IconButton color="inherit" onClick={(() => { handleNavigation("/Badminton/round-robin") })}>
+                    <Typography>Games</Typography>
                 </IconButton>
             </MenuItem>
             <MenuItem>
-                <IconButton color="inherit" onClick={(() => { handleNavigation("/scoreboard") })}>
-                    <span>Scoreboard</span>
+                <IconButton color="inherit" onClick={(() => { handleNavigation("/Badminton/scoreboard") })}>
+                    <Typography>Scoreboard</Typography>
                 </IconButton>
             </MenuItem>
             <MenuItem>
-                <IconButton color="inherit" onClick={(() => { handleNavigation("/configuration") })}>
-                    <span>Config</span>
+                <IconButton color="inherit" onClick={(() => { handleNavigation("/Badminton/configuration") })}>
+                    <Typography>Config</Typography>
                 </IconButton>
             </MenuItem>
           </Menu>
@@ -158,34 +123,34 @@ const Main = () => {
             <div className={classes.grow}>
                 <AppBar position="sticky">
                     <Toolbar>
-                        <Typography className={classes.title} variant="h6" noWrap>
-                            Sunday Badminton
-                        </Typography>
-                    <div className={classes.grow} />
-                    <div className={classes.sectionDesktop}>
-                        <IconButton color="inherit" onClick={(() => { handleNavigation("/round-robin") })}>
-                            <span>Games</span>
-                        </IconButton>
-                        <IconButton color="inherit" onClick={(() => { handleNavigation("/scoreboard") })}>
-                            <span>Scoreboard</span>
-                        </IconButton>
-                        <IconButton color="inherit" onClick={(() => { handleNavigation("/configuration") })}>
-                            <span>Config</span>
-                        </IconButton>
-                    </div>
-                    <div className={classes.sectionMobile}>
-                        <IconButton
-                            aria-label="show more"
-                            aria-controls={mobileMenuId}
-                            aria-haspopup="true"
-                            onClick={handleMobileMenuOpen}
-                            color="inherit"
-                        >
-                            <MoreIcon />
-                        </IconButton>
-                    </div>
-                </Toolbar>
-            </AppBar>
+                      <Typography className={classes.title} variant="h5" noWrap>
+                              Sunday Badminton
+                          </Typography>
+                      <div className={classes.grow} />
+                      <div className={classes.sectionDesktop}>
+                          <IconButton color="inherit" onClick={(() => { handleNavigation("/Badminton/round-robin") })}>
+                              <Typography>Games</Typography>
+                          </IconButton>
+                          <IconButton color="inherit" onClick={(() => { handleNavigation("/Badminton/scoreboard") })}>
+                              <Typography>Scoreboard</Typography>
+                          </IconButton>
+                          <IconButton color="inherit" onClick={(() => { handleNavigation("/Badminton/configuration") })}>
+                              <Typography>Config</Typography>
+                          </IconButton>
+                      </div>
+                      <div className={classes.sectionMobile}>
+                          <IconButton
+                              aria-label="show more"
+                              aria-controls={mobileMenuId}
+                              aria-haspopup="true"
+                              onClick={handleMobileMenuOpen}
+                              color="inherit"
+                          >
+                              <MoreIcon />
+                          </IconButton>
+                      </div>
+                  </Toolbar>
+              </AppBar>
             {renderMobileMenu}
         </div>
         );
@@ -193,16 +158,16 @@ const Main = () => {
 
     return (
         <Box className="App">
-            { BuildNavBar() }
+            {BuildNavBar()}
 
             <Box className="content">
-                <Route path="/round-robin">
+                <Route path="/Badminton/round-robin">
                     <RoundRobin config={config} gameData={gameData} setGameData={setGameData} />
                 </Route>
-                <Route path="/scoreboard">
+                <Route path="/Badminton/scoreboard">
                     <Scoreboard config={config} gameData={gameData} />
                 </Route>
-                <Route path="/configuration">
+                <Route path="/Badminton/configuration">
                     <Configuration config={config} setConfig={setConfig} />
                 </Route>
             </Box>
