@@ -48,18 +48,6 @@ const RoundRobin: React.FC<IProps> = ({ config, gameData, setGameData }) => {
         const bye = config?.players?.length % (config?.courts?.length * 4);
         let playersAlreadyOnBye: Props["config"]["players"] = [];
 
-        // if (config?.courts?.length === 0) {
-        //     return (
-        //         <div>Enter a court and some players to begin.</div>
-        //     );
-        // }
-
-        // if (config?.players?.length / 4 < config?.courts?.length) {
-        //     return (
-        //         <div>There are not enough players for {config?.courts?.length} courts.</div>
-        //     );
-        // }
-
         for (let i = 1; i < rounds + 1; i++)
         {
             // Work out who is on bye this round.

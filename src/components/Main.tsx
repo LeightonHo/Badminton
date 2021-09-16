@@ -36,7 +36,6 @@ const useStickyState = (defaultValue: (IRound[] | IConfig), key: string) => {
 }
 
 const Main = () => {
-  const [firstLoad, setFirstLoad] = useState<boolean>(true);
   const history = useHistory();
   const handleNavigation = (path: string) => {
     history.push(path);
@@ -183,18 +182,9 @@ const Main = () => {
     );
   }
 
-  const initialiseApp = () => {
-    if (firstLoad) {
-      handleNavigation("/configuration")
-
-      setFirstLoad(false);
-    }
-  }
-
   return (
     <Box className="App">
       {BuildNavBar()}
-      {initialiseApp()}
 
       <Switch>
         <Route path="/round-robin">
