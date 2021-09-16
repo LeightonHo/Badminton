@@ -135,7 +135,14 @@ const Configuration:React.FC<IProps> = ({ config, setConfig, setGameData }) => {
                 </CardContent>
             </Card>
 
-            <Box className="card config-buttons">
+            <Box className="config-buttons">
+                <Button 
+                    variant="contained" 
+                    color="primary"
+                >
+                    Export
+                </Button>
+
                 <Button 
                     variant="contained" 
                     color="secondary"
@@ -149,7 +156,7 @@ const Configuration:React.FC<IProps> = ({ config, setConfig, setGameData }) => {
                     color="secondary"
                     onClick={clearGameData}
                 >
-                    Clear game data
+                    Clear data
                 </Button>
             </Box>
 

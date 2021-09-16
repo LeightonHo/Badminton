@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, KeyboardEvent } from "react";
 import {IState as Props} from "./Main";
 import { Box, Button, TextField } from "@material-ui/core";
 
@@ -38,6 +38,12 @@ const PlayerForm: React.FC<IProps> = ({ config, setConfig }) => {
         });
     }
 
+    const handleKeyPress = (e: KeyboardEvent) => {
+        if (e.key === "Enter") {
+            handleClick();
+        }
+    }
+
     const isDuplicate = (name: string): boolean => {
         for (const player of config.players) {
             if (player.toLowerCase() === input.name.toLowerCase()) {
@@ -59,6 +65,7 @@ const PlayerForm: React.FC<IProps> = ({ config, setConfig }) => {
                 type="text" 
                 value={input.name}
                 onChange={handleChange}
+                onKeyPress={handleKeyPress}
                 name="name"
             />
             <Button 

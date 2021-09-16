@@ -1,5 +1,5 @@
 import { Box, Button, TextField } from "@material-ui/core";
-import React, { useState } from "react";
+import React, { useState, KeyboardEvent} from "react";
 import { IState as Props } from "./Main";
 
 interface IProps {
@@ -48,6 +48,12 @@ const CourtForm: React.FC<IProps> = ({ config, setConfig }) => {
         return false;
     }
 
+    const handleKeyPress = (e: KeyboardEvent) => {
+        if (e.key === "Enter") {
+            handleClick();
+        }
+    }
+
     return (
         <Box
             className="box-text-input"
@@ -61,6 +67,7 @@ const CourtForm: React.FC<IProps> = ({ config, setConfig }) => {
                 type="text" 
                 value={input.court}
                 onChange={handleChange}
+                onKeyPress={handleKeyPress}
                 name="court"
             />
             <Button 
