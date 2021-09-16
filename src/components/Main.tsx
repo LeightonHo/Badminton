@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { makeStyles } from '@material-ui/core/styles';
-import { Route, useHistory } from "react-router-dom";
+import { Route, Switch, useHistory } from "react-router-dom";
 import Box from "@material-ui/core/Box";
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -129,17 +129,17 @@ const Main = () => {
         onClose={handleMobileMenuClose}
       >
         <MenuItem>
-          <IconButton color="inherit" onClick={(() => { handleNavigation("/Badminton/round-robin") })}>
+          <IconButton color="inherit" onClick={(() => { handleNavigation("/round-robin") })}>
             <Typography>Games</Typography>
           </IconButton>
         </MenuItem>
         <MenuItem>
-          <IconButton color="inherit" onClick={(() => { handleNavigation("/Badminton/scoreboard") })}>
+          <IconButton color="inherit" onClick={(() => { handleNavigation("/scoreboard") })}>
             <Typography>Scoreboard</Typography>
           </IconButton>
         </MenuItem>
         <MenuItem>
-          <IconButton color="inherit" onClick={(() => { handleNavigation("/Badminton/configuration") })}>
+          <IconButton color="inherit" onClick={(() => { handleNavigation("/configuration") })}>
             <Typography>Config</Typography>
           </IconButton>
         </MenuItem>
@@ -155,13 +155,13 @@ const Main = () => {
             </Typography>
             <div className={classes.grow} />
             <div className={classes.sectionDesktop}>
-              <IconButton color="inherit" onClick={(() => { handleNavigation("/Badminton/round-robin") })}>
+              <IconButton color="inherit" onClick={(() => { handleNavigation("/round-robin") })}>
                 <Typography>Games</Typography>
               </IconButton>
-              <IconButton color="inherit" onClick={(() => { handleNavigation("/Badminton/scoreboard") })}>
+              <IconButton color="inherit" onClick={(() => { handleNavigation("/scoreboard") })}>
                 <Typography>Scoreboard</Typography>
               </IconButton>
-              <IconButton color="inherit" onClick={(() => { handleNavigation("/Badminton/configuration") })}>
+              <IconButton color="inherit" onClick={(() => { handleNavigation("/configuration") })}>
                 <Typography>Config</Typography>
               </IconButton>
             </div>
@@ -185,7 +185,7 @@ const Main = () => {
 
   const initialiseApp = () => {
     if (firstLoad) {
-      handleNavigation("/Badminton/configuration")
+      handleNavigation("/configuration")
 
       setFirstLoad(false);
     }
@@ -196,17 +196,17 @@ const Main = () => {
       {BuildNavBar()}
       {initialiseApp()}
 
-      <Box className="content">
-        <Route path="/Badminton/round-robin">
+      <Switch>
+        <Route path="/round-robin">
           <RoundRobin config={config} gameData={gameData} setGameData={setGameData} />
         </Route>
-        <Route path="/Badminton/scoreboard">
+        <Route path="/scoreboard">
           <Scoreboard config={config} gameData={gameData} />
         </Route>
-        <Route path="/Badminton/configuration">
+        <Route path="/configuration">
           <Configuration config={config} setConfig={setConfig} setGameData={setGameData} />
         </Route>
-      </Box>
+      </Switch>
     </Box>
   );
 }
