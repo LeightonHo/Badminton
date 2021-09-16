@@ -2,7 +2,7 @@ import React from "react";
 import { IState as Props } from "./Main";
 import Bye from "./Bye";
 import Match from "./Match";
-import { Box, Card, CardContent, Divider, Grid, Typography } from "@material-ui/core";
+import { Box, Button, Card, CardContent, Divider, Grid, Typography } from "@material-ui/core";
 
 export interface IProps {
     config: Props["config"],
@@ -35,8 +35,6 @@ const RoundRobin: React.FC<IProps> = ({ config, gameData, setGameData }) => {
     const initRoundRobin = (): void => {
         // If there is no game data, generate the brackets.
         if (gameData.length === 0) {
-            console.log("Generating brackets.");
-
             const bracket = generateBracket();
 
             setGameData(bracket);
@@ -45,7 +43,7 @@ const RoundRobin: React.FC<IProps> = ({ config, gameData, setGameData }) => {
 
     const generateBracket = (): Props["gameData"] => {
         const rounds = config.rounds;
-        const bye = config?.players?.length % (config?.courts?.length * 4);
+        const bye = config.players.length - (config.courts.length * 4);
         let playersAlreadyOnBye: Props["config"]["players"] = [];
 
         for (let i = 1; i < rounds + 1; i++)
@@ -128,7 +126,7 @@ const RoundRobin: React.FC<IProps> = ({ config, gameData, setGameData }) => {
 
         return result;
     }
-    
+
     const renderMobileView = () => {
         return (
             <Box>
@@ -235,10 +233,7 @@ const RoundRobin: React.FC<IProps> = ({ config, gameData, setGameData }) => {
     return (
         <Box>
             {initRoundRobin()}
-
             {renderMobileView()}
-            
-            {/* {renderDesktopView()} */}
         </Box>
     );
 }

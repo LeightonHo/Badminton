@@ -136,12 +136,12 @@ const Configuration:React.FC<IProps> = ({ config, setConfig, setGameData }) => {
             </Card>
 
             <Box className="config-buttons">
-                <Button 
+                {/* <Button 
                     variant="contained" 
                     color="primary"
                 >
                     Export
-                </Button>
+                </Button> */}
 
                 <Button 
                     variant="contained" 
@@ -156,7 +156,7 @@ const Configuration:React.FC<IProps> = ({ config, setConfig, setGameData }) => {
                     color="secondary"
                     onClick={clearGameData}
                 >
-                    Clear data
+                    Reset round robin
                 </Button>
             </Box>
 

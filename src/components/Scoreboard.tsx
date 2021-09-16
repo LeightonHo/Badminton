@@ -21,8 +21,7 @@ interface IProps {
 }
 
 const Scoreboard:React.FC<IProps> = ({ config, gameData }) => {
-    console.log(gameData);
-
+    
     const generateTableBody = () => {
         let result: IPlayerStats = {}
 
