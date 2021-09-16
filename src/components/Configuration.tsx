@@ -40,7 +40,7 @@ const Configuration:React.FC<IProps> = ({ config, setConfig, setGameData }) => {
                     label: "Yes",
                     onClick: () => { 
                         setConfig({
-                            rounds: 0,
+                            rounds: 10,
                             winningScore: 21,
                             courts: [],
                             players: []
