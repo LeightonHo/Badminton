@@ -126,8 +126,8 @@
 }
 
 .player-name {
-  font-size: 14px !important;
-  font-weight: 200 !important;
+  font-size: 15px !important;
+  /* font-weight: 400 !important; */
 }
 
 .games {

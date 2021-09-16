@@ -148,7 +148,7 @@ const Configuration:React.FC<IProps> = ({ config, setConfig, setGameData }) => {
                     color="secondary"
                     onClick={clearConfigData}
                 >
-                    Clear config
+                    Reset config
                 </Button>
 
                 <Button 

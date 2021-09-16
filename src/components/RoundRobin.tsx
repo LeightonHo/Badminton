@@ -2,7 +2,7 @@ import React from "react";
 import { IState as Props } from "./Main";
 import Bye from "./Bye";
 import Match from "./Match";
-import { Box, Button, Card, CardContent, Divider, Grid, Typography } from "@material-ui/core";
+import { Box, Card, CardContent, Divider, Grid, Typography } from "@material-ui/core";
 
 export interface IProps {
     config: Props["config"],
