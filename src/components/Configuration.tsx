@@ -1,9 +1,11 @@
-import { Box, Card, CardContent, TextField, Typography } from "@material-ui/core";
+import { Box, Button, Card, CardContent, TextField, Typography } from "@material-ui/core";
 import CourtForm from "./CourtForm";
 import CourtList from "./CourtList";
 import PlayerForm from "./PlayerForm";
 import PlayerList from "./PlayerList";
 import { IState as Props } from "./Main";
+import { confirmAlert } from "react-confirm-alert";
+import "react-confirm-alert/src/react-confirm-alert.css";
 
 export interface IConfig {
     rounds: number,
@@ -14,10 +16,11 @@ export interface IConfig {
 
 interface IProps {
     config: Props["config"],
-    setConfig: React.Dispatch<React.SetStateAction<Props["config"]>>
+    setConfig: React.Dispatch<React.SetStateAction<Props["config"]>>,
+    setGameData: React.Dispatch<React.SetStateAction<Props["gameData"]>>
 }
 
-const Configuration:React.FC<IProps> = ({ config, setConfig }) => {
+const Configuration:React.FC<IProps> = ({ config, setConfig, setGameData }) => {
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
         if (!isNaN(parseInt(e.target.value))) {
@@ -26,6 +29,47 @@ const Configuration:React.FC<IProps> = ({ config, setConfig }) => {
                 rounds: parseInt(e.target.value)
             });
         }
+    }
+
+    const clearConfigData = () => {
+        confirmAlert({
+            title: "Confirm",
+            message: "Are you sure you want to clear the local settings?",
+            buttons: [
+                {
+                    label: "Yes",
+                    onClick: () => { 
+                        setConfig({
+                            rounds: 0,
+                            winningScore: 21,
+                            courts: [],
+                            players: []
+                        });
+                    }
+                },
+                {
+                    label: "No",
+                    onClick: () => { }
+                }
+            ]
+        });
+    }
+
+    const clearGameData = () => {
+        confirmAlert({
+            title: "Confirm",
+            message: "Are you sure you want to clear the local game data?",
+            buttons: [
+                {
+                    label: "Yes",
+                    onClick: () => { setGameData([]); }
+                },
+                {
+                    label: "No",
+                    onClick: () => { }
+                }
+            ]
+        });
     }
 
     return (
@@ -39,7 +83,7 @@ const Configuration:React.FC<IProps> = ({ config, setConfig }) => {
                     </Typography>
                     <TextField 
                         id="inputMatches" 
-                        label="Rounds" 
+                        label={`Rounds (${config.rounds.toString()})`}
                         type="number"
                         variant="outlined" 
                         size="small"
@@ -51,7 +95,7 @@ const Configuration:React.FC<IProps> = ({ config, setConfig }) => {
                     />
                     <TextField 
                         id="inputWinningScore" 
-                        label="Winning Score" 
+                        label={`Winning Score (${config.winningScore.toString()})`}
                         type="number"
                         variant="outlined" 
                         size="small"
@@ -90,6 +134,25 @@ const Configuration:React.FC<IProps> = ({ config, setConfig }) => {
                     <PlayerList config={config} setConfig={setConfig} />
                 </CardContent>
             </Card>
+
+            <Box className="card config-buttons">
+                <Button 
+                    variant="contained" 
+                    color="secondary"
+                    onClick={clearConfigData}
+                >
+                    Clear config
+                </Button>
+
+                <Button 
+                    variant="contained" 
+                    color="secondary"
+                    onClick={clearGameData}
+                >
+                    Clear game data
+                </Button>
+            </Box>
+
         </Box>
     );
 }

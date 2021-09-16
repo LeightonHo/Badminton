@@ -56,6 +56,24 @@
   justify-content: space-between;
 }
 
+.config-buttons > button {
+  width: 100%;
+}
+
+.config-buttons > button:not(:last-child) {
+  margin-bottom: 10px;
+}
+
+@media (max-width:960px) {
+  .react-confirm-alert {
+    width: 100%;
+  }
+
+  .react-confirm-alert > div {
+    width: initial;
+  }
+}
+
 /* ROUND ROBIN SCREEN */
 .round-card {
   text-align: center;
