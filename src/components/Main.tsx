@@ -19,7 +19,7 @@ export interface IState {
   gameData: IRound[]
 }
 
-const useStickyState = (defaultValue: any, key: string) => {
+const useStickyState = (defaultValue: (IRound[] | IConfig), key: string) => {
   const [value, setValue] = useState(() => {
     const stickyValue = window.localStorage.getItem(key);
 
@@ -45,7 +45,12 @@ const Main = () => {
   const [gameData, setGameData] = useStickyState([], "badminton-game-data");
 
   // Default values
-  const [config, setConfig] = useStickyState([], "badminton-config");
+  const [config, setConfig] = useStickyState({
+    rounds: 10,
+    winningScore: 21,
+    courts: [],
+    players: []
+  }, "badminton-config");
 
   // const [config, setConfig] = useStickyState({
   //   rounds: 10,
