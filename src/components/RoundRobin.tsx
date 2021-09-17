@@ -3,6 +3,8 @@ import { IState as Props } from "./Main";
 import Bye from "./Bye";
 import Match from "./Match";
 import { Box, Card, CardContent, Divider, Grid, Typography } from "@material-ui/core";
+import { join } from "path";
+import PlayerForm from "./PlayerForm";
 
 export interface IProps {
     config: Props["config"],
@@ -41,10 +43,19 @@ const RoundRobin: React.FC<IProps> = ({ config, gameData, setGameData }) => {
         }
     }
 
+    let playerDictionary: { [name: string]: string[] } = { }
+
     const generateBracket = (): Props["gameData"] => {
         const rounds = config.rounds;
         const bye = config.players.length - (config.courts.length * 4);
         let playersAlreadyOnBye: Props["config"]["players"] = [];
+        
+        for (let i = 0; i < config.players.length; i++) {
+            playerDictionary[config.players[i]] = [...config.players];
+            playerDictionary[config.players[i]].splice(i, 1);
+        }
+
+        console.log(playerDictionary)
 
         for (let i = 1; i < rounds + 1; i++)
         {
@@ -77,7 +88,7 @@ const RoundRobin: React.FC<IProps> = ({ config, gameData, setGameData }) => {
             // Pass list of active players into a function for generating the match up
             let currentPlayers: Props["config"]["players"] = config.players.filter(x => !currentPlayersOnBye.includes(x));
 
-            currentPlayers = shuffleArray(currentPlayers);
+            // currentPlayers = shuffleArray(currentPlayers);
 
             const matches: IMatch[] = generateMatches(config.courts, currentPlayers);
             const round: IRound = {
@@ -106,7 +117,77 @@ const RoundRobin: React.FC<IProps> = ({ config, gameData, setGameData }) => {
         let result: IMatch[] = []
 
         for (let i = 0; i < courts.length; i++) {
-            const currentPlayers = players.splice(0, 4);
+            let currentPlayers: string[] = [];
+
+            console.log(playerDictionary);
+
+            // Find match up which hasn't happened yet (best efforts), if we can't find one then we should probably find another set of byes
+            // Iterate through half of the number of players
+            // If someone's player list is empty, then they should be on bye.
+            for (let j = 0; j < players.length; j++) {
+                let currentPlayer = config.players[j];
+                console.log(`Finding a partner for ${currentPlayer}`);
+
+                // Check that the current player isn't on bye
+                if (players.indexOf(currentPlayer) < 0) {
+                    console.log(`${currentPlayer} is on bye`);
+                    continue;
+                }
+
+                // For each player, find a team mate which they haven't played together yet.
+                if (currentPlayers.indexOf(currentPlayer) >= 0) {
+                    // Already selected, check next player.
+                    console.log(`${currentPlayer} has already been selected`);
+                    continue;
+                }
+
+                for (let k = 0; k < playerDictionary[currentPlayer].length; k++) {
+                    console.log("Available partners: " + playerDictionary[currentPlayer]);
+
+                    // For each player they haven't played with, check if they're already in the current pool.
+                    let currentPartner = playerDictionary[currentPlayer][k];
+
+                    if (currentPlayers.indexOf(currentPartner) >= 0 || players.indexOf(currentPartner) < 0) {
+                        // Already selected, check next partner;
+                        continue;
+                    }
+
+                    console.log(`${currentPlayer} selected ${currentPartner}`);
+
+                    currentPlayers.push(currentPlayer);
+                    currentPlayers.push(currentPartner);
+
+                    // Remove partner from the current player's pool.
+                    playerDictionary[currentPlayer].splice(k, 1);
+
+                    console.log(`${currentPlayer}'s new partner list: ${playerDictionary[currentPlayer]}`)
+
+                    // Refresh the list of partners if the player's partner list is empty;
+                    if (playerDictionary[currentPlayer].length === 0) {
+                        playerDictionary[currentPlayer] = [...config.players];
+                        playerDictionary[currentPlayer].splice(playerDictionary[currentPlayer].indexOf(currentPlayer), 1);
+                        playerDictionary[currentPlayer].splice(playerDictionary[currentPlayer].indexOf(currentPartner), 1);
+                        console.log(`${currentPlayer}'s new partner list: ${playerDictionary[currentPlayer]}`)
+                    } 
+                    
+                    // Remove player from partner's pool.
+                    playerDictionary[currentPartner].splice(playerDictionary[currentPartner].indexOf(currentPlayer), 1);
+
+                    if (playerDictionary[currentPartner].length === 0) {
+                        playerDictionary[currentPartner] = [...config.players];
+                        playerDictionary[currentPartner].splice(playerDictionary[currentPartner].indexOf(currentPlayer), 1);
+                        playerDictionary[currentPartner].splice(playerDictionary[currentPartner].indexOf(currentPartner), 1);
+                    }
+
+                    break;
+                }
+
+                // If there's no more players they haven't played with, then choose anyone OR reset and find a new set of byes.
+            }
+            
+            console.log(`Current players for this match: ${currentPlayers}`);
+
+            // const currentPlayers = players.splice(0, 4);
             const match: IMatch = {
                 court: courts[i],
                 team1: {
