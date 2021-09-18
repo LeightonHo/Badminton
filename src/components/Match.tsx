@@ -36,8 +36,6 @@ const Match: React.FC<IProps> = ({ match, gameData, setGameData, roundKey, match
             }
         }
 
-        console.log(gameData);
-
         setGameData([
             ...gameData
         ]);
