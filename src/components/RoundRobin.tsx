@@ -5,6 +5,7 @@ import Match from "./Match";
 import { Box, Card, CardContent, Divider, Grid, Typography } from "@material-ui/core";
 import { join } from "path";
 import PlayerForm from "./PlayerForm";
+import PlayerList from "./PlayerList";
 
 export interface IProps {
     config: Props["config"],
@@ -36,7 +37,7 @@ const RoundRobin: React.FC<IProps> = ({ config, gameData, setGameData }) => {
 
     const initRoundRobin = (): void => {
         // If there is no game data, generate the brackets.
-        if (gameData.length === 0) {
+        if (gameData.length === 0 || true === true) {
             const bracket = generateBracket();
 
             setGameData(bracket);
@@ -54,8 +55,6 @@ const RoundRobin: React.FC<IProps> = ({ config, gameData, setGameData }) => {
             playerDictionary[config.players[i]] = [...config.players];
             playerDictionary[config.players[i]].splice(i, 1);
         }
-
-        console.log(playerDictionary)
 
         for (let i = 1; i < rounds + 1; i++)
         {
@@ -75,8 +74,8 @@ const RoundRobin: React.FC<IProps> = ({ config, gameData, setGameData }) => {
 
             for (let y = 0; y < iterations; y++)
             {
-                let player = eligiblePlayers[eligiblePlayers.length * Math.random() | 0];
-                // let player = eligiblePlayers[y];
+                // let player = eligiblePlayers[eligiblePlayers.length * Math.random() | 0];
+                let player = eligiblePlayers[y];
                 let indexOfPlayer = eligiblePlayers.indexOf(player);
     
                 currentPlayersOnBye.push(player);
@@ -103,7 +102,7 @@ const RoundRobin: React.FC<IProps> = ({ config, gameData, setGameData }) => {
         return gameData;
     }
 
-    const shuffleArray = (array: Props["config"]["players"]): Props["config"]["players"] => {
+    const shuffleArray = (array: any): any[] => {
         for (let i = array.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
             [array[i], array[j]] = [array[j], array[i]];
@@ -119,20 +118,31 @@ const RoundRobin: React.FC<IProps> = ({ config, gameData, setGameData }) => {
         for (let i = 0; i < courts.length; i++) {
             let currentPlayers: string[] = [];
 
-            console.log(playerDictionary);
+            // Keep snapshot of current playerDictionary?
+            // const playerDictionaryBackup = { ...playerDictionary };
 
-            // Find match up which hasn't happened yet (best efforts), if we can't find one then we should probably find another set of byes
-            // Iterate through half of the number of players
-            // If someone's player list is empty, then they should be on bye.
+            // While currentPlayers.length < courts.length * 4
+            // if counter is > 0 (not the first run), then reshuffle everyone's partner list?
+
+            // Algorithm for taking the players, and then making sure there's a combination that hasn't played yet?
+            // loop through players sorted by length of player pool
+            players.sort((a, b) => {
+                return playerDictionary[a].length - playerDictionary[b].length;
+            });
+
+            let counter = 0;
+
+            // Rollback changes and start again
+            // playerDictionary = { ...playerDictionaryBackup };
+
             for (let j = 0; j < players.length; j++) {
-                let currentPlayer = config.players[j];
-                console.log(`Finding a partner for ${currentPlayer}`);
-
-                // Check that the current player isn't on bye
-                if (players.indexOf(currentPlayer) < 0) {
-                    console.log(`${currentPlayer} is on bye`);
-                    continue;
+                if (currentPlayers.length === courts.length * 4) {
+                    console.log(`${courts.length * 4} players found.`)
+                    break;
                 }
+
+                let currentPlayer = players[j];
+                console.log(`Finding a partner for ${currentPlayer}`);
 
                 // For each player, find a team mate which they haven't played together yet.
                 if (currentPlayers.indexOf(currentPlayer) >= 0) {
@@ -140,8 +150,19 @@ const RoundRobin: React.FC<IProps> = ({ config, gameData, setGameData }) => {
                     console.log(`${currentPlayer} has already been selected`);
                     continue;
                 }
+                
+                // If there's no one left in the pool, then re-add all players to the list.
+                // if (playerDictionary[currentPlayer].every(val => ))
+
+                if (playerDictionary[currentPlayer].length === 1 && players.indexOf(playerDictionary[currentPlayer][0]) < 0) {
+                    playerDictionary[currentPlayer] = [...config.players];
+                    playerDictionary[currentPlayer].splice(playerDictionary[currentPlayer].indexOf(currentPlayer), 1);
+                }
+
+                playerDictionary[currentPlayer] = shuffleArray(playerDictionary[currentPlayer]);
 
                 for (let k = 0; k < playerDictionary[currentPlayer].length; k++) {
+
                     console.log("Available partners: " + playerDictionary[currentPlayer]);
 
                     // For each player they haven't played with, check if they're already in the current pool.
@@ -181,10 +202,8 @@ const RoundRobin: React.FC<IProps> = ({ config, gameData, setGameData }) => {
 
                     break;
                 }
-
-                // If there's no more players they haven't played with, then choose anyone OR reset and find a new set of byes.
             }
-            
+
             console.log(`Current players for this match: ${currentPlayers}`);
 
             // const currentPlayers = players.splice(0, 4);
