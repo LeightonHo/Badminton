@@ -3,6 +3,8 @@ import { IState as Props } from "./Main";
 import Bye from "./Bye";
 import Match from "./Match";
 import { Box, Card, CardContent, Divider, Grid, Typography } from "@material-ui/core";
+import { isTemplateMiddleOrTemplateTail } from "typescript";
+import { ConfirmationNumberOutlined } from "@material-ui/icons";
 
 export interface IProps {
     config: Props["config"],
@@ -41,7 +43,9 @@ const RoundRobin: React.FC<IProps> = ({ config, gameData, setGameData }) => {
         }
     }
 
-    let playerDictionary: { [name: string]: string[] } = { }
+    let teamDictionary: { [name: string]: number } = { };
+    let playerDictionary: { [name: string]: string[] } = { };
+    let playerDebtDictionary: { [name: string]: string[] } = { };
 
     const generateBracket = (): Props["gameData"] => {
         const rounds = config.rounds;
@@ -49,8 +53,26 @@ const RoundRobin: React.FC<IProps> = ({ config, gameData, setGameData }) => {
         let playersAlreadyOnBye: Props["config"]["players"] = [];
         
         for (let i = 0; i < config.players.length; i++) {
-            playerDictionary[config.players[i]] = [...config.players];
-            playerDictionary[config.players[i]].splice(i, 1);
+            for (let j = 0; j < config.players.length; j++) {
+                if (i === j) {
+                    continue;
+                }
+
+                teamDictionary[[config.players[i], config.players[j]].sort().toString()] = 0;
+            }
+        }
+
+        console.log(teamDictionary);
+
+        for (let i = 0; i < config.players.length; i++) {
+            const player = config.players[i];
+
+            // Initialise dictionary for storing available partners.
+            playerDictionary[player] = [...config.players];
+            playerDictionary[player].splice(i, 1);
+
+            // Initialise dictionary for storing partners they had to go in "debt" for.
+            playerDebtDictionary[player] = [];
         }
 
         for (let i = 1; i < rounds + 1; i++)
@@ -96,6 +118,14 @@ const RoundRobin: React.FC<IProps> = ({ config, gameData, setGameData }) => {
             gameData.push(round);
         }
 
+        for (const log of matchLog) {
+            console.log(log);
+        }
+
+        for (const log of teamLog) {
+            console.log(log);
+        }
+
         return gameData;
     }
 
@@ -116,97 +146,63 @@ const RoundRobin: React.FC<IProps> = ({ config, gameData, setGameData }) => {
         }
     }
 
+    let matchLog: string[] = [];
+    let teamLog: string[] = [];
+
     // Function for rendering each match takes in a list of players and generates the bracket
     const generateMatches = (courts: Props["config"]["courts"], players: Props["config"]["players"], playersOnBye: Props["config"]["players"]): IMatch[] => {
         let result: IMatch[] = []
         let currentPlayers: string[] = [];
 
+        let teamKeyList = Object.keys(teamDictionary);
+
+        teamKeyList.sort((a, b) => { 
+            return teamDictionary[a] - teamDictionary[b];
+        });
+
+        // Select teams instead of players..
         for (let i = 0; i < courts.length; i++) {
             const numberOfPlayersAlreadySelected = i * 4;
             const numberOfPlayersToSelect = (i + 1) * 4;
 
-            // Sort by the number of available players remaining.
-            players.sort((a, b) => {
-                return playerDictionary[a].length - playerDictionary[b].length;
+            teamKeyList.sort((a, b) => { 
+                return teamDictionary[a] - teamDictionary[b];
             });
 
-            for (let j = 0; j < players.length; j++) {
+            console.log([...teamKeyList]);
+            console.log({...teamDictionary});
+
+            for (let j = 0; j < teamKeyList.length; j++) {
                 if (currentPlayers.length === ((i + 1) * 4)) {
-                    log(`${numberOfPlayersToSelect} players found.`)
+                    console.log(`${numberOfPlayersToSelect} players found.`)
                     break;
                 }
 
-                const currentPlayer = players[j];
-                log(`Finding a partner for ${currentPlayer}`);
-
-                // For each player, find a team mate which they haven't played together yet.
-                if (currentPlayers.indexOf(currentPlayer) >= 0) {
-                    // Already selected, check next player.
-                    log(`${currentPlayer} has already been selected`);
-                    continue;
-                }
-                
-                // If there's no one left in the pool, then re-add all players to the list.
+                // If the players in this matchup are available, then add them to the current players list.
                 const invalidPlayers = [...currentPlayers, ...playersOnBye];
+                const teamKey = teamKeyList[j].split(",");
 
-                log(invalidPlayers);
-                log(playerDictionary[currentPlayer].every(val => invalidPlayers.includes(val)));
+                console.log(`Checking team: ${teamKey}`);
+                console.log(`Invalid players: ${invalidPlayers.toString()}`);
 
-                if (playerDictionary[currentPlayer].every(val => invalidPlayers.includes(val))) {
-                    for (const partner of playerDictionary[currentPlayer]) {
-                        playerDictionary[partner].push(currentPlayer);
-                    }
-
-                    playerDictionary[currentPlayer] = [...playerDictionary[currentPlayer], ...config.players];
-                    playerDictionary[currentPlayer].splice(playerDictionary[currentPlayer].indexOf(currentPlayer), 1);
-                }
-
-                playerDictionary[currentPlayer] = shuffleArray(playerDictionary[currentPlayer]);
-
-                log("Available partners: " + playerDictionary[currentPlayer]);
-
-                for (let k = 0; k < playerDictionary[currentPlayer].length; k++) {
-                    // For each player they haven't played with, check if they're already in the current pool.
-                    let currentPartner = playerDictionary[currentPlayer][k];
-
-                    if (currentPlayers.indexOf(currentPartner) >= 0 || players.indexOf(currentPartner) < 0) {
-                        // Already selected, check next partner;
-                        continue;
-                    }
-
-                    log(`${currentPlayer} selected ${currentPartner}`);
-
-                    currentPlayers.push(currentPlayer);
-                    currentPlayers.push(currentPartner);
-
-                    // Remove partner from the current player's pool.
-                    playerDictionary[currentPlayer].splice(k, 1);
-
-                    log(`${currentPlayer}'s new partner list: ${playerDictionary[currentPlayer]}`)
-
-                    // Refresh the list of partners if the player's partner list is empty;
-                    if (playerDictionary[currentPlayer].length === 0) {
-                        playerDictionary[currentPlayer] = [...config.players];
-                        playerDictionary[currentPlayer].splice(playerDictionary[currentPlayer].indexOf(currentPlayer), 1);
-                        playerDictionary[currentPlayer].splice(playerDictionary[currentPlayer].indexOf(currentPartner), 1);
-                        log(`${currentPlayer}'s new partner list: ${playerDictionary[currentPlayer]}`)
-                    } 
-                    
-                    // Remove player from partner's pool.
-                    playerDictionary[currentPartner].splice(playerDictionary[currentPartner].indexOf(currentPlayer), 1);
-
-                    if (playerDictionary[currentPartner].length === 0) {
-                        playerDictionary[currentPartner] = [...config.players];
-                        playerDictionary[currentPartner].splice(playerDictionary[currentPartner].indexOf(currentPlayer), 1);
-                        playerDictionary[currentPartner].splice(playerDictionary[currentPartner].indexOf(currentPartner), 1);
-                    }
-
-                    break;
+                if (!teamKey.some(element => invalidPlayers.includes(element))) {
+                    console.log(`Adding ${teamKey.toString()} to the current players.`);
+                    currentPlayers = currentPlayers.concat(teamKey);
+                    teamDictionary[teamKeyList[j]]++;
                 }
             }
 
             log(`Current players for this match: ${currentPlayers}`);
-            
+
+            const finalMatchup = [currentPlayers[numberOfPlayersAlreadySelected + 0], currentPlayers[numberOfPlayersAlreadySelected + 1], currentPlayers[numberOfPlayersAlreadySelected + 2], currentPlayers[numberOfPlayersAlreadySelected + 3]].sort();
+            matchLog.push(`${finalMatchup[0]},${finalMatchup[1]}|${finalMatchup[2]},${finalMatchup[3]}`);
+
+            const team1 = [currentPlayers[numberOfPlayersAlreadySelected + 0], currentPlayers[numberOfPlayersAlreadySelected + 1]].sort();
+            const team2 = [currentPlayers[numberOfPlayersAlreadySelected + 2], currentPlayers[numberOfPlayersAlreadySelected + 3]].sort();
+
+            teamLog.push(team1.toString());
+            teamLog.push(team2.toString());
+
             // Test round matchups
             // console.log([currentPlayers[numberOfPlayersAlreadySelected + 0], currentPlayers[numberOfPlayersAlreadySelected + 1], currentPlayers[numberOfPlayersAlreadySelected + 2], currentPlayers[numberOfPlayersAlreadySelected + 3]].sort().toString());
 
