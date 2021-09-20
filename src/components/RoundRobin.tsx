@@ -44,8 +44,7 @@ const RoundRobin: React.FC<IProps> = ({ config, gameData, setGameData }) => {
     }
 
     let teamDictionary: { [name: string]: number } = { };
-    let playerDictionary: { [name: string]: string[] } = { };
-    let playerDebtDictionary: { [name: string]: string[] } = { };
+    let playerDictionary: { [name: string]: number } = { };
 
     const generateBracket = (): Props["gameData"] => {
         const rounds = config.rounds;
@@ -62,18 +61,15 @@ const RoundRobin: React.FC<IProps> = ({ config, gameData, setGameData }) => {
             }
         }
 
-        console.log(teamDictionary);
-
         for (let i = 0; i < config.players.length; i++) {
             const player = config.players[i];
 
             // Initialise dictionary for storing available partners.
-            playerDictionary[player] = [...config.players];
-            playerDictionary[player].splice(i, 1);
-
-            // Initialise dictionary for storing partners they had to go in "debt" for.
-            playerDebtDictionary[player] = [];
+            playerDictionary[player] = 0;
         }
+
+        console.log(playerDictionary);
+        console.log(teamDictionary);
 
         for (let i = 1; i < rounds + 1; i++)
         {
@@ -156,10 +152,6 @@ const RoundRobin: React.FC<IProps> = ({ config, gameData, setGameData }) => {
 
         let teamKeyList = Object.keys(teamDictionary);
 
-        teamKeyList.sort((a, b) => { 
-            return teamDictionary[a] - teamDictionary[b];
-        });
-
         // Select teams instead of players..
         for (let i = 0; i < courts.length; i++) {
             const numberOfPlayersAlreadySelected = i * 4;
@@ -172,25 +164,72 @@ const RoundRobin: React.FC<IProps> = ({ config, gameData, setGameData }) => {
             console.log([...teamKeyList]);
             console.log({...teamDictionary});
 
-            for (let j = 0; j < teamKeyList.length; j++) {
-                if (currentPlayers.length === ((i + 1) * 4)) {
-                    console.log(`${numberOfPlayersToSelect} players found.`)
-                    break;
+            let counter = 1;
+
+            while (currentPlayers.length < numberOfPlayersToSelect && counter <= 100) {
+                console.log(`Counter: ${counter}`);
+
+                // If we've tried 5 times and couldn't find a team, then remove the first team from the list.
+                if (counter % 10 && currentPlayers.length > 0) {
+                    let teamToRemove = currentPlayers.splice(0, 2).sort().toString();
+                    console.log(`Removing ${teamToRemove} (${teamDictionary[teamToRemove]--})`);
                 }
 
-                // If the players in this matchup are available, then add them to the current players list.
-                const invalidPlayers = [...currentPlayers, ...playersOnBye];
-                const teamKey = teamKeyList[j].split(",");
+                // Figure out the minimum number of games any team has played
+                let lowestNumberOfGamesPlayed = Math.min(...Object.values(teamDictionary));
+                console.log(`Lowest number of games: ${lowestNumberOfGamesPlayed}`);
 
-                console.log(`Checking team: ${teamKey}`);
-                console.log(`Invalid players: ${invalidPlayers.toString()}`);
-
-                if (!teamKey.some(element => invalidPlayers.includes(element))) {
-                    console.log(`Adding ${teamKey.toString()} to the current players.`);
-                    currentPlayers = currentPlayers.concat(teamKey);
-                    teamDictionary[teamKeyList[j]]++;
+                // If we've tried 25 times, then increase the search radius.
+                if (counter >= 80) {
+                    lowestNumberOfGamesPlayed++;
                 }
+                
+                // Iterate through the teams that have played that many games.
+                let teamsToSearch: string[] = [];
+                console.log(`Teams to check: ${teamsToSearch.toString()}`);
+
+                for (const [key, value] of Object.entries(teamDictionary)) {
+                    if (value === lowestNumberOfGamesPlayed) {
+                        teamsToSearch.push(key);
+                    }
+                }
+
+                teamsToSearch = [...shuffleArray(teamsToSearch)];
+
+                for (let j = 0; j < teamsToSearch.length; j++) {
+                    // If the players in this matchup are available, then add them to the current players list.
+                    const invalidPlayers = [...currentPlayers, ...playersOnBye];
+                    const teamKey = teamsToSearch[j].split(",");
+
+                    if (!teamKey.some(element => invalidPlayers.includes(element))) {
+                        console.log(`Adding ${teamKey.toString()} (${teamDictionary[teamsToSearch[j]]}) to the current players.`);
+                        currentPlayers = currentPlayers.concat(teamKey);
+                        teamDictionary[teamsToSearch[j]]++;
+                    }
+                }
+
+                counter++;
             }
+
+            // for (let j = 0; j < teamKeyList.length; j++) {
+            //     if (currentPlayers.length === ((i + 1) * 4)) {
+            //         console.log(`${numberOfPlayersToSelect} players found.`)
+            //         break;
+            //     }
+
+            //     // If the players in this matchup are available, then add them to the current players list.
+            //     const invalidPlayers = [...currentPlayers, ...playersOnBye];
+            //     const teamKey = teamKeyList[j].split(",");
+
+            //     // console.log(`Checking team: ${teamKey}`);
+            //     // console.log(`Invalid players: ${invalidPlayers.toString()}`);
+
+            //     if (!teamKey.some(element => invalidPlayers.includes(element))) {
+            //         console.log(`Adding ${teamKey.toString()}(${teamDictionary[teamKeyList[j]]}) to the current players.`);
+            //         currentPlayers = currentPlayers.concat(teamKey);
+            //         teamDictionary[teamKeyList[j]]++;
+            //     }
+            // }
 
             log(`Current players for this match: ${currentPlayers}`);
 
