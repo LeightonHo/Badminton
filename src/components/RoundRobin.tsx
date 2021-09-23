@@ -3,8 +3,6 @@ import { IState as Props } from "./Main";
 import Bye from "./Bye";
 import Match from "./Match";
 import { Box, Card, CardContent, Divider, Grid, Typography } from "@material-ui/core";
-import { isTemplateMiddleOrTemplateTail } from "typescript";
-import { ConfirmationNumberOutlined } from "@material-ui/icons";
 
 export interface IProps {
     config: Props["config"],
@@ -161,32 +159,29 @@ const RoundRobin: React.FC<IProps> = ({ config, gameData, setGameData }) => {
                 return teamDictionary[a] - teamDictionary[b];
             });
 
-            console.log([...teamKeyList]);
-            console.log({...teamDictionary});
-
             let counter = 1;
 
             while (currentPlayers.length < numberOfPlayersToSelect && counter <= 100) {
                 console.log(`Counter: ${counter}`);
 
                 // If we've tried 5 times and couldn't find a team, then remove the first team from the list.
-                if (counter % 10 && currentPlayers.length > 0) {
+                if (counter % 2 == 0 && currentPlayers.length > 0) {
                     let teamToRemove = currentPlayers.splice(0, 2).sort().toString();
                     console.log(`Removing ${teamToRemove} (${teamDictionary[teamToRemove]--})`);
                 }
 
-                // Figure out the minimum number of games any team has played
+                // Figure out the minimum number of games any team has played.
                 let lowestNumberOfGamesPlayed = Math.min(...Object.values(teamDictionary));
-                console.log(`Lowest number of games: ${lowestNumberOfGamesPlayed}`);
 
-                // If we've tried 25 times, then increase the search radius.
-                if (counter >= 80) {
+                // After some time, increase the search radius.
+                if (counter % 10 == 0) {
                     lowestNumberOfGamesPlayed++;
                 }
+
+                console.log(`Lowest number of games: ${lowestNumberOfGamesPlayed}`);
                 
                 // Iterate through the teams that have played that many games.
                 let teamsToSearch: string[] = [];
-                console.log(`Teams to check: ${teamsToSearch.toString()}`);
 
                 for (const [key, value] of Object.entries(teamDictionary)) {
                     if (value === lowestNumberOfGamesPlayed) {
@@ -195,6 +190,7 @@ const RoundRobin: React.FC<IProps> = ({ config, gameData, setGameData }) => {
                 }
 
                 teamsToSearch = [...shuffleArray(teamsToSearch)];
+                // console.log(`Teams to check: ${teamsToSearch.toString()}`);
 
                 for (let j = 0; j < teamsToSearch.length; j++) {
                     // If the players in this matchup are available, then add them to the current players list.

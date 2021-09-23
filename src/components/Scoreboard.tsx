@@ -128,31 +128,135 @@ const Scoreboard:React.FC<IProps> = ({ config, gameData }) => {
 
         return Math.round(win / (win + loss) * 100);
     }
+    
+    const generateStatistics = () => {
+        let playerCourtDictionary: { [name: string]: { [name: string]: number } };
+        let partnerDictionary: { [name: string]: { [name: string]: number } } = { };
+        let opponentDictionary: { [name: string]: { [name: string]: number } } = { };
+        
+        // Init dictionaries.
+        for (const player1 of config.players) {
+            partnerDictionary[player1] = { }
+            opponentDictionary[player1] = { }
+
+            for (const player2 of config.players) {
+                if (player1 === player2) {
+                    continue;
+                }
+
+                partnerDictionary[player1][player2] = 0;
+                opponentDictionary[player1][player2] = 0;
+            }
+        }
+
+        for (const game of gameData) {
+            for (const match of game.matches) {
+                // Update partner dictionary.
+                partnerDictionary[match.team1.player1][match.team1.player2]++;
+                partnerDictionary[match.team1.player2][match.team1.player1]++;
+
+                partnerDictionary[match.team2.player3][match.team2.player4]++;
+                partnerDictionary[match.team2.player4][match.team2.player3]++;
+
+                // Update opponent dictionary.
+                opponentDictionary[match.team1.player1][match.team2.player3]++;
+                opponentDictionary[match.team1.player1][match.team2.player4]++;
+
+                opponentDictionary[match.team1.player2][match.team2.player3]++;
+                opponentDictionary[match.team1.player2][match.team2.player4]++;
+
+                opponentDictionary[match.team2.player3][match.team1.player1]++;
+                opponentDictionary[match.team2.player3][match.team1.player2]++;
+
+                opponentDictionary[match.team2.player4][match.team1.player1]++;
+                opponentDictionary[match.team2.player4][match.team1.player2]++;
+            }
+        }
+
+        let partnerStatisticsMessageList: string[] = [];
+        let opponentStatisticsMessageList: string[] = [];
+
+        for (const player1 of Object.keys(partnerDictionary)) {
+            let playerList = [...config.players];
+            let partnerStatisticsMessage = `[Partner Statistics] ${player1}: `;
+            let opponentStatisticsMessage = `[Opponent Statistics] ${player1}: `;
+
+            playerList.splice(playerList.indexOf(player1), 1);
+
+            // Generate partner statistics.
+            playerList.sort((a, b) => {
+                return partnerDictionary[player1][b] - partnerDictionary[player1][a];
+            });
+
+            for (const player2 of playerList) {
+                if (player1 === player2) {
+                    continue;
+                }
+
+                const gamesPlayedWith = partnerDictionary[player1][player2];
+
+                partnerStatisticsMessage += `${player2} (${gamesPlayedWith}), `;
+            }
+
+            // Generate opponent statistics.
+            playerList.sort((a, b) => {
+                return opponentDictionary[player1][b] - opponentDictionary[player1][a];
+            });
+
+            for (const player2 of playerList) {
+                if (player1 === player2) {
+                    continue;
+                }
+
+                const gamesPlayedAgainst = opponentDictionary[player1][player2];
+
+                opponentStatisticsMessage += `${player2} (${gamesPlayedAgainst}), `;
+            }
+
+            partnerStatisticsMessageList.push(partnerStatisticsMessage);
+            opponentStatisticsMessageList.push(opponentStatisticsMessage);
+        }
+
+        for (const message of partnerStatisticsMessageList) {
+            console.log(message);
+        }
+
+        for (const message of opponentStatisticsMessageList) {
+            console.log(message);
+        }
+
+        console.log({...partnerDictionary});
+        console.log({...opponentDictionary});
+    }
 
     return (
-        <Card className="card">
-            <CardContent>
-                <Typography 
-                    variant="h5"
-                    gutterBottom
-                >
-                    Scoreboard
-                </Typography>
-                <TableContainer>
-                    <Table padding="none" className="scoreboard-table">
-                        <TableHead className="scoreboard-header">
-                            <TableRow>
-                                <TableCell>Name</TableCell>
-                                <TableCell align="right">Win</TableCell>
-                                <TableCell align="right">Loss</TableCell>
-                                <TableCell align="right">Win Rate</TableCell>
-                            </TableRow>
-                        </TableHead>
-                        {generateTableBody()}
-                    </Table>
-                </TableContainer>
-            </CardContent>
-        </Card>
+        <>
+            <Card className="card">
+                <CardContent>
+                    <Typography 
+                        variant="h5"
+                        gutterBottom
+                    >
+                        Scoreboard
+                    </Typography>
+                    <TableContainer>
+                        <Table padding="none" className="scoreboard-table">
+                            <TableHead className="scoreboard-header">
+                                <TableRow>
+                                    <TableCell>Name</TableCell>
+                                    <TableCell align="right">Win</TableCell>
+                                    <TableCell align="right">Loss</TableCell>
+                                    <TableCell align="right">Win Rate</TableCell>
+                                </TableRow>
+                            </TableHead>
+                            {generateTableBody()}
+                        </Table>
+                    </TableContainer>
+                </CardContent>
+            </Card>
+            
+            {generateStatistics()}
+        </>
     );
 }
 
