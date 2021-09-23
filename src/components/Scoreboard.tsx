@@ -1,4 +1,4 @@
-import { Card, CardContent, Typography } from "@material-ui/core";
+import { Box, Card, CardContent, Typography } from "@material-ui/core";
 import React from "react";
 import { IState as Props } from "./Main";
 import Table from '@material-ui/core/Table';
@@ -227,6 +227,23 @@ const Scoreboard:React.FC<IProps> = ({ config, gameData }) => {
 
         console.log({...partnerDictionary});
         console.log({...opponentDictionary});
+
+        const messages = partnerStatisticsMessageList.concat(opponentStatisticsMessageList);
+
+        return (
+            messages.map((message, key) => {
+                return (
+                    <Box>
+                        <Typography 
+                            key={key}
+                            variant="inherit"
+                        >
+                            {message}
+                        </Typography>
+                    </Box>
+                );
+            })
+        );
     }
 
     return (
@@ -254,8 +271,20 @@ const Scoreboard:React.FC<IProps> = ({ config, gameData }) => {
                     </TableContainer>
                 </CardContent>
             </Card>
-            
-            {generateStatistics()}
+
+            <Card className="card">
+                <CardContent>
+                    <Typography 
+                        variant="h5"
+                        gutterBottom
+                    >
+                        Statistics
+                    </Typography>
+                    <Box className="statistics-box">
+                        {generateStatistics()}
+                    </Box>
+                </CardContent>
+            </Card>
         </>
     );
 }
