@@ -41,29 +41,44 @@ const RoundRobin: React.FC<IProps> = ({ config, gameData, setGameData }) => {
         }
     }
 
+    let matchKeyList: string[] = [];
     let teamDictionary: { [name: string]: number } = { };
     let playerDictionary: { [name: string]: number } = { };
+    let opponentDictionary: { [name: string]: { [name: string]: number } } = { };
 
     const generateBracket = (): Props["gameData"] => {
         const rounds = config.rounds;
         const bye = config.players.length - (config.courts.length * 4);
         let playersAlreadyOnBye: Props["config"]["players"] = [];
         
-        for (let i = 0; i < config.players.length; i++) {
-            for (let j = 0; j < config.players.length; j++) {
-                if (i === j) {
+        for (const player1 of config.players) {
+            // Initialise dictionary for storing available partners.
+            playerDictionary[player1] = 0;
+            opponentDictionary[player1] = { };
+
+            for (const player2 of config.players) {
+                if (player1 === player2) {
                     continue;
                 }
 
-                teamDictionary[[config.players[i], config.players[j]].sort().toString()] = 0;
+                teamDictionary[[player1, player2].sort().toString()] = 0;
+                opponentDictionary[player1][player2] = 0;
             }
         }
 
-        for (let i = 0; i < config.players.length; i++) {
-            const player = config.players[i];
+        for (const team1 of Object.keys(teamDictionary)) {
+            for (const team2 of Object.keys(teamDictionary)) {
+                if (team1 === team2) {
+                    continue;
+                }
 
-            // Initialise dictionary for storing available partners.
-            playerDictionary[player] = 0;
+                const team1List = team1.split(",");
+                const team2List = team2.split(",");
+
+                if (!team1List.some(element => team2List.includes(element))) {
+                    matchKeyList.push(team1 + ":" + team2);
+                }
+            }
         }
 
         console.log(playerDictionary);
@@ -112,13 +127,13 @@ const RoundRobin: React.FC<IProps> = ({ config, gameData, setGameData }) => {
             gameData.push(round);
         }
 
-        for (const log of matchLog) {
-            console.log(log);
-        }
+        // for (const log of matchLog) {
+        //     console.log(log);
+        // }
 
-        for (const log of teamLog) {
-            console.log(log);
-        }
+        // for (const log of teamLog) {
+        //     console.log(log);
+        // }
 
         return gameData;
     }
@@ -147,8 +162,107 @@ const RoundRobin: React.FC<IProps> = ({ config, gameData, setGameData }) => {
     const generateMatches = (courts: Props["config"]["courts"], players: Props["config"]["players"], playersOnBye: Props["config"]["players"]): IMatch[] => {
         let result: IMatch[] = []
         let currentPlayers: string[] = [];
-
         let teamKeyList = Object.keys(teamDictionary);
+
+        // Iterate through all possible matches and select it if:
+        // 1. Both teams haven't played with each other.  Tolerance increases.
+        // 2. Everyone hasn't played with each other.  Tolerance increases.
+
+        for (let i = 0; i < courts.length; i++) {
+            let team1: string[] = [];
+            let team2: string[] = [];
+
+            const invalidPlayers = [...currentPlayers, ...playersOnBye];
+
+            let counter = 1;
+            let matchFound = false;
+
+            while (!matchFound && counter <= 100) {
+                let lowestNumberOfGamesPlayed = Math.min(...Object.values(teamDictionary));
+
+                if (counter % 10 == 0) {
+                    lowestNumberOfGamesPlayed++;
+                }
+
+                for (const matchKey of matchKeyList) {
+                    const team1Key = matchKey.split(":")[0];
+                    const team2Key = matchKey.split(":")[1];
+    
+                    team1 = team1Key.split(",");
+                    team2 = team2Key.split(",");
+                    const allPlayers = team1.concat(team2);
+    
+                    // Check that none of these players have already been selected for this round.
+                    if (allPlayers.some(element => invalidPlayers.includes(element))) {
+                        continue;
+                    }
+    
+                    // Check that the players have the least number of games played.
+                    if (teamDictionary[team1Key] > lowestNumberOfGamesPlayed || teamDictionary[team2Key] > lowestNumberOfGamesPlayed) {
+                        continue;
+                    }
+        
+                    const player1 = team1[0];
+                    const player2 = team1[1];
+                    const player3 = team2[0];
+                    const player4 = team2[1];
+        
+                    // // Check if they've played against each other before.
+                    // if (opponentDictionary[player1][player3] > 0 || opponentDictionary[player1][player4] > 0) {
+                    //     continue;
+                    // }
+        
+                    // if (opponentDictionary[player2][player3] > 0 || opponentDictionary[player2][player4] > 0) {
+                    //     continue;
+                    // }
+        
+                    // Otherwise add them to the list.
+                    currentPlayers = currentPlayers.concat(allPlayers);
+    
+                    // Update team dictionary.
+                    teamDictionary[team1Key]++;
+                    teamDictionary[team2Key]++;
+    
+                    // Update opponent dictionary.
+                    opponentDictionary[player1][player3]++;
+                    opponentDictionary[player1][player4]++;
+    
+                    opponentDictionary[player2][player3]++;
+                    opponentDictionary[player2][player4]++;
+    
+                    opponentDictionary[player3][player1]++;
+                    opponentDictionary[player3][player2]++;
+    
+                    opponentDictionary[player4][player1]++;
+                    opponentDictionary[player4][player2]++;
+    
+                    break;
+                }
+
+                counter++;
+            }
+
+            const match: IMatch = {
+                court: courts[i],
+                team1: {
+                    player1: team1[0],
+                    player2: team1[1],
+                    score: 0
+                },
+                team2: { 
+                    player3: team2[0],
+                    player4: team2[1],
+                    score: 0
+                }
+            }
+
+            result.push(match);
+        }
+
+        console.log({...teamDictionary})
+        console.log({...opponentDictionary})
+        
+        return result;
 
         // Select teams instead of players..
         for (let i = 0; i < courts.length; i++) {
@@ -206,26 +320,6 @@ const RoundRobin: React.FC<IProps> = ({ config, gameData, setGameData }) => {
 
                 counter++;
             }
-
-            // for (let j = 0; j < teamKeyList.length; j++) {
-            //     if (currentPlayers.length === ((i + 1) * 4)) {
-            //         console.log(`${numberOfPlayersToSelect} players found.`)
-            //         break;
-            //     }
-
-            //     // If the players in this matchup are available, then add them to the current players list.
-            //     const invalidPlayers = [...currentPlayers, ...playersOnBye];
-            //     const teamKey = teamKeyList[j].split(",");
-
-            //     // console.log(`Checking team: ${teamKey}`);
-            //     // console.log(`Invalid players: ${invalidPlayers.toString()}`);
-
-            //     if (!teamKey.some(element => invalidPlayers.includes(element))) {
-            //         console.log(`Adding ${teamKey.toString()}(${teamDictionary[teamKeyList[j]]}) to the current players.`);
-            //         currentPlayers = currentPlayers.concat(teamKey);
-            //         teamDictionary[teamKeyList[j]]++;
-            //     }
-            // }
 
             log(`Current players for this match: ${currentPlayers}`);
 
