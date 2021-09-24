@@ -58,7 +58,7 @@ const Configuration:React.FC<IProps> = ({ config, setConfig, setGameData }) => {
     const clearGameData = () => {
         confirmAlert({
             title: "Confirm",
-            message: "Are you sure you want to clear the local game data?",
+            message: "Generating a new round robin will clear existing game data.  Are you sure you want to continue?",
             buttons: [
                 {
                     label: "Yes",
@@ -145,19 +145,21 @@ const Configuration:React.FC<IProps> = ({ config, setConfig, setGameData }) => {
 
                 <Button 
                     variant="contained" 
+                    color="primary"
+                    onClick={clearGameData}
+                >
+                    Generate round robin
+                </Button>
+
+                <Button 
+                    variant="contained" 
                     color="secondary"
                     onClick={clearConfigData}
                 >
                     Reset config
                 </Button>
 
-                <Button 
-                    variant="contained" 
-                    color="secondary"
-                    onClick={clearGameData}
-                >
-                    Reset round robin
-                </Button>
+                
             </Box>
 
         </Box>
