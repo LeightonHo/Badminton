@@ -21,11 +21,38 @@ interface IProps {
 }
 
 const Scoreboard:React.FC<IProps> = ({ config, gameData }) => {
+
+    const players: string[] = []
+
+    const initPlayers = () => {
+        // Get all the unique players in the game data
+        for (const round of gameData) {
+            for (const match of round.matches) {
+                if (players.indexOf(match.team1.player1) < 0) {
+                    players.push(match.team1.player1);
+                }
+
+                if (players.indexOf(match.team1.player2) < 0) {
+                    players.push(match.team1.player2);
+                }
+
+                if (players.indexOf(match.team2.player3) < 0) {
+                    players.push(match.team2.player3);
+                }
+
+                if (players.indexOf(match.team2.player4) < 0) {
+                    players.push(match.team2.player4);
+                }
+            }
+        }
+    }
     
     const generateTableBody = () => {
         let result: IPlayerStats = {}
 
-        for (const player of config.players) {
+        initPlayers();
+
+        for (const player of players) {
             result[player] = {
                 win: 0,
                 loss: 0
@@ -62,7 +89,7 @@ const Scoreboard:React.FC<IProps> = ({ config, gameData }) => {
                             hover
                             key={key}
                         >
-                            <TableCell>{playerStat.name} {displayEmoji(key, config.players.length)}</TableCell>
+                            <TableCell>{playerStat.name} {displayEmoji(key, players.length)}</TableCell>
                             <TableCell align="right">{playerStat.win}</TableCell>
                             <TableCell align="right">{playerStat.loss}</TableCell>
                             <TableCell align="right">{calculateWinRate(playerStat.win, playerStat.loss)}%</TableCell>
@@ -272,7 +299,7 @@ const Scoreboard:React.FC<IProps> = ({ config, gameData }) => {
                 </CardContent>
             </Card>
 
-            {generateStatistics()}
+            {/* {generateStatistics()} */}
 
             {/* <Card className="card">
                 <CardContent>

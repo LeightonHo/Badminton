@@ -134,6 +134,14 @@
   font-size: 14px;
 }
 
+.hide {
+  display: none !important;
+}
+
+.show {
+  display: block !important;
+}
+
 /* SCOREBOARD SCREEN */
 .scoreboard-table > thead > tr > th {
   font-weight: bold;
