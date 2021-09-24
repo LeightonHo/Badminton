@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { makeStyles } from '@material-ui/core/styles';
-import { Route, Switch, useHistory } from "react-router-dom";
+import { Redirect, Route, Switch, useHistory } from "react-router-dom";
 import Box from "@material-ui/core/Box";
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -187,6 +187,15 @@ const Main = () => {
       {BuildNavBar()}
 
       <Switch>
+        <Route
+          exact
+          path="/"
+          render={() => {
+            return (
+              gameData.length == 0 ? <Redirect to="/configuration" /> : <Redirect to="/round-robin" />
+            );
+          }}
+        />
         <Route path="/round-robin">
           <RoundRobin config={config} gameData={gameData} setGameData={setGameData} />
         </Route>
