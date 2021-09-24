@@ -225,25 +225,25 @@ const Scoreboard:React.FC<IProps> = ({ config, gameData }) => {
             console.log(message);
         }
 
-        console.log({...partnerDictionary});
-        console.log({...opponentDictionary});
+        // console.log({...partnerDictionary});
+        // console.log({...opponentDictionary});
 
         const messages = partnerStatisticsMessageList.concat(opponentStatisticsMessageList);
 
-        return (
-            messages.map((message, key) => {
-                return (
-                    <Box>
-                        <Typography 
-                            key={key}
-                            variant="inherit"
-                        >
-                            {message}
-                        </Typography>
-                    </Box>
-                );
-            })
-        );
+        // return (
+        //     messages.map((message, key) => {
+        //         return (
+        //             <Box>
+        //                 <Typography 
+        //                     key={key}
+        //                     variant="inherit"
+        //                 >
+        //                     {message}
+        //                 </Typography>
+        //             </Box>
+        //         );
+        //     })
+        // );
     }
 
     return (
@@ -272,7 +272,9 @@ const Scoreboard:React.FC<IProps> = ({ config, gameData }) => {
                 </CardContent>
             </Card>
 
-            <Card className="card">
+            {generateStatistics()}
+
+            {/* <Card className="card">
                 <CardContent>
                     <Typography 
                         variant="h5"
@@ -284,7 +286,7 @@ const Scoreboard:React.FC<IProps> = ({ config, gameData }) => {
                         {generateStatistics()}
                     </Box>
                 </CardContent>
-            </Card>
+            </Card> */}
         </>
     );
 }

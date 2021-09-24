@@ -147,215 +147,123 @@ const RoundRobin: React.FC<IProps> = ({ config, gameData, setGameData }) => {
         return array;
     }
 
-    const debugMode = false;
-
-    const log = (message: any) => {
-        if (debugMode) {
-            console.log(message);
-        }
-    }
-
-    let matchLog: string[] = [];
-    let teamLog: string[] = [];
+    let previousMatch = "";
 
     // Function for rendering each match takes in a list of players and generates the bracket
     const generateMatches = (courts: Props["config"]["courts"], players: Props["config"]["players"], playersOnBye: Props["config"]["players"]): IMatch[] => {
         let result: IMatch[] = []
         let currentPlayers: string[] = [];
-        let teamKeyList = Object.keys(teamDictionary);
-
-        // Iterate through all possible matches and select it if:
-        // 1. Both teams haven't played with each other.  Tolerance increases.
-        // 2. Everyone hasn't played with each other.  Tolerance increases.
 
         for (let i = 0; i < courts.length; i++) {
+            const invalidPlayers = [...currentPlayers, ...playersOnBye];
+            let lowestNumberOfGamesPlayedWith = Math.min(...Object.values(teamDictionary));
             let team1: string[] = [];
             let team2: string[] = [];
-
-            const invalidPlayers = [...currentPlayers, ...playersOnBye];
-
-            let counter = 1;
             let matchFound = false;
 
-            while (!matchFound && counter <= 100) {
-                let lowestNumberOfGamesPlayed = Math.min(...Object.values(teamDictionary));
+            matchKeyList.sort((a, b) => {
+                // Sort based on lowest total games played against each other.
+                const aTeam1Key = a.split(":")[0];
+                const aTeam2Key = a.split(":")[1];
+                const aTeam1 = aTeam1Key.split(",");
+                const aTeam2 = aTeam2Key.split(",");
+                const aPlayer1 = aTeam1[0];
+                const aPlayer2 = aTeam1[1];
+                const aPlayer3 = aTeam2[0];
+                const aPlayer4 = aTeam2[1];
+                
+                const bTeam1Key = b.split(":")[0];
+                const bTeam2Key = b.split(":")[1];
+                const bTeam1 = bTeam1Key.split(",");
+                const bTeam2 = bTeam2Key.split(",");
+                const bPlayer1 = bTeam1[0];
+                const bPlayer2 = bTeam1[1];
+                const bPlayer3 = bTeam2[0];
+                const bPlayer4 = bTeam2[1];
 
-                if (counter % 10 == 0) {
-                    lowestNumberOfGamesPlayed++;
+                const aTotal = opponentDictionary[aPlayer1][aPlayer3] + opponentDictionary[aPlayer1][aPlayer4] + opponentDictionary[aPlayer2][aPlayer3] + opponentDictionary[aPlayer2][aPlayer4];
+                const bTotal = opponentDictionary[bPlayer1][bPlayer3] + opponentDictionary[bPlayer1][bPlayer4] + opponentDictionary[bPlayer2][bPlayer3] + opponentDictionary[bPlayer2][bPlayer4];
+
+                if (aTotal === bTotal) {
+                    // Secondary sort on matches with teams with the lowest number of games played together.
+                    return (teamDictionary[aTeam1Key] + teamDictionary[aTeam2Key]) - (teamDictionary[bTeam1Key] + teamDictionary[bTeam2Key])
                 }
 
-                for (const matchKey of matchKeyList) {
-                    const team1Key = matchKey.split(":")[0];
-                    const team2Key = matchKey.split(":")[1];
-    
-                    team1 = team1Key.split(",");
-                    team2 = team2Key.split(",");
-                    const allPlayers = team1.concat(team2);
-    
-                    // Check that none of these players have already been selected for this round.
-                    if (allPlayers.some(element => invalidPlayers.includes(element))) {
-                        continue;
-                    }
-    
-                    // Check that the players have the least number of games played.
-                    if (teamDictionary[team1Key] > lowestNumberOfGamesPlayed || teamDictionary[team2Key] > lowestNumberOfGamesPlayed) {
-                        continue;
-                    }
-        
-                    const player1 = team1[0];
-                    const player2 = team1[1];
-                    const player3 = team2[0];
-                    const player4 = team2[1];
-        
-                    // // Check if they've played against each other before.
-                    // if (opponentDictionary[player1][player3] > 0 || opponentDictionary[player1][player4] > 0) {
-                    //     continue;
-                    // }
-        
-                    // if (opponentDictionary[player2][player3] > 0 || opponentDictionary[player2][player4] > 0) {
-                    //     continue;
-                    // }
-        
-                    // Otherwise add them to the list.
-                    currentPlayers = currentPlayers.concat(allPlayers);
-    
-                    // Update team dictionary.
-                    teamDictionary[team1Key]++;
-                    teamDictionary[team2Key]++;
-    
-                    // Update opponent dictionary.
-                    opponentDictionary[player1][player3]++;
-                    opponentDictionary[player1][player4]++;
-    
-                    opponentDictionary[player2][player3]++;
-                    opponentDictionary[player2][player4]++;
-    
-                    opponentDictionary[player3][player1]++;
-                    opponentDictionary[player3][player2]++;
-    
-                    opponentDictionary[player4][player1]++;
-                    opponentDictionary[player4][player2]++;
-    
-                    break;
-                }
-
-                counter++;
-            }
-
-            const match: IMatch = {
-                court: courts[i],
-                team1: {
-                    player1: team1[0],
-                    player2: team1[1],
-                    score: 0
-                },
-                team2: { 
-                    player3: team2[0],
-                    player4: team2[1],
-                    score: 0
-                }
-            }
-
-            result.push(match);
-        }
-
-        console.log({...teamDictionary})
-        console.log({...opponentDictionary})
-        
-        return result;
-
-        // Select teams instead of players..
-        for (let i = 0; i < courts.length; i++) {
-            const numberOfPlayersAlreadySelected = i * 4;
-            const numberOfPlayersToSelect = (i + 1) * 4;
-
-            teamKeyList.sort((a, b) => { 
-                return teamDictionary[a] - teamDictionary[b];
+                return aTotal - bTotal;
             });
 
-            let counter = 1;
-
-            while (currentPlayers.length < numberOfPlayersToSelect && counter <= 100) {
-                console.log(`Counter: ${counter}`);
-
-                // If we've tried 5 times and couldn't find a team, then remove the first team from the list.
-                if (counter % 2 == 0 && currentPlayers.length > 0) {
-                    let teamToRemove = currentPlayers.splice(0, 2).sort().toString();
-                    console.log(`Removing ${teamToRemove} (${teamDictionary[teamToRemove]--})`);
+            for (const matchKey of matchKeyList) {
+                if (matchKey === previousMatch) {
+                    continue;
                 }
 
-                // Figure out the minimum number of games any team has played.
-                let lowestNumberOfGamesPlayed = Math.min(...Object.values(teamDictionary));
+                const team1Key = matchKey.split(":")[0];
+                const team2Key = matchKey.split(":")[1];
 
-                // After some time, increase the search radius.
-                if (counter % 10 == 0) {
-                    lowestNumberOfGamesPlayed++;
+                team1 = team1Key.split(",");
+                team2 = team2Key.split(",");
+                const allPlayers = team1.concat(team2);
+
+                // Check that none of these players have already been selected for this round.
+                if (allPlayers.some(element => invalidPlayers.includes(element))) {
+                    continue;
                 }
 
-                console.log(`Lowest number of games: ${lowestNumberOfGamesPlayed}`);
-                
-                // Iterate through the teams that have played that many games.
-                let teamsToSearch: string[] = [];
-
-                for (const [key, value] of Object.entries(teamDictionary)) {
-                    if (value === lowestNumberOfGamesPlayed) {
-                        teamsToSearch.push(key);
-                    }
+                // Check that the players have the least number of games played.
+                if (teamDictionary[team1Key] > lowestNumberOfGamesPlayedWith || teamDictionary[team2Key] > lowestNumberOfGamesPlayedWith) {
+                    continue;
                 }
+    
+                const player1 = team1[0];
+                const player2 = team1[1];
+                const player3 = team2[0];
+                const player4 = team2[1];
+    
+                // Otherwise add them to the list.
+                currentPlayers = currentPlayers.concat(allPlayers);
 
-                teamsToSearch = [...shuffleArray(teamsToSearch)];
-                // console.log(`Teams to check: ${teamsToSearch.toString()}`);
+                // Update team dictionary.
+                teamDictionary[team1Key]++;
+                teamDictionary[team2Key]++;
 
-                for (let j = 0; j < teamsToSearch.length; j++) {
-                    // If the players in this matchup are available, then add them to the current players list.
-                    const invalidPlayers = [...currentPlayers, ...playersOnBye];
-                    const teamKey = teamsToSearch[j].split(",");
+                // Update opponent dictionary.
+                opponentDictionary[player1][player3]++;
+                opponentDictionary[player1][player4]++;
 
-                    if (!teamKey.some(element => invalidPlayers.includes(element))) {
-                        console.log(`Adding ${teamKey.toString()} (${teamDictionary[teamsToSearch[j]]}) to the current players.`);
-                        currentPlayers = currentPlayers.concat(teamKey);
-                        teamDictionary[teamsToSearch[j]]++;
-                    }
-                }
+                opponentDictionary[player2][player3]++;
+                opponentDictionary[player2][player4]++;
 
-                counter++;
+                opponentDictionary[player3][player1]++;
+                opponentDictionary[player3][player2]++;
+
+                opponentDictionary[player4][player1]++;
+                opponentDictionary[player4][player2]++;
+
+                matchFound = true;
+
+                previousMatch = matchKey;
+                break;
             }
 
-            log(`Current players for this match: ${currentPlayers}`);
-
-            const finalMatchup = [currentPlayers[numberOfPlayersAlreadySelected + 0], currentPlayers[numberOfPlayersAlreadySelected + 1], currentPlayers[numberOfPlayersAlreadySelected + 2], currentPlayers[numberOfPlayersAlreadySelected + 3]].sort();
-            matchLog.push(`${finalMatchup[0]},${finalMatchup[1]}|${finalMatchup[2]},${finalMatchup[3]}`);
-
-            const team1 = [currentPlayers[numberOfPlayersAlreadySelected + 0], currentPlayers[numberOfPlayersAlreadySelected + 1]].sort();
-            const team2 = [currentPlayers[numberOfPlayersAlreadySelected + 2], currentPlayers[numberOfPlayersAlreadySelected + 3]].sort();
-
-            teamLog.push(team1.toString());
-            teamLog.push(team2.toString());
-
-            // Test round matchups
-            // console.log([currentPlayers[numberOfPlayersAlreadySelected + 0], currentPlayers[numberOfPlayersAlreadySelected + 1], currentPlayers[numberOfPlayersAlreadySelected + 2], currentPlayers[numberOfPlayersAlreadySelected + 3]].sort().toString());
-
-            // Test team matchups
-            // console.log([currentPlayers[numberOfPlayersAlreadySelected + 0], currentPlayers[numberOfPlayersAlreadySelected + 1]].sort().toString());
-            // console.log([currentPlayers[numberOfPlayersAlreadySelected + 2], currentPlayers[numberOfPlayersAlreadySelected + 3]].sort().toString());
-
-            const match: IMatch = {
-                court: courts[i],
-                team1: {
-                    player1: currentPlayers[numberOfPlayersAlreadySelected + 0],
-                    player2: currentPlayers[numberOfPlayersAlreadySelected + 1],
-                    score: 0
-                },
-                team2: { 
-                    player3: currentPlayers[numberOfPlayersAlreadySelected + 2],
-                    player4: currentPlayers[numberOfPlayersAlreadySelected + 3],
-                    score: 0
+            if (matchFound) {
+                const match: IMatch = {
+                    court: courts[i],
+                    team1: {
+                        player1: team1[0],
+                        player2: team1[1],
+                        score: 0
+                    },
+                    team2: { 
+                        player3: team2[0],
+                        player4: team2[1],
+                        score: 0
+                    }
                 }
+    
+                result.push(match);
             }
-
-            result.push(match);
         }
-
+        
         return result;
     }
 
