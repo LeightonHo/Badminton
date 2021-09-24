@@ -309,7 +309,7 @@ const RoundRobin: React.FC<IProps> = ({ config, gameData, setGameData }) => {
                                         );
                                     })}
                                     
-                                    <Divider />
+                                    {round.byes.length > 0 ? <Divider /> : ""}
 
                                     <Grid item xs>
                                         <Bye players={round.byes}></Bye>
