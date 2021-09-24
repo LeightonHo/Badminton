@@ -1,5 +1,4 @@
-import { Box, Grid, Input, TextField, Typography } from "@material-ui/core";
-import { SettingsInputHdmiTwoTone } from "@material-ui/icons";
+import { Box, Grid, TextField, Typography } from "@material-ui/core";
 import React, { useState, KeyboardEvent } from "react";
 import { IMatch, IProps as Props } from "./RoundRobin";
 
@@ -50,7 +49,6 @@ const Match: React.FC<IProps> = ({ match, gameData, setGameData, roundKey, match
     }
 
     const handlePlayerChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        // On change, update the game state.
         if (e.target.value === "") {
             return;
         }
@@ -90,9 +88,6 @@ const Match: React.FC<IProps> = ({ match, gameData, setGameData, roundKey, match
     }
 
     const handlePlayerClick = (e: React.MouseEvent<HTMLElement>, player: string) => {
-        console.log(player)
-        console.log(e.target)
-
         setInput({
             ...input,
             [player]: true
