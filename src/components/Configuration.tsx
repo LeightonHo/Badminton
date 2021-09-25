@@ -133,7 +133,7 @@ const Configuration:React.FC<IProps> = ({ config, setConfig, setGameData }) => {
                         gutterBottom
                         className="config-card-header"
                     >
-                        Players <span>{config.players.length}</span>
+                        Players ({config.players.length})
                     </Typography>
                     <PlayerForm config={config} setConfig={setConfig} />
                     <PlayerList config={config} setConfig={setConfig} />
