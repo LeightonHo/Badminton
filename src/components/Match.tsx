@@ -1,5 +1,6 @@
 import { Box, Grid, TextField, Typography } from "@material-ui/core";
 import React, { useState, KeyboardEvent } from "react";
+import Player from "./Player";
 import { IMatch, IProps as Props } from "./RoundRobin";
 
 interface IProps {
@@ -117,54 +118,20 @@ const Match: React.FC<IProps> = ({ match, gameData, setGameData, roundKey, match
                 direction="column"
                 justifyContent="center"
             >
-                <Grid item xs>
-                    <Box
-                        onClick={(e) => { handlePlayerClick(e, "editPlayer1") }}
-                        className={input.editPlayer1 ? "hide" : "show"}
-                    >
-                        <Typography 
-                            variant="overline"
-                            className="player-name"
-                        >
-                            {match.team1.player1}
-                        </Typography>
-                    </Box>
-                    <TextField 
-                        id="inputPlayer1" 
-                        className={"text-input " + (input.editPlayer1 ? "show" : "hide")}
-                        variant="outlined" 
-                        size="small"
-                        type="text" 
-                        placeholder={match.team1.player1}
-                        onChange={handlePlayerChange}
-                        onKeyPress={(e) => { handlePlayerKeyPress(e, "editPlayer1") }}
-                        name="player1"
-                    />
-                </Grid>
-                <Grid item xs>
-                    <Box
-                        onClick={(e) => { handlePlayerClick(e, "editPlayer2") }}
-                        className={input.editPlayer2 ? "hide" : "show"}
-                    >
-                        <Typography 
-                            variant="overline"
-                            className="player-name"
-                        >
-                            {match.team1.player2}
-                        </Typography>
-                    </Box>
-                    <TextField 
-                        id="inputPlayer2" 
-                        className={"text-input " + (input.editPlayer2 ? "show" : "hide")}
-                        variant="outlined" 
-                        size="small"
-                        type="text" 
-                        placeholder={match.team1.player2}
-                        onChange={handlePlayerChange}
-                        onKeyPress={(e) => { handlePlayerKeyPress(e, "editPlayer2") }}
-                        name="player2"
-                    />
-                </Grid>
+                <Player 
+                    player="player1" 
+                    gameData={gameData} 
+                    setGameData={setGameData} 
+                    roundKey={roundKey} 
+                    matchKey={matchKey} 
+                />
+                <Player 
+                    player="player2" 
+                    gameData={gameData} 
+                    setGameData={setGameData}
+                    roundKey={roundKey} 
+                    matchKey={matchKey} 
+                />
                 <Grid item xs className="score-input-grid-item">
                     <TextField
                         variant="outlined"
@@ -188,54 +155,20 @@ const Match: React.FC<IProps> = ({ match, gameData, setGameData, roundKey, match
                 item xs
                 direction="column"
             >
-                <Grid item xs>
-                    <Box
-                        onClick={(e) => { handlePlayerClick(e, "editPlayer3") }}
-                        className={input.editPlayer3 ? "hide" : "show"}
-                    >
-                        <Typography 
-                            variant="overline"
-                            className="player-name"
-                        >
-                            {match.team2.player3}
-                        </Typography>
-                    </Box>
-                    <TextField 
-                        id="inputPlayer3" 
-                        className={"text-input " + (input.editPlayer3 ? "show" : "hide")}
-                        variant="outlined" 
-                        size="small"
-                        type="text" 
-                        placeholder={match.team2.player3}
-                        onChange={handlePlayerChange}
-                        onKeyPress={(e) => { handlePlayerKeyPress(e, "editPlayer3") }}
-                        name="player3"
-                    />
-                </Grid>
-                <Grid item xs>
-                    <Box
-                        onClick={(e) => { handlePlayerClick(e, "editPlayer4") }}
-                        className={input.editPlayer4 ? "hide" : "show"}
-                    >
-                        <Typography 
-                            variant="overline"
-                            className="player-name"
-                        >
-                            {match.team2.player4}
-                        </Typography>
-                    </Box>
-                    <TextField 
-                        id="inputPlayer4" 
-                        className={"text-input " + (input.editPlayer4 ? "show" : "hide")}
-                        variant="outlined" 
-                        size="small"
-                        type="text" 
-                        placeholder={match.team2.player4}
-                        onChange={handlePlayerChange}
-                        onKeyPress={(e) => { handlePlayerKeyPress(e, "editPlayer4") }}
-                        name="player4"
-                    />
-                </Grid>
+                <Player 
+                    player="player3" 
+                    gameData={gameData} 
+                    setGameData={setGameData}
+                    roundKey={roundKey} 
+                    matchKey={matchKey} 
+                />
+                <Player 
+                    player="player4" 
+                    gameData={gameData} 
+                    setGameData={setGameData}
+                    roundKey={roundKey} 
+                    matchKey={matchKey} 
+                />
                 <Grid item xs className="score-input-grid-item">
                     <TextField
                         variant="outlined"
