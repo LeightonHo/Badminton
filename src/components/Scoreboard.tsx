@@ -266,7 +266,7 @@ const Scoreboard:React.FC<IProps> = ({ config, gameData }) => {
         });
 
         for (const player of playerList) {
-            console.log(`${player} played ${gamesPlayedDictionary[player]} times.`)
+            console.log(`${player} played ${gamesPlayedDictionary[player]} times and was on bye ${gameData.length - gamesPlayedDictionary[player]} times.`)
         }
 
         for (const message of partnerStatisticsMessageList) {

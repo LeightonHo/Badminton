@@ -155,10 +155,8 @@ const RoundRobin: React.FC<IProps> = ({ config, gameData, setGameData }) => {
             let matches: IMatch[] = [];
             let playersOnBye: Props["config"]["players"] = [];
 
-            console.log(`Round ${i}`);
-            console.log({...teamDictionary});
-            console.log(JSON.stringify(opponentDictionary));
-            
+            matchKeyList.sort(sortMatches);
+
             if (numPlayersOnBye === 0) {
                 matches = generateMatches(playersOnBye);
             } else {
@@ -246,7 +244,14 @@ const RoundRobin: React.FC<IProps> = ({ config, gameData, setGameData }) => {
         return aTeamTotal - bTeamTotal;
     }
 
-    let previousMatch = "";
+    let previousMatchKey = "";
+
+    const wasPreviousMatch = (currentMatchKey: string, previousMatchKey: string): boolean => {
+        const currentTeams = currentMatchKey.split(":");
+        const previousTeams = previousMatchKey.split(":");
+
+        return currentTeams.sort().toString() === previousTeams.sort().toString();
+    }
 
     // Function for rendering each match takes in a list of players and generates the bracket
     const generateMatches = (playersOnBye: Props["config"]["players"]): IMatch[] => {
@@ -260,10 +265,9 @@ const RoundRobin: React.FC<IProps> = ({ config, gameData, setGameData }) => {
             let team2: string[] = [];
             let matchFound = false;
 
-            matchKeyList.sort(sortMatches);
-
             for (const matchKey of matchKeyList) {
-                if (matchKey === previousMatch) {
+                if (wasPreviousMatch(matchKey, previousMatchKey))
+                {
                     continue;
                 }
 
@@ -306,7 +310,7 @@ const RoundRobin: React.FC<IProps> = ({ config, gameData, setGameData }) => {
                 opponentDictionary[player4][player2]++;
 
                 matchFound = true;
-                previousMatch = matchKey;
+                previousMatchKey = matchKey;
 
                 break;
             }
