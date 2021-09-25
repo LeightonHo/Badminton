@@ -37,8 +37,6 @@ const RoundRobin: React.FC<IProps> = ({ config, gameData, setGameData }) => {
         if (gameData.length === 0) {
             const bracket = generateBracket();
 
-            console.log([...bracket]);
-
             setGameData([...bracket]);
         }
     }
@@ -46,13 +44,11 @@ const RoundRobin: React.FC<IProps> = ({ config, gameData, setGameData }) => {
     let byeKeyList: string[] = [];
     let matchKeyList: string[] = [];
     let teamDictionary: { [name: string]: number } = { };
-    let playerDictionary: { [name: string]: number } = { };
     let opponentDictionary: { [name: string]: { [name: string]: number } } = { };
     let byeDictionary: { [name: string]: number } = { };
 
     const initDataStructures = () => {
         for (const player1 of config.players) {
-            playerDictionary[player1] = 0;
             byeDictionary[player1] = 0;
             opponentDictionary[player1] = { };
 
@@ -120,8 +116,6 @@ const RoundRobin: React.FC<IProps> = ({ config, gameData, setGameData }) => {
                 }
             }
         }
-
-        console.log(byeKeyList);
     }
 
     const sortByes = (a: string, b: string): number => {
@@ -149,6 +143,7 @@ const RoundRobin: React.FC<IProps> = ({ config, gameData, setGameData }) => {
     }
 
     const generateBracket = (): Props["gameData"] => {
+        const numPlayersOnBye = config.players.length - (config.courts.length * 4);
         const rounds = config.rounds;
         let bracket: IRound[] = [];
         let playersAlreadyOnBye: Props["config"]["players"] = [];
@@ -158,74 +153,51 @@ const RoundRobin: React.FC<IProps> = ({ config, gameData, setGameData }) => {
         for (let i = 1; i < rounds + 1; i++)
         {
             let matches: IMatch[] = [];
+            let playersOnBye: Props["config"]["players"] = [];
+
+            console.log(`Round ${i}`);
+            console.log({...teamDictionary});
+            console.log(JSON.stringify(opponentDictionary));
             
-            // Use the bye dictionary to select next byes.  Sort by number of times on bye.
-            byeKeyList.sort(sortByes);
-
-            for (const byeKey of byeKeyList) {
-                const playersOnBye = byeKey.split(",");
-
-                // Skip these byes if some of them were already on bye last time.
-                if (playersOnBye.some(element => playersAlreadyOnBye.includes(element))) {
-                    continue;
-                }
-
-                for (const player of playersOnBye) {
-                    byeDictionary[player]++;
-                }
-
+            if (numPlayersOnBye === 0) {
                 matches = generateMatches(playersOnBye);
+            } else {
+                // Use the bye dictionary to select next byes.  Sort by number of times on bye.
+                byeKeyList.sort(sortByes);
 
-                console.log([...matches]);
+                for (const byeKey of byeKeyList) {
+                    const players = byeKey.split(",");
 
-                if (matches.length !== config.courts.length) {
-                    continue;
+                    // Skip these byes if some of them were already on bye last time.
+                    if (players.some(element => playersAlreadyOnBye.includes(element))) {
+                        continue;
+                    }
+
+                    for (const player of players) {
+                        byeDictionary[player]++;
+                    }
+
+                    matches = generateMatches(players);
+
+                    if (matches.length !== config.courts.length) {
+                        continue;
+                    }
+
+                    playersOnBye = players;
+                    playersAlreadyOnBye = players;
+
+                    break;
                 }
-
-                playersAlreadyOnBye = playersOnBye;
-
-                const round: IRound = {
-                    number: i,
-                    matches: matches,
-                    byes: playersOnBye
-                }
-    
-                bracket.push(round);
-
-                break;
             }
 
+            const round: IRound = {
+                number: i,
+                matches: matches,
+                byes: playersOnBye
+            }
 
-                // currentPlayers = shuffleArray(currentPlayers);
-
-                // matches = generateMatches(currentPlayersOnBye);
-
-                // if (matches.length !== rounds) {
-                //     // Match not found, so shuffle the byes again.
-
-                //     for (const player of currentPlayersOnBye) {
-                //         // Reset their number of byes
-
-                //     }
-                // }
-            // }
-
-            // const round: IRound = {
-            //     number: i,
-            //     matches: matches,
-            //     byes: currentPlayersOnBye
-            // }
-
-            // gameData.push(round);
+            bracket.push(round);
         }
-
-        // for (const log of matchLog) {
-        //     console.log(log);
-        // }
-
-        // for (const log of teamLog) {
-        //     console.log(log);
-        // }
 
         return bracket;
     }
@@ -240,34 +212,38 @@ const RoundRobin: React.FC<IProps> = ({ config, gameData, setGameData }) => {
     }
 
     const sortMatches = (a: string, b: string): number => {
-        // Sort based on lowest total games played against each other.
+        // Sort on matches with teams with the lowest number of games played together.
         const aTeam1Key = a.split(":")[0];
         const aTeam2Key = a.split(":")[1];
-        const aTeam1 = aTeam1Key.split(",");
-        const aTeam2 = aTeam2Key.split(",");
-        const aPlayer1 = aTeam1[0];
-        const aPlayer2 = aTeam1[1];
-        const aPlayer3 = aTeam2[0];
-        const aPlayer4 = aTeam2[1];
-        
         const bTeam1Key = b.split(":")[0];
         const bTeam2Key = b.split(":")[1];
-        const bTeam1 = bTeam1Key.split(",");
-        const bTeam2 = bTeam2Key.split(",");
-        const bPlayer1 = bTeam1[0];
-        const bPlayer2 = bTeam1[1];
-        const bPlayer3 = bTeam2[0];
-        const bPlayer4 = bTeam2[1];
 
-        const aTotal = opponentDictionary[aPlayer1][aPlayer3] + opponentDictionary[aPlayer1][aPlayer4] + opponentDictionary[aPlayer2][aPlayer3] + opponentDictionary[aPlayer2][aPlayer4];
-        const bTotal = opponentDictionary[bPlayer1][bPlayer3] + opponentDictionary[bPlayer1][bPlayer4] + opponentDictionary[bPlayer2][bPlayer3] + opponentDictionary[bPlayer2][bPlayer4];
+        const aTeamTotal = (teamDictionary[aTeam1Key] + teamDictionary[aTeam2Key]);
+        const bTeamTotal = (teamDictionary[bTeam1Key] + teamDictionary[bTeam2Key])
 
-        if (aTotal === bTotal) {
-            // Secondary sort on matches with teams with the lowest number of games played together.
-            return (teamDictionary[aTeam1Key] + teamDictionary[aTeam2Key]) - (teamDictionary[bTeam1Key] + teamDictionary[bTeam2Key])
+        if (aTeamTotal === bTeamTotal) {
+            // Secondary sort based on lowest total games played against each other.
+            const aTeam1 = aTeam1Key.split(",");
+            const aTeam2 = aTeam2Key.split(",");
+            const aPlayer1 = aTeam1[0];
+            const aPlayer2 = aTeam1[1];
+            const aPlayer3 = aTeam2[0];
+            const aPlayer4 = aTeam2[1];
+            
+            const bTeam1 = bTeam1Key.split(",");
+            const bTeam2 = bTeam2Key.split(",");
+            const bPlayer1 = bTeam1[0];
+            const bPlayer2 = bTeam1[1];
+            const bPlayer3 = bTeam2[0];
+            const bPlayer4 = bTeam2[1];
+    
+            const aTotal = opponentDictionary[aPlayer1][aPlayer3] + opponentDictionary[aPlayer1][aPlayer4] + opponentDictionary[aPlayer2][aPlayer3] + opponentDictionary[aPlayer2][aPlayer4];
+            const bTotal = opponentDictionary[bPlayer1][bPlayer3] + opponentDictionary[bPlayer1][bPlayer4] + opponentDictionary[bPlayer2][bPlayer3] + opponentDictionary[bPlayer2][bPlayer4];
+    
+            return aTotal - bTotal;
         }
 
-        return aTotal - bTotal;
+        return aTeamTotal - bTeamTotal;
     }
 
     let previousMatch = "";
@@ -280,7 +256,6 @@ const RoundRobin: React.FC<IProps> = ({ config, gameData, setGameData }) => {
 
         for (let i = 0; i < courts.length; i++) {
             const invalidPlayers = [...currentPlayers, ...playersOnBye];
-            let lowestNumberOfGamesPlayedWith = Math.min(...Object.values(teamDictionary));
             let team1: string[] = [];
             let team2: string[] = [];
             let matchFound = false;
@@ -297,15 +272,11 @@ const RoundRobin: React.FC<IProps> = ({ config, gameData, setGameData }) => {
 
                 team1 = team1Key.split(",");
                 team2 = team2Key.split(",");
+
                 const allPlayers = team1.concat(team2);
 
                 // Check that none of these players have already been selected for this round.
                 if (allPlayers.some(element => invalidPlayers.includes(element))) {
-                    continue;
-                }
-
-                // Check that the players have the least number of games played.
-                if (teamDictionary[team1Key] > lowestNumberOfGamesPlayedWith || teamDictionary[team2Key] > lowestNumberOfGamesPlayedWith) {
                     continue;
                 }
     
