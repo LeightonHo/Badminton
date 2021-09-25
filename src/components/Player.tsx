@@ -42,7 +42,7 @@ const Player: React.FC<IProps> = ({ player, gameData, setGameData, roundKey, mat
 
         setInput({
             ...input,
-            value: e.target.value + "*"
+            value: e.target.value.trim() + "*"
         });
     }
 

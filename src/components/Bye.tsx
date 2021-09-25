@@ -24,7 +24,7 @@ const Bye: React.FC<IProps> = ({ player, gameData, setGameData, roundKey }) => {
 
         setInput({
             ...input,
-            value: e.target.value + "*"
+            value: e.target.value.trim() + "*"
         });
     }
 
@@ -75,7 +75,7 @@ const Bye: React.FC<IProps> = ({ player, gameData, setGameData, roundKey }) => {
                 </Typography>
             </Box>
             <TextField 
-                id="inputPlayer"
+                id="inputBye"
                 className={"text-input " + (input.editing ? "show" : "hide")}
                 variant="outlined" 
                 size="small"

@@ -1,5 +1,5 @@
-import { Box, TextField, Typography } from "@material-ui/core";
-import React, { useState, KeyboardEvent } from "react";
+import { Box } from "@material-ui/core";
+import React from "react";
 import Bye from "./Bye";
 import { IState as Props} from "./Main";
 
@@ -17,6 +17,7 @@ const ByeContainer: React.FC<IProps> = ({ players, gameData, setGameData, roundK
             {players.map((player, key) => {
                 return (
                     <Bye 
+                        key={key}
                         player={player} 
                         gameData={gameData} 
                         setGameData={setGameData} 
