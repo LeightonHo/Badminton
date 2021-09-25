@@ -1,28 +1,91 @@
-import { Box, Typography } from "@material-ui/core";
-import React from "react";
+import { Box, TextField, Typography } from "@material-ui/core";
+import React, { useState, KeyboardEvent } from "react";
 import { IState as Props} from "./Main";
 
 interface IProps {
-    players: Props["config"]["players"]
+    player: string,
+    gameData: Props["gameData"],
+    setGameData: React.Dispatch<React.SetStateAction<Props["gameData"]>>,
+    roundKey: number
 }
 
-const Bye: React.FC<IProps> = ({ players }) => {
+const Bye: React.FC<IProps> = ({ player, gameData, setGameData, roundKey }) => {
+
+    const [input, setInput] = useState({
+        previousValue: "",
+        value: "",
+        editing: false
+    });
+
+    const handlePlayerChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.value === "") {
+            return;
+        }
+
+        setInput({
+            ...input,
+            value: e.target.value + "*"
+        });
+    }
+
+    const handlePlayerKeyPress = (e: KeyboardEvent): void => {
+        if (e.key === "Enter" || e.key === "Escape") {
+            if (input.value === "") {
+                setInput({
+                    ...input,
+                    editing: false
+                });
+    
+                return;
+            }
+
+            // Remove the existing bye and add the new one.
+            gameData[roundKey].byes.splice(gameData[roundKey].byes.indexOf(player), 1);
+            gameData[roundKey].byes.push(input.value);
+
+            setGameData([
+                ...gameData
+            ]);
+
+            setInput({
+                ...input,
+                editing: false
+            });
+        }
+    }
+
+    const handlePlayerClick = (e: React.MouseEvent<HTMLElement>): void => {
+        setInput({
+            ...input,
+            editing: true
+        });
+    }
 
     return (
-        <Box className="divBye">
-            {players.map((player, key) => {
-                return (
-                    <Box key={key}>
-                        <Typography
-                            variant="overline"
-                            align="center"
-                        >
-                            {player}
-                        </Typography>
-                    </Box>
-                )
-            })}
-        </Box>
+        <>
+            <Box 
+                onContextMenu={handlePlayerClick}
+                className={input.editing ? "hide" : "show"}
+            >
+                <Typography
+                    variant="overline"
+                    align="center"
+                >
+                    {player}
+                </Typography>
+            </Box>
+            <TextField 
+                id="inputPlayer"
+                className={"text-input " + (input.editing ? "show" : "hide")}
+                variant="outlined" 
+                size="small"
+                type="text" 
+                placeholder={player}
+                onChange={handlePlayerChange}
+                onKeyPress={handlePlayerKeyPress}
+                name={player}
+            />
+        </>
     );
 }
 

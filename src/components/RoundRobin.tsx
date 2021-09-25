@@ -1,6 +1,6 @@
 import React from "react";
 import { IState as Props } from "./Main";
-import Bye from "./Bye";
+import ByeContainer from "./ByeContainer";
 import Match from "./Match";
 import { Box, Card, CardContent, Divider, Grid, Typography } from "@material-ui/core";
 
@@ -382,7 +382,7 @@ const RoundRobin: React.FC<IProps> = ({ config, gameData, setGameData }) => {
                                     {round.byes.length > 0 ? <Divider /> : ""}
 
                                     <Grid item xs>
-                                        <Bye players={round.byes}></Bye>
+                                        <ByeContainer players={round.byes} gameData={gameData} setGameData={setGameData} roundKey={roundKey}></ByeContainer>
                                     </Grid>
                                 </Grid>
                             </CardContent>
@@ -431,7 +431,7 @@ const RoundRobin: React.FC<IProps> = ({ config, gameData, setGameData }) => {
                             })}
                             
                             <Grid item xs={2}>
-                                <Bye players={round.byes}></Bye>
+                                {/* <Bye players={round.byes}></Bye> */}
                             </Grid>
                         </Grid>
                     );

@@ -23,10 +23,34 @@ interface IProps {
 const Scoreboard:React.FC<IProps> = ({ config, gameData }) => {
 
     const players: string[] = []
+    const processedGameData: Props["gameData"] = JSON.parse(JSON.stringify(gameData));
+
+    const cleanPlayerName = (player: string): string => {
+        const indexOfAsterisk = player.indexOf("*");
+
+        if (indexOfAsterisk > 0) {
+            return player.substring(0, player.indexOf("*"));
+        }
+
+        return player;
+    }
+
+    const preprocessGameData = (): void => {
+        for (const round of processedGameData) {
+            for (const match of round.matches) {
+                match.team1.player1 = cleanPlayerName(match.team1.player1);
+                match.team1.player2 = cleanPlayerName(match.team1.player2);
+                match.team2.player3 = cleanPlayerName(match.team2.player3);
+                match.team2.player4 = cleanPlayerName(match.team2.player4);
+            }
+        }
+
+        console.log([...processedGameData]);
+    }
 
     const initPlayers = () => {
         // Get all the unique players in the game data
-        for (const round of gameData) {
+        for (const round of processedGameData) {
             for (const match of round.matches) {
                 if (players.indexOf(match.team1.player1) < 0) {
                     players.push(match.team1.player1);
@@ -45,11 +69,14 @@ const Scoreboard:React.FC<IProps> = ({ config, gameData }) => {
                 }
             }
         }
+
+        console.log(players);
     }
     
     const generateTableBody = () => {
         let result: IPlayerStats = {}
 
+        preprocessGameData();
         initPlayers();
 
         for (const player of players) {
@@ -59,7 +86,7 @@ const Scoreboard:React.FC<IProps> = ({ config, gameData }) => {
             };
         }
 
-        for (const round of gameData) {
+        for (const round of processedGameData) {
             for (const match of round.matches) {
                 // Check if the match is finished, based on the configured winning score.
                 if (match.team1.score >= config.winningScore || match.team2.score >= config.winningScore) {
@@ -178,7 +205,7 @@ const Scoreboard:React.FC<IProps> = ({ config, gameData }) => {
             }
         }
 
-        for (const game of gameData) {
+        for (const game of processedGameData) {
             // Update bye dictionary.
 
             for (const match of game.matches) {
@@ -266,7 +293,7 @@ const Scoreboard:React.FC<IProps> = ({ config, gameData }) => {
         });
 
         for (const player of playerList) {
-            console.log(`${player} played ${gamesPlayedDictionary[player]} times and was on bye ${gameData.length - gamesPlayedDictionary[player]} times.`)
+            console.log(`${player} played ${gamesPlayedDictionary[player]} times and was on bye ${processedGameData.length - gamesPlayedDictionary[player]} times.`)
         }
 
         for (const message of partnerStatisticsMessageList) {
