@@ -160,11 +160,13 @@ const Scoreboard:React.FC<IProps> = ({ config, gameData }) => {
         let playerCourtDictionary: { [name: string]: { [name: string]: number } };
         let partnerDictionary: { [name: string]: { [name: string]: number } } = { };
         let opponentDictionary: { [name: string]: { [name: string]: number } } = { };
+        let gamesPlayedDictionary: { [name: string]: number} = { };
         
         // Init dictionaries.
         for (const player1 of config.players) {
             partnerDictionary[player1] = { }
             opponentDictionary[player1] = { }
+            gamesPlayedDictionary[player1] = 0;
 
             for (const player2 of config.players) {
                 if (player1 === player2) {
@@ -177,7 +179,14 @@ const Scoreboard:React.FC<IProps> = ({ config, gameData }) => {
         }
 
         for (const game of gameData) {
+            // Update bye dictionary.
+
             for (const match of game.matches) {
+                gamesPlayedDictionary[match.team1.player1]++;
+                gamesPlayedDictionary[match.team1.player2]++;
+                gamesPlayedDictionary[match.team2.player3]++;
+                gamesPlayedDictionary[match.team2.player4]++;
+
                 // Update partner dictionary.
                 partnerDictionary[match.team1.player1][match.team1.player2]++;
                 partnerDictionary[match.team1.player2][match.team1.player1]++;
@@ -206,7 +215,6 @@ const Scoreboard:React.FC<IProps> = ({ config, gameData }) => {
         for (const player1 of Object.keys(partnerDictionary)) {
             let playerList = [...config.players];
             let partnerStatisticsMessage = `[Partner Statistics] ${player1}: `;
-            let opponentStatisticsMessage = `[Opponent Statistics] ${player1}: `;
 
             playerList.splice(playerList.indexOf(player1), 1);
 
@@ -224,6 +232,13 @@ const Scoreboard:React.FC<IProps> = ({ config, gameData }) => {
 
                 partnerStatisticsMessage += `${player2} (${gamesPlayedWith}), `;
             }
+            
+            partnerStatisticsMessageList.push(partnerStatisticsMessage);
+        }
+
+        for (const player1 of Object.keys(partnerDictionary)) {
+            let playerList = [...config.players];
+            let opponentStatisticsMessage = `[Opponent Statistics] ${player1}: `;
 
             // Generate opponent statistics.
             playerList.sort((a, b) => {
@@ -240,8 +255,18 @@ const Scoreboard:React.FC<IProps> = ({ config, gameData }) => {
                 opponentStatisticsMessage += `${player2} (${gamesPlayedAgainst}), `;
             }
 
-            partnerStatisticsMessageList.push(partnerStatisticsMessage);
             opponentStatisticsMessageList.push(opponentStatisticsMessage);
+        }
+
+        // Generate games played statistics.
+        let playerList = [...config.players];
+
+        playerList.sort((a, b) => {
+            return gamesPlayedDictionary[a] - gamesPlayedDictionary[b];
+        });
+
+        for (const player of playerList) {
+            console.log(`${player} played ${gamesPlayedDictionary[player]} times.`)
         }
 
         for (const message of partnerStatisticsMessageList) {
@@ -299,7 +324,7 @@ const Scoreboard:React.FC<IProps> = ({ config, gameData }) => {
                 </CardContent>
             </Card>
 
-            {generateStatistics()}
+            {/* {generateStatistics()} */}
 
             {/* <Card className="card">
                 <CardContent>
