@@ -35,7 +35,7 @@ const Player: React.FC<IProps> = ({ player, gameData, setGameData, roundKey, mat
             break;
     }
 
-    const handlePlayerChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.value === "") {
             return;
         }
@@ -46,7 +46,14 @@ const Player: React.FC<IProps> = ({ player, gameData, setGameData, roundKey, mat
         });
     }
 
-    const handlePlayerKeyPress = (e: KeyboardEvent): void => {
+    const handleOnBlur = () => {
+        setInput({
+            ...input,
+            editing: false
+        });
+    }
+
+    const handleKeyPress = (e: KeyboardEvent): void => {
         if (e.key === "Enter" || e.key === "Escape") {
             if (input.value === "") {
                 setInput({
@@ -87,17 +94,27 @@ const Player: React.FC<IProps> = ({ player, gameData, setGameData, roundKey, mat
         }
     }
 
-    const handlePlayerClick = (e: React.MouseEvent<HTMLElement>): void => {
-        setInput({
-            ...input,
-            editing: true
-        });
+    let clickHoldTimer: any = null;
+
+    const handleMouseDown = () => {
+        clickHoldTimer = setTimeout(() => {
+            setInput({
+                ...input,
+                editing: true
+            });
+        }, 500);
+    }
+
+    const handleMouseUp = () => {
+        clearTimeout(clickHoldTimer);
     }
 
     return (
         <Grid item xs>
-            <Box
-                onContextMenu={handlePlayerClick}
+            {!input.editing
+            ? <Box
+                onMouseDown={handleMouseDown}
+                onMouseUp={handleMouseUp}
                 className={input.editing ? "hide" : "show"}
             >
                 <Typography 
@@ -107,17 +124,20 @@ const Player: React.FC<IProps> = ({ player, gameData, setGameData, roundKey, mat
                     {playerName}
                 </Typography>
             </Box>
-            <TextField 
-                id="inputPlayer"
+            : <TextField 
+                autoFocus
+                id={`inputPlayer-${playerName}-${roundKey}-${matchKey}`}
                 className={"text-input " + (input.editing ? "show" : "hide")}
                 variant="outlined" 
                 size="small"
                 type="text" 
                 placeholder={playerName}
-                onChange={handlePlayerChange}
-                onKeyPress={handlePlayerKeyPress}
+                onChange={handleChange}
+                onKeyPress={handleKeyPress}
+                onBlur={handleOnBlur}
                 name={playerName}
             />
+            }
         </Grid>
     );
 }

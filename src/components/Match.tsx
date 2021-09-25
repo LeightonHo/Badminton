@@ -13,13 +13,6 @@ interface IProps {
 
 const Match: React.FC<IProps> = ({ match, gameData, setGameData, roundKey, matchKey }) => {
     
-    const [input, setInput] = useState({
-        editPlayer1: false,
-        editPlayer2: false,
-        editPlayer3: false,
-        editPlayer4: false
-    })
-
     const handleScoreChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
         if (isNaN(parseInt(e.target.value))) {
             return;
@@ -47,52 +40,6 @@ const Match: React.FC<IProps> = ({ match, gameData, setGameData, roundKey, match
         setGameData([
             ...gameData
         ]);
-    }
-
-    const handlePlayerChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (e.target.value === "") {
-            return;
-        }
-
-        const player = e.target.name;
-
-        if (player === "player1" || player === "player2") { 
-            gameData[roundKey].matches[matchKey] = {
-                ...match,
-                team1: {
-                    ...match.team1,
-                    [player]: e.target.value
-                }
-            }
-        } else {
-            gameData[roundKey].matches[matchKey] = {
-                ...match,
-                team2: {
-                    ...match.team2,
-                    [player]: e.target.value
-                }
-            }
-        }
-
-        setGameData([
-            ...gameData
-        ]);
-    }
-
-    const handlePlayerKeyPress = (e: KeyboardEvent, player: string) => {
-        if (e.key === "Enter" || e.key === "Escape") {
-            setInput({
-                ...input,
-                [player]: false
-            });
-        }
-    }
-
-    const handlePlayerClick = (e: React.MouseEvent<HTMLElement>, player: string) => {
-        setInput({
-            ...input,
-            [player]: true
-        });
     }
 
     return (

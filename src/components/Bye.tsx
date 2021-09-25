@@ -54,6 +54,21 @@ const Bye: React.FC<IProps> = ({ player, gameData, setGameData, roundKey }) => {
         }
     }
 
+    let clickHoldTimer: any = null;
+
+    const handleMouseDown = () => {
+        clickHoldTimer = setTimeout(() => {
+            setInput({
+                ...input,
+                editing: true
+            });
+        }, 500);
+    }
+
+    const handleMouseUp = () => {
+        clearTimeout(clickHoldTimer);
+    }
+
     const handlePlayerClick = (e: React.MouseEvent<HTMLElement>): void => {
         setInput({
             ...input,
@@ -66,6 +81,8 @@ const Bye: React.FC<IProps> = ({ player, gameData, setGameData, roundKey }) => {
             <Box 
                 onContextMenu={handlePlayerClick}
                 className={input.editing ? "hide" : "show"}
+                onMouseDown={handleMouseDown}
+                onMouseUp={handleMouseUp}
             >
                 <Typography
                     variant="overline"
