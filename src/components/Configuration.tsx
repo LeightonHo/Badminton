@@ -6,6 +6,7 @@ import PlayerList from "./PlayerList";
 import { IState as Props } from "./Main";
 import { confirmAlert } from "react-confirm-alert";
 import "react-confirm-alert/src/react-confirm-alert.css";
+import { useHistory } from "react-router-dom";
 
 export interface IConfig {
     rounds: number,
@@ -21,6 +22,7 @@ interface IProps {
 }
 
 const Configuration:React.FC<IProps> = ({ config, setConfig, setGameData }) => {
+    const history = useHistory();
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
         if (!isNaN(parseInt(e.target.value))) {
@@ -62,7 +64,10 @@ const Configuration:React.FC<IProps> = ({ config, setConfig, setGameData }) => {
             buttons: [
                 {
                     label: "Yes",
-                    onClick: () => { setGameData([]); }
+                    onClick: () => { 
+                        setGameData([]);
+                        history.push("/round-robin");
+                    }
                 },
                 {
                     label: "No",
@@ -128,7 +133,7 @@ const Configuration:React.FC<IProps> = ({ config, setConfig, setGameData }) => {
                         gutterBottom
                         className="config-card-header"
                     >
-                        Players ({config.players.length})
+                        Players <span>{config.players.length}</span>
                     </Typography>
                     <PlayerForm config={config} setConfig={setConfig} />
                     <PlayerList config={config} setConfig={setConfig} />

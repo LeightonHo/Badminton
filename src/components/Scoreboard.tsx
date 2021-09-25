@@ -244,13 +244,13 @@ const Scoreboard:React.FC<IProps> = ({ config, gameData }) => {
             opponentStatisticsMessageList.push(opponentStatisticsMessage);
         }
 
-        // for (const message of partnerStatisticsMessageList) {
-        //     console.log(message);
-        // }
+        for (const message of partnerStatisticsMessageList) {
+            console.log(message);
+        }
 
-        // for (const message of opponentStatisticsMessageList) {
-        //     console.log(message);
-        // }
+        for (const message of opponentStatisticsMessageList) {
+            console.log(message);
+        }
 
         // console.log({...partnerDictionary});
         // console.log({...opponentDictionary});
@@ -299,7 +299,7 @@ const Scoreboard:React.FC<IProps> = ({ config, gameData }) => {
                 </CardContent>
             </Card>
 
-            {/* {generateStatistics()} */}
+            {generateStatistics()}
 
             {/* <Card className="card">
                 <CardContent>

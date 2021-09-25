@@ -51,25 +51,6 @@ const Main = () => {
     players: []
   }, "badminton-config");
 
-  // const [config, setConfig] = useStickyState({
-  //   rounds: 10,
-  //   winningScore: 21,
-  //   courts: ["9", "10"],
-  //   players: [
-  //     "Leighton",
-  //     "Seth",
-  //     "Blake",
-  //     "Jenny",
-  //     "Ace",
-  //     "Kris D",
-  //     "Kris P",
-  //     "Ed",
-  //     "Deborah",
-  //     "Calvin",
-  //     "Kyvin"
-  //   ]
-  // }, "badminton-config");
-
   const useStyles = makeStyles((theme) => ({
     grow: {
       flexGrow: 1,
