@@ -43,13 +43,13 @@
 
 @media (min-width:1000px) {
   .card {
-    margin-left: 20%;
-    margin-right: 20%;
+    margin-left: 25%;
+    margin-right: 25%;
   }
 
   .config-buttons {
-    margin-left: 20%;
-    margin-right: 20%;
+    margin-left: 25%;
+    margin-right: 25%;
   }
 }
 
