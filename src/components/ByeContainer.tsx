@@ -18,6 +18,7 @@ const ByeContainer: React.FC<IProps> = ({ players, gameData, setGameData, roundK
                 return (
                     <Bye 
                         key={key}
+                        byeKey={key}
                         player={player} 
                         gameData={gameData} 
                         setGameData={setGameData} 

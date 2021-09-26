@@ -115,7 +115,6 @@ const Player: React.FC<IProps> = ({ player, gameData, setGameData, roundKey, mat
             ? <Box
                 onMouseDown={handleMouseDown}
                 onMouseUp={handleMouseUp}
-                className={input.editing ? "hide" : "show"}
             >
                 <Typography 
                     variant="overline"
@@ -127,7 +126,7 @@ const Player: React.FC<IProps> = ({ player, gameData, setGameData, roundKey, mat
             : <TextField 
                 autoFocus
                 id={`inputPlayer-${playerName}-${roundKey}-${matchKey}`}
-                className={"text-input " + (input.editing ? "show" : "hide")}
+                className={"text-input"}
                 variant="outlined" 
                 size="small"
                 type="text" 

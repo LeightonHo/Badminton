@@ -3,13 +3,14 @@ import React, { useState, KeyboardEvent } from "react";
 import { IState as Props} from "./Main";
 
 interface IProps {
+    byeKey: number,
     player: string,
     gameData: Props["gameData"],
     setGameData: React.Dispatch<React.SetStateAction<Props["gameData"]>>,
     roundKey: number
 }
 
-const Bye: React.FC<IProps> = ({ player, gameData, setGameData, roundKey }) => {
+const Bye: React.FC<IProps> = ({ byeKey, player, gameData, setGameData, roundKey }) => {
 
     const [input, setInput] = useState({
         previousValue: "",
@@ -25,6 +26,13 @@ const Bye: React.FC<IProps> = ({ player, gameData, setGameData, roundKey }) => {
         setInput({
             ...input,
             value: e.target.value.trim() + "*"
+        });
+    }
+
+    const handleOnBlur = () => {
+        setInput({
+            ...input,
+            editing: false
         });
     }
 
@@ -69,39 +77,35 @@ const Bye: React.FC<IProps> = ({ player, gameData, setGameData, roundKey }) => {
         clearTimeout(clickHoldTimer);
     }
 
-    const handlePlayerClick = (e: React.MouseEvent<HTMLElement>): void => {
-        setInput({
-            ...input,
-            editing: true
-        });
-    }
-
     return (
         <>
-            <Box 
-                onContextMenu={handlePlayerClick}
-                className={input.editing ? "hide" : "show"}
+            {!input.editing
+            ? <Box 
                 onMouseDown={handleMouseDown}
                 onMouseUp={handleMouseUp}
             >
                 <Typography
                     variant="overline"
                     align="center"
+                    className="player-name"
                 >
                     {player}
                 </Typography>
             </Box>
-            <TextField 
-                id="inputBye"
-                className={"text-input " + (input.editing ? "show" : "hide")}
+            : <TextField 
+                autoFocus
+                id={`inputBye-${player}-${byeKey}`}
+                className="text-input"
                 variant="outlined" 
                 size="small"
                 type="text" 
                 placeholder={player}
                 onChange={handlePlayerChange}
                 onKeyPress={handlePlayerKeyPress}
+                onBlur={handleOnBlur}
                 name={player}
             />
+            }
         </>
     );
 }

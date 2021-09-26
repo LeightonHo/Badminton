@@ -127,19 +127,12 @@
 
 .player-name {
   font-size: 15px !important;
+  cursor: pointer;
   /* font-weight: 400 !important; */
 }
 
 .games {
   font-size: 14px;
-}
-
-.hide {
-  display: none !important;
-}
-
-.show {
-  display: block !important;
 }
 
 /* SCOREBOARD SCREEN */
