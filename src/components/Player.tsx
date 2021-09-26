@@ -96,7 +96,7 @@ const Player: React.FC<IProps> = ({ player, gameData, setGameData, roundKey, mat
 
     let clickHoldTimer: any = null;
 
-    const handleMouseDown = () => {
+    const handlePress = () => {
         clickHoldTimer = setTimeout(() => {
             setInput({
                 ...input,
@@ -105,7 +105,7 @@ const Player: React.FC<IProps> = ({ player, gameData, setGameData, roundKey, mat
         }, 500);
     }
 
-    const handleMouseUp = () => {
+    const handleRelease = () => {
         clearTimeout(clickHoldTimer);
     }
 
@@ -113,8 +113,11 @@ const Player: React.FC<IProps> = ({ player, gameData, setGameData, roundKey, mat
         <Grid item xs>
             {!input.editing
             ? <Box
-                onMouseDown={handleMouseDown}
-                onMouseUp={handleMouseUp}
+                onMouseDown={handlePress}
+                onTouchStart={handlePress}
+                onMouseUp={handleRelease}
+                onTouchEnd={handleRelease}
+                onTouchCancel={handleRelease}
             >
                 <Typography 
                     variant="overline"

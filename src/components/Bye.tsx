@@ -64,7 +64,7 @@ const Bye: React.FC<IProps> = ({ byeKey, player, gameData, setGameData, roundKey
 
     let clickHoldTimer: any = null;
 
-    const handleMouseDown = () => {
+    const handlePress = () => {
         clickHoldTimer = setTimeout(() => {
             setInput({
                 ...input,
@@ -73,7 +73,7 @@ const Bye: React.FC<IProps> = ({ byeKey, player, gameData, setGameData, roundKey
         }, 500);
     }
 
-    const handleMouseUp = () => {
+    const handleRelease = () => {
         clearTimeout(clickHoldTimer);
     }
 
@@ -81,8 +81,11 @@ const Bye: React.FC<IProps> = ({ byeKey, player, gameData, setGameData, roundKey
         <>
             {!input.editing
             ? <Box 
-                onMouseDown={handleMouseDown}
-                onMouseUp={handleMouseUp}
+                onMouseDown={handlePress}
+                onTouchStart={handlePress}
+                onMouseUp={handleRelease}
+                onTouchEnd={handleRelease}
+                onTouchCancel={handleRelease}
             >
                 <Typography
                     variant="overline"
