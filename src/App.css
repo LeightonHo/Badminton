@@ -5,11 +5,64 @@
 /* GENERAL */
 .card {
   margin-top: 15px;
-  margin-left: 10px;
-  margin-right: 10px;
   margin-bottom: 10px;
   padding-left: 5px;
   padding-right: 5px;
+}
+
+.config-buttons {
+  margin-top: 15px;
+  margin-bottom: 10px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+@media (min-width:0px) {
+  .card {
+    margin-left: 10px;
+    margin-right: 10px;
+  }
+
+  .config-buttons {
+    margin-left: 10px;
+    margin-right: 10px;
+  }
+}
+
+@media (min-width:500px) {
+  .card {
+    margin-left: 10%;
+    margin-right: 10%;
+  }
+
+  .config-buttons {
+    margin-left: 10%;
+    margin-right: 10%;
+  }
+}
+
+@media (min-width:1000px) {
+  .card {
+    margin-left: 20%;
+    margin-right: 20%;
+  }
+
+  .config-buttons {
+    margin-left: 20%;
+    margin-right: 20%;
+  }
+}
+
+@media (min-width:1500px) {
+  .card {
+    margin-left: 30%;
+    margin-right: 30%;
+  }
+
+  .config-buttons {
+    margin-left: 30%;
+    margin-right: 30%;
+  }
 }
 
 .vertical-align-center {
@@ -56,13 +109,8 @@
   justify-content: space-between;
 }
 
-.config-buttons {
-  margin-top: 15px;
-  margin-left: 10px;
-  margin-right: 10px;
-  margin-bottom: 10px;
-  padding-left: 5px;
-  padding-right: 5px;
+.text-input {
+  width: 100%;
 }
 
 .config-buttons > button {

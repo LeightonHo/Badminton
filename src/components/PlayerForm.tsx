@@ -68,13 +68,13 @@ const PlayerForm: React.FC<IProps> = ({ config, setConfig }) => {
                 onKeyPress={handleKeyPress}
                 name="name"
             />
-            <Button 
+            {/* <Button 
                 variant="contained" 
                 color="primary"
                 onClick={handleClick}
             >
                 Add
-            </Button>
+            </Button> */}
         </Box>
     );
 }

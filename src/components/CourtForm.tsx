@@ -70,13 +70,13 @@ const CourtForm: React.FC<IProps> = ({ config, setConfig }) => {
                 onKeyPress={handleKeyPress}
                 name="court"
             />
-            <Button 
+            {/* <Button 
                 variant="contained" 
                 color="primary"
                 onClick={handleClick}
             >
                 Add
-            </Button>
+            </Button> */}
         </Box>
     );
 }
