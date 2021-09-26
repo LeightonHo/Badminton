@@ -184,7 +184,7 @@ const Main = () => {
           <Scoreboard config={config} gameData={gameData} />
         </Route>
         <Route path="/configuration">
-          <Configuration config={config} setConfig={setConfig} setGameData={setGameData} />
+          <Configuration config={config} setConfig={setConfig} gameData={gameData} setGameData={setGameData} />
         </Route>
       </Switch>
     </Box>

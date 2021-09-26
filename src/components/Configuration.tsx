@@ -18,10 +18,11 @@ export interface IConfig {
 interface IProps {
     config: Props["config"],
     setConfig: React.Dispatch<React.SetStateAction<Props["config"]>>,
+    gameData: Props["gameData"],
     setGameData: React.Dispatch<React.SetStateAction<Props["gameData"]>>
 }
 
-const Configuration:React.FC<IProps> = ({ config, setConfig, setGameData }) => {
+const Configuration:React.FC<IProps> = ({ config, setConfig, gameData, setGameData }) => {
     const history = useHistory();
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
@@ -40,7 +41,7 @@ const Configuration:React.FC<IProps> = ({ config, setConfig, setGameData }) => {
             buttons: [
                 {
                     label: "Yes",
-                    onClick: () => { 
+                    onClick: () => {
                         setConfig({
                             rounds: 10,
                             winningScore: 21,
@@ -64,7 +65,7 @@ const Configuration:React.FC<IProps> = ({ config, setConfig, setGameData }) => {
             buttons: [
                 {
                     label: "Yes",
-                    onClick: () => { 
+                    onClick: () => {
                         setGameData([]);
                         history.push("/round-robin");
                     }
@@ -77,6 +78,15 @@ const Configuration:React.FC<IProps> = ({ config, setConfig, setGameData }) => {
         });
     }
 
+    const handleExport = () => {
+        const data = `data:text/json;charsett=utf-8,${encodeURIComponent(JSON.stringify(gameData))}`;
+        let downloadAnchorElement = document.getElementById("downloadAnchorElement");
+
+        downloadAnchorElement?.setAttribute("href", data);
+        downloadAnchorElement?.setAttribute("download", `badminton-export-${new Date().toISOString().split("T")[0]}.json`);
+        downloadAnchorElement?.click();
+    }
+
     return (
         <Box>
             <Card className="card">
@@ -86,11 +96,11 @@ const Configuration:React.FC<IProps> = ({ config, setConfig, setGameData }) => {
                     >
                         General
                     </Typography>
-                    <TextField 
-                        id="inputMatches" 
+                    <TextField
+                        id="inputMatches"
                         label={`Rounds (${config.rounds.toString()})`}
                         type="number"
-                        variant="outlined" 
+                        variant="outlined"
                         size="small"
                         fullWidth
                         onChange={handleChange}
@@ -98,11 +108,11 @@ const Configuration:React.FC<IProps> = ({ config, setConfig, setGameData }) => {
                         name="name"
                         className="general-input"
                     />
-                    <TextField 
-                        id="inputWinningScore" 
+                    <TextField
+                        id="inputWinningScore"
                         label={`Winning Score (${config.winningScore.toString()})`}
                         type="number"
-                        variant="outlined" 
+                        variant="outlined"
                         size="small"
                         fullWidth
                         onChange={handleChange}
@@ -141,30 +151,32 @@ const Configuration:React.FC<IProps> = ({ config, setConfig, setGameData }) => {
             </Card>
 
             <Box className="config-buttons">
-                {/* <Button 
-                    variant="contained" 
-                    color="primary"
-                >
-                    Export
-                </Button> */}
-
-                <Button 
-                    variant="contained" 
+                <Button
+                    variant="contained"
                     color="primary"
                     onClick={clearGameData}
                 >
                     Generate round robin
                 </Button>
 
-                <Button 
-                    variant="contained" 
+                <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={handleExport}
+                >
+                    Export data
+                </Button>
+                <a id="downloadAnchorElement"></a>
+
+                <Button
+                    variant="contained"
                     color="secondary"
                     onClick={clearConfigData}
                 >
                     Reset config
                 </Button>
 
-                
+
             </Box>
 
         </Box>

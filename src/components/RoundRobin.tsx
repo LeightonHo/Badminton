@@ -200,15 +200,6 @@ const RoundRobin: React.FC<IProps> = ({ config, gameData, setGameData }) => {
         return bracket;
     }
 
-    const shuffleArray = (array: any): any[] => {
-        for (let i = array.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [array[i], array[j]] = [array[j], array[i]];
-        }
-
-        return array;
-    }
-
     const sortMatches = (a: string, b: string): number => {
         // Sort on matches with teams with the lowest number of games played together.
         const aTeam1Key = a.split(":")[0];
@@ -337,7 +328,7 @@ const RoundRobin: React.FC<IProps> = ({ config, gameData, setGameData }) => {
         return result;
     }
 
-    const renderMobileView = () => {
+    const renderView = () => {
         return (
             <Box>
                 {gameData.map((round, roundKey) => {
@@ -401,50 +392,11 @@ const RoundRobin: React.FC<IProps> = ({ config, gameData, setGameData }) => {
         }
     }
 
-    const renderDesktopView = () => {
-        return (
-            <Box className="games">
-                {gameData.map((round, i) => {
-                    return (
-                        <Grid 
-                            key={i}
-                            container
-                            direction="row"
-                            className="divRound"
-                            spacing={2}
-                        >
-                            <Grid item xs={1}>
-                                <span className="spnGameLabel">{round.number}</span>
-                            </Grid>
-                            
-                            {round.matches.map((match, j) => {
-                                return (
-                                    <Grid 
-                                        key={j}
-                                        item 
-                                        xs
-                                        className="match"
-                                    >
-                                        <Match match={match} gameData={gameData} setGameData={setGameData} roundKey={i} matchKey={j} />
-                                    </Grid>
-                                );
-                            })}
-                            
-                            <Grid item xs={2}>
-                                {/* <Bye players={round.byes}></Bye> */}
-                            </Grid>
-                        </Grid>
-                    );
-                })}
-            </Box>
-        );
-    }
-
     return (
-        <Box>
+        <>
             {initRoundRobin()}
-            {renderMobileView()}
-        </Box>
+            {renderView()}
+        </>
     );
 }
 
