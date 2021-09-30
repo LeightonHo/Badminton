@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { makeStyles } from '@material-ui/core/styles';
 import { Redirect, Route, Switch, useHistory } from "react-router-dom";
 import Box from "@material-ui/core/Box";
@@ -13,6 +13,7 @@ import { IConfig } from "./Configuration";
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import MoreIcon from '@material-ui/icons/MoreVert';
+import Lobby from "./Lobby";
 
 export interface IState {
   config: IConfig,
@@ -35,12 +36,55 @@ const useStickyState = (defaultValue: (IRound[] | IConfig), key: string) => {
   return [value, setValue];
 }
 
+// socket.addEventListener("open", () => {
+//   console.log("WebSocket is connected");
+// });
+
+// socket.addEventListener("close", (e) => {
+//   console.log(e);
+//   console.log("WebSocket is closed");
+// });
+
+// socket.addEventListener("error", (e) => {
+//   console.log(e);
+//   console.log("WebSocket is in error");
+// });
+
+// socket.addEventListener("message", (e: MessageEvent<any>) => {
+//   console.log(e.data);
+//   console.log(`Response from server: ${JSON.parse(e.data).message}`);
+// });
+
+// setTimeout(() => {
+//   const payload: any = {
+//     action: "session",
+//     method: "create",
+//     sessionId: "ABC12345"
+//   }
+
+//   console.log(payload);
+  
+//   socket.send(JSON.stringify(payload));
+// }, 1000);
+
+const socket = new WebSocket("wss://n3ko2em1n4.execute-api.ap-southeast-2.amazonaws.com/production");
+
+socket.addEventListener("open", () => {
+  console.log("WebSocket is connected");
+});
+
+socket.addEventListener("close", (e) => {
+  console.log(e);
+  console.log("WebSocket is closed");
+});
+
 const Main = () => {
   const history = useHistory();
   const handleNavigation = (path: string) => {
     history.push(path);
   }
 
+  const [gameState, setGameState] = useState([]);
   const [gameData, setGameData] = useStickyState([], "badminton-game-data");
 
   // Default values
@@ -177,6 +221,9 @@ const Main = () => {
             );
           }}
         />
+        <Route path="/lobby">
+          <Lobby socket={socket} />
+        </Route>
         <Route path="/round-robin">
           <RoundRobin config={config} gameData={gameData} setGameData={setGameData} />
         </Route>

@@ -44,8 +44,6 @@ const Scoreboard:React.FC<IProps> = ({ config, gameData }) => {
                 match.team2.player4 = cleanPlayerName(match.team2.player4);
             }
         }
-
-        console.log([...processedGameData]);
     }
 
     const initPlayers = () => {
@@ -69,8 +67,6 @@ const Scoreboard:React.FC<IProps> = ({ config, gameData }) => {
                 }
             }
         }
-
-        console.log(players);
     }
     
     const generateTableBody = () => {
