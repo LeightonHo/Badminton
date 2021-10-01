@@ -6,8 +6,8 @@ import { Box, Card, CardContent, Divider, Grid, Typography } from "@material-ui/
 
 export interface IProps {
     config: Props["config"],
-    gameState: Props["gameData"],
-    setGameState: React.Dispatch<React.SetStateAction<Props["gameData"]>>,
+    gameState: Props["gameState"],
+    setGameState: React.Dispatch<React.SetStateAction<Props["gameState"]>>,
     socket: WebSocket,
     sessionId: string
 }
@@ -144,7 +144,7 @@ const RoundRobin: React.FC<IProps> = ({ config, gameState, setGameState, socket,
         return aTotal - bTotal;
     }
 
-    const generateBracket = (): Props["gameData"] => {
+    const generateBracket = (): Props["gameState"] => {
         const numPlayersOnBye = config.players.length - (config.courts.length * 4);
         const rounds = config.rounds;
         let bracket: IRound[] = [];

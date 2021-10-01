@@ -17,7 +17,7 @@ import Lobby from "./Lobby";
 
 export interface IState {
   config: IConfig,
-  gameData: IRound[]
+  gameState: IRound[]
 }
 
 const useStickyState = (defaultValue: (IRound[] | IConfig), key: string) => {
@@ -67,7 +67,8 @@ const Main = () => {
   
   socket.onmessage = onMessage;
 
-  const [sessionId, setSessionId] = useState("");
+  const [sessionId, setSessionId] = useState<string>("");
+  // const [gameState, setGameState] = useState<IState["gameState"]>([]);
   const [gameState, setGameState] = useStickyState([], "badminton-game-data");
 
   // Default values

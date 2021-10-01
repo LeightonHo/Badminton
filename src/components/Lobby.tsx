@@ -1,15 +1,15 @@
-import { Box, Button, Card, TextField } from "@material-ui/core";
+import { Box, Button, Card, CardContent, TextField, Typography } from "@material-ui/core";
 import React, { useState } from "react";
 import { IState as Props } from "./Main";
 
 interface IProps {
     socket: WebSocket,
-    gameState: Props["gameData"],
+    gameState: Props["gameState"],
     sessionId: string,
     setSessionId: React.Dispatch<React.SetStateAction<string>>
 }
 
-const Lobby: React.FunctionComponent<IProps> = ({ socket, gameState: gameData, sessionId, setSessionId }) => {
+const Lobby: React.FunctionComponent<IProps> = ({ socket, gameState, sessionId, setSessionId }) => {
 
     const handleSessionChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
         setSessionId(e.target.value);
@@ -52,56 +52,52 @@ const Lobby: React.FunctionComponent<IProps> = ({ socket, gameState: gameData, s
         return result;
     }
 
-    const pushGameState = () => {
-        const payload: any = {
-            action: "session",
-            method: "pushGameState",
-            sessionId: sessionId,
-            gameState: JSON.stringify(gameData)
-        }
-
-        console.log(`Pushing game state..`, payload);
-        socket.send(JSON.stringify(payload));
-    }
-
     return (
-        <Card className="card">
-            <TextField
-                id="inputSession"
-                type="text"
-                variant="outlined"
-                size="small"
-                fullWidth
-                onChange={handleSessionChange}
-                name="session"
-                className="general-input"
-                value={sessionId}
-            />
+        <Box>
+            <Card className="card">
+                <CardContent className="general-card">
+                    <Typography
+                        variant="h5"
+                    >
+                        Lobby
+                    </Typography>
+                    <Typography
+                        variant="subtitle2"
+                    >
+                        If you have a session code, enter it below and hit "Join".  Otherwise click "Create" to generate a new session.
+                    </Typography>
+                    <TextField
+                        id="inputSession"
+                        label="Session Code"
+                        type="text"
+                        variant="outlined"
+                        size="small"
+                        onChange={handleSessionChange}
+                        name="session"
+                        className="general-input"
+                        value={sessionId}
+                        fullWidth
+                    />
+                </CardContent>
+            </Card>
+            <Box className="config-buttons">
+                <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={joinSession}
+                >
+                    Join Session
+                </Button>
 
-            <Button
-                variant="contained"
-                color="primary"
-                onClick={joinSession}
-            >
-                Join Session
-            </Button>
-
-            <Button
-                variant="contained"
-                color="primary"
-                onClick={createSession}
-            >
-                Create Session
-            </Button>
-
-            <Button
-                variant="contained"
-                color="primary"
-                onClick={pushGameState}
-            >
-                Push game state
-            </Button>
-        </Card>
+                <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={createSession}
+                >
+                    Create Session
+                </Button>
+            </Box>
+        </Box>
     );
 }
 

@@ -5,8 +5,8 @@ import { IState as Props} from "./Main";
 
 interface IProps {
     players: Props["config"]["players"]
-    gameData: Props["gameData"],
-    setGameData: React.Dispatch<React.SetStateAction<Props["gameData"]>>,
+    gameData: Props["gameState"],
+    setGameData: React.Dispatch<React.SetStateAction<Props["gameState"]>>,
     roundKey: number
 }
 

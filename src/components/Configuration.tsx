@@ -18,8 +18,8 @@ export interface IConfig {
 interface IProps {
     config: Props["config"],
     setConfig: React.Dispatch<React.SetStateAction<Props["config"]>>,
-    gameState: Props["gameData"],
-    setGameState: React.Dispatch<React.SetStateAction<Props["gameData"]>>
+    gameState: Props["gameState"],
+    setGameState: React.Dispatch<React.SetStateAction<Props["gameState"]>>
 }
 
 const Configuration:React.FC<IProps> = ({ config, setConfig, gameState, setGameState }) => {
@@ -175,10 +175,7 @@ const Configuration:React.FC<IProps> = ({ config, setConfig, gameState, setGameS
                 >
                     Reset config
                 </Button>
-
-
             </Box>
-
         </Box>
     );
 }

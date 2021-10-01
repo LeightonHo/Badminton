@@ -17,13 +17,13 @@ interface IPlayerStats {
 
 interface IProps {
     config: Props["config"],
-    gameState: Props["gameData"]
+    gameState: Props["gameState"]
 }
 
 const Scoreboard:React.FC<IProps> = ({ config, gameState: gameData }) => {
 
     const players: string[] = []
-    const processedGameData: Props["gameData"] = JSON.parse(JSON.stringify(gameData));
+    const processedGameData: Props["gameState"] = JSON.parse(JSON.stringify(gameData));
 
     const cleanPlayerName = (player: string): string => {
         const indexOfAsterisk = player.indexOf("*");
