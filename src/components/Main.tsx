@@ -69,6 +69,9 @@ const useStickyState = (defaultValue: (IRound[] | IConfig), key: string) => {
 
 const socket = new WebSocket("wss://n3ko2em1n4.execute-api.ap-southeast-2.amazonaws.com/production");
 
+
+
+
 socket.addEventListener("open", () => {
   console.log("WebSocket is connected");
 });
@@ -83,6 +86,20 @@ const Main = () => {
   const handleNavigation = (path: string) => {
     history.push(path);
   }
+
+  const onMessage = (ev: MessageEvent<any>) => {
+    const data = JSON.parse(ev.data);
+    console.log(data.action);
+    
+    if (data.action === "syncGameState") {
+      const gameState = JSON.parse(data.gameState);
+      console.log("Syncing game state...", gameState);
+
+      setGameData([...gameState]);
+    }
+  }
+  
+  socket.onmessage = onMessage;
 
   const [gameState, setGameState] = useState([]);
   const [gameData, setGameData] = useStickyState([], "badminton-game-data");
@@ -222,7 +239,7 @@ const Main = () => {
           }}
         />
         <Route path="/lobby">
-          <Lobby socket={socket} />
+          <Lobby socket={socket} gameData={gameData} />
         </Route>
         <Route path="/round-robin">
           <RoundRobin config={config} gameData={gameData} setGameData={setGameData} />

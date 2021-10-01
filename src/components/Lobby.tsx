@@ -1,16 +1,13 @@
 import { Box, Button, Card, TextField } from "@material-ui/core";
 import React, { useState } from "react";
+import { IState as Props } from "./Main";
 
 interface IProps {
-    socket: WebSocket
+    socket: WebSocket,
+    gameData: Props["gameData"]
 }
 
-const Lobby: React.FunctionComponent<IProps> = ({ socket }) => {
-
-    socket.addEventListener("message", (e: MessageEvent<any>) => {
-        console.log(e.data);
-        console.log(`Lobby: Response from server: ${JSON.parse(e.data).message}`);
-    });
+const Lobby: React.FunctionComponent<IProps> = ({ socket, gameData }) => {
 
     const [input, setInput] = useState({
         sessionId: ""
@@ -23,14 +20,55 @@ const Lobby: React.FunctionComponent<IProps> = ({ socket }) => {
         });
     }
 
+    const joinSession = () => {
+        const payload: any = {
+            action: "session",
+            method: "join",
+            sessionId: input.sessionId
+        }
+
+        console.log(`Joining session..`, payload);
+        socket.send(JSON.stringify(payload));
+    }
+
     const createSession = () => {
+        // TODO: check for clashes.
+        const sessionId = generateSessionId(4);
         const payload: any = {
             action: "session",
             method: "create",
-            sessionId: "ABC12345"
+            sessionId: sessionId
+        };
+
+        console.log(`Creating session..`, payload);
+        socket.send(JSON.stringify(payload));
+
+        setInput({
+            ...input,
+            sessionId: sessionId
+        });
+    }
+
+    const generateSessionId = (length: number) => {
+        const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        let result = "";
+
+        for (let i = 0; i < length; i++) {
+            result += chars.charAt(Math.floor(Math.random() * chars.length));
         }
 
-        console.log(`Creating session.. ${payload}`);
+        return result;
+    }
+
+    const pushGameState = () => {
+        const payload: any = {
+            action: "session",
+            method: "pushGameState",
+            sessionId: input.sessionId,
+            gameState: JSON.stringify(gameData)
+        }
+
+        console.log(`Pushing game state..`, payload);
         socket.send(JSON.stringify(payload));
     }
 
@@ -38,7 +76,6 @@ const Lobby: React.FunctionComponent<IProps> = ({ socket }) => {
         <Card className="card">
             <TextField
                 id="inputSession"
-                label={`Session ID`}
                 type="text"
                 variant="outlined"
                 size="small"
@@ -46,12 +83,13 @@ const Lobby: React.FunctionComponent<IProps> = ({ socket }) => {
                 onChange={handleSessionChange}
                 name="session"
                 className="general-input"
+                value={input.sessionId}
             />
 
             <Button
                 variant="contained"
                 color="primary"
-                // onClick={clearGameData}
+                onClick={joinSession}
             >
                 Join Session
             </Button>
@@ -62,6 +100,14 @@ const Lobby: React.FunctionComponent<IProps> = ({ socket }) => {
                 onClick={createSession}
             >
                 Create Session
+            </Button>
+
+            <Button
+                variant="contained"
+                color="primary"
+                onClick={pushGameState}
+            >
+                Push game state
             </Button>
         </Card>
     );
