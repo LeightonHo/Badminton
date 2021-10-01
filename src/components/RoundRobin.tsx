@@ -3,6 +3,7 @@ import { IState as Props } from "./Main";
 import ByeContainer from "./ByeContainer";
 import Match from "./Match";
 import { Box, Card, CardContent, Divider, Grid, Typography } from "@material-ui/core";
+import { pushGameState } from "../functions/SocketHelper";
 
 export interface IProps {
     config: Props["config"],
@@ -39,7 +40,8 @@ const RoundRobin: React.FC<IProps> = ({ config, gameState, setGameState, socket,
         if (gameState.length === 0) {
             const bracket = generateBracket();
 
-            setGameState([...bracket]);
+            // setGameState([...bracket]);
+            pushGameState(socket, sessionId, [...bracket]);
         }
     }
 
@@ -365,7 +367,14 @@ const RoundRobin: React.FC<IProps> = ({ config, gameState, setGameState, socket,
                                                     item xs
                                                     className="match"
                                                 >
-                                                    <Match match={match} gameState={gameState} setGameState={setGameState} roundKey={roundKey} matchKey={matchKey} socket={socket} sessionId={sessionId} />
+                                                    <Match 
+                                                        match={match} 
+                                                        gameState={gameState} 
+                                                        setGameState={setGameState} 
+                                                        roundKey={roundKey} 
+                                                        matchKey={matchKey} 
+                                                        socket={socket} 
+                                                        sessionId={sessionId} />
                                                 </Grid>
                                                 {addMatchDivider(matchKey, round.matches.length)}
                                             </Box>
@@ -375,7 +384,13 @@ const RoundRobin: React.FC<IProps> = ({ config, gameState, setGameState, socket,
                                     {round.byes.length > 0 ? <Divider /> : ""}
 
                                     <Grid item xs>
-                                        <ByeContainer players={round.byes} gameData={gameState} setGameData={setGameState} roundKey={roundKey}></ByeContainer>
+                                        <ByeContainer 
+                                            players={round.byes} 
+                                            gameState={gameState} 
+                                            setGameState={setGameState} 
+                                            roundKey={roundKey} 
+                                            socket={socket} 
+                                            sessionId={sessionId} />
                                     </Grid>
                                 </Grid>
                             </CardContent>

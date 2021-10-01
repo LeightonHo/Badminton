@@ -1,19 +1,22 @@
 import { Box, Grid, TextField, Typography } from "@material-ui/core";
 import React, { useState, KeyboardEvent } from "react";
 import { IProps as Props } from "./RoundRobin";
+import { pushGameState } from "../functions/SocketHelper";
 
 interface IProps {
     player: string,
-    gameData: Props["gameState"],
-    setGameData: React.Dispatch<React.SetStateAction<Props["gameState"]>>,
+    gameState: Props["gameState"],
+    setGameState: React.Dispatch<React.SetStateAction<Props["gameState"]>>,
     roundKey: number,
-    matchKey: number
+    matchKey: number,
+    socket: WebSocket,
+    sessionId: string
 }
 
-const Player: React.FC<IProps> = ({ player, gameData, setGameData, roundKey, matchKey }) => {
+const Player: React.FC<IProps> = ({ player, gameState, setGameState, roundKey, matchKey, socket, sessionId }) => {
 
     let playerName = "";
-    const match = gameData[roundKey].matches[matchKey];
+    const match = gameState[roundKey].matches[matchKey];
     const [input, setInput] = useState({
         value: "",
         editing: false,
@@ -65,7 +68,7 @@ const Player: React.FC<IProps> = ({ player, gameData, setGameData, roundKey, mat
             }
 
             if (player === "player1" || player === "player2") { 
-                gameData[roundKey].matches[matchKey] = {
+                gameState[roundKey].matches[matchKey] = {
                     ...match,
                     team1: {
                         ...match.team1,
@@ -73,7 +76,7 @@ const Player: React.FC<IProps> = ({ player, gameData, setGameData, roundKey, mat
                     }
                 }
             } else {
-                gameData[roundKey].matches[matchKey] = {
+                gameState[roundKey].matches[matchKey] = {
                     ...match,
                     team2: {
                         ...match.team2,
@@ -82,9 +85,10 @@ const Player: React.FC<IProps> = ({ player, gameData, setGameData, roundKey, mat
                 }
             }
 
-            setGameData([
-                ...gameData
-            ]);
+            // setGameData([
+            //     ...gameData
+            // ]);
+            pushGameState(socket, sessionId, gameState)
 
             setInput({
                 ...input,

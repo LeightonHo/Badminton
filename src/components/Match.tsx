@@ -14,6 +14,11 @@ interface IProps {
 }
 
 const Match: React.FC<IProps> = ({ match, gameState, setGameState, roundKey, matchKey, socket, sessionId }) => {
+
+    const [input, setInput] = useState({
+        team1Score: match.team1.score,
+        team2Score: match.team2.score
+    });
     
     const handleScoreChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
         if (isNaN(parseInt(e.target.value))) {
@@ -22,25 +27,31 @@ const Match: React.FC<IProps> = ({ match, gameState, setGameState, roundKey, mat
 
         // Update the game data state
         if (e.target.name === "team1Score") { 
-            gameState[roundKey].matches[matchKey] = {
-                ...match,
-                team1: {
-                    ...match.team1,
-                    score: parseInt(e.target.value)
-                }
-            }
+            setInput({
+                ...input,
+                team1Score: parseInt(e.target.value)
+            });
         } else {
-            gameState[roundKey].matches[matchKey] = {
-                ...match,
-                team2: {
-                    ...match.team2,
-                    score: parseInt(e.target.value)
-                }
-            }
-        }        
+            setInput({
+                ...input,
+                team2Score: parseInt(e.target.value)
+            });
+        }   
     }
 
     const pushGameState = () => {
+        gameState[roundKey].matches[matchKey] = {
+            ...match,
+            team1: {
+                ...match.team1,
+                score: input.team1Score
+            },
+            team2: {
+                ...match.team2,
+                score: input.team2Score
+            }
+        };
+
         const payload: any = {
             action: "session",
             method: "pushGameState",
@@ -76,17 +87,21 @@ const Match: React.FC<IProps> = ({ match, gameState, setGameState, roundKey, mat
             >
                 <Player 
                     player="player1" 
-                    gameData={gameState} 
-                    setGameData={setGameState}
+                    gameState={gameState} 
+                    setGameState={setGameState}
                     roundKey={roundKey} 
-                    matchKey={matchKey} 
+                    matchKey={matchKey}
+                    socket={socket}
+                    sessionId={sessionId}
                 />
                 <Player 
                     player="player2" 
-                    gameData={gameState} 
-                    setGameData={setGameState}
-                    roundKey={roundKey} 
-                    matchKey={matchKey} 
+                    gameState={gameState} 
+                    setGameState={setGameState}
+                    roundKey={roundKey}
+                    matchKey={matchKey}
+                    socket={socket}
+                    sessionId={sessionId}
                 />
                 <Grid item xs className="score-input-grid-item">
                     <TextField
@@ -95,7 +110,7 @@ const Match: React.FC<IProps> = ({ match, gameState, setGameState, roundKey, mat
                         onChange={handleScoreChange}
                         onBlur={pushGameState}
                         name="team1Score"
-                        placeholder={match.team1.score.toString()}
+                        value={input.team1Score.toString()}
                         size="small"
                         className="score-input"
                     />
@@ -114,17 +129,21 @@ const Match: React.FC<IProps> = ({ match, gameState, setGameState, roundKey, mat
             >
                 <Player 
                     player="player3" 
-                    gameData={gameState} 
-                    setGameData={setGameState}
+                    gameState={gameState} 
+                    setGameState={setGameState}
                     roundKey={roundKey} 
-                    matchKey={matchKey} 
+                    matchKey={matchKey}
+                    socket={socket}
+                    sessionId={sessionId}
                 />
                 <Player 
                     player="player4" 
-                    gameData={gameState} 
-                    setGameData={setGameState}
+                    gameState={gameState} 
+                    setGameState={setGameState}
                     roundKey={roundKey} 
-                    matchKey={matchKey} 
+                    matchKey={matchKey}
+                    socket={socket}
+                    sessionId={sessionId}
                 />
                 <Grid item xs className="score-input-grid-item">
                     <TextField
@@ -133,7 +152,7 @@ const Match: React.FC<IProps> = ({ match, gameState, setGameState, roundKey, mat
                         onChange={handleScoreChange}
                         onBlur={pushGameState}
                         name="team2Score"
-                        placeholder={match.team2.score.toString()}
+                        value={input.team2Score.toString()}
                         size="small"
                         className="score-input"
                     />

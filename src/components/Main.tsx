@@ -20,7 +20,7 @@ export interface IState {
   gameState: IRound[]
 }
 
-const useStickyState = (defaultValue: (IRound[] | IConfig), key: string) => {
+const useStickyState = (defaultValue: (IRound[] | IConfig | string), key: string) => {
   const [value, setValue] = useState(() => {
     const stickyValue = window.localStorage.getItem(key);
 
@@ -63,17 +63,28 @@ const Main = () => {
 
       setGameState([...gameState]);
     }
+
+    if (data.action === "createSession") {
+      console.log("Session was created.");
+      history.push("/configuration");
+    }
+
+    if (data.action === "joinSession") {
+      console.log("Joined session.");
+      // If no game state is returned, then the game hasn't started yet, so show a loading screen until data is pushed.
+      
+    }
   }
   
   socket.onmessage = onMessage;
 
-  const [sessionId, setSessionId] = useState<string>("");
+  const [sessionId, setSessionId] = useStickyState("", "badminton-session-code");
   // const [gameState, setGameState] = useState<IState["gameState"]>([]);
   const [gameState, setGameState] = useStickyState([], "badminton-game-data");
 
   // Default values
   const [config, setConfig] = useStickyState({
-    rounds: 10,
+    rounds: 15,
     winningScore: 21,
     courts: [],
     players: []
@@ -209,7 +220,7 @@ const Main = () => {
           path="/"
           render={() => {
             return (
-              gameState.length == 0 ? <Redirect to="/configuration" /> : <Redirect to="/round-robin" />
+              sessionId === "" ? <Redirect to="/lobby" /> : <Redirect to="/round-robin" />
             );
           }}
         />
@@ -223,7 +234,7 @@ const Main = () => {
           <Scoreboard config={config} gameState={gameState} />
         </Route>
         <Route path="/configuration">
-          <Configuration config={config} setConfig={setConfig} gameState={gameState} setGameState={setGameState} />
+          <Configuration config={config} setConfig={setConfig} gameState={gameState} setGameState={setGameState} socket={socket} sessionId={sessionId} />
         </Route>
       </Switch>
     </Box>

@@ -69,14 +69,8 @@ const CourtForm: React.FC<IProps> = ({ config, setConfig }) => {
                 onChange={handleChange}
                 onKeyPress={handleKeyPress}
                 name="court"
+                helperText="Press enter to add"
             />
-            {/* <Button 
-                variant="contained" 
-                color="primary"
-                onClick={handleClick}
-            >
-                Add
-            </Button> */}
         </Box>
     );
 }

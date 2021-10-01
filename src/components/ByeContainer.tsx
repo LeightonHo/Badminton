@@ -5,12 +5,14 @@ import { IState as Props} from "./Main";
 
 interface IProps {
     players: Props["config"]["players"]
-    gameData: Props["gameState"],
-    setGameData: React.Dispatch<React.SetStateAction<Props["gameState"]>>,
-    roundKey: number
+    gameState: Props["gameState"],
+    setGameState: React.Dispatch<React.SetStateAction<Props["gameState"]>>,
+    roundKey: number,
+    socket: WebSocket,
+    sessionId: string
 }
 
-const ByeContainer: React.FC<IProps> = ({ players, gameData, setGameData, roundKey }) => {
+const ByeContainer: React.FC<IProps> = ({ players, gameState, setGameState, roundKey, socket, sessionId }) => {
 
     return (
         <Box className="divBye">
@@ -20,9 +22,11 @@ const ByeContainer: React.FC<IProps> = ({ players, gameData, setGameData, roundK
                         key={key}
                         byeKey={key}
                         player={player} 
-                        gameData={gameData} 
-                        setGameData={setGameData} 
-                        roundKey={roundKey} 
+                        gameState={gameState} 
+                        setGameState={setGameState} 
+                        roundKey={roundKey}
+                        socket={socket}
+                        sessionId={sessionId}
                     />
                 )
             })}

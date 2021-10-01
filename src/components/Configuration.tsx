@@ -19,12 +19,14 @@ interface IProps {
     config: Props["config"],
     setConfig: React.Dispatch<React.SetStateAction<Props["config"]>>,
     gameState: Props["gameState"],
-    setGameState: React.Dispatch<React.SetStateAction<Props["gameState"]>>
+    setGameState: React.Dispatch<React.SetStateAction<Props["gameState"]>>,
+    socket: WebSocket,
+    sessionId: string
 }
 
-const Configuration:React.FC<IProps> = ({ config, setConfig, gameState, setGameState }) => {
+const Configuration:React.FC<IProps> = ({ config, setConfig, gameState, setGameState, socket, sessionId }) => {
     const history = useHistory();
-
+    
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
         if (!isNaN(parseInt(e.target.value))) {
             setConfig({
@@ -43,7 +45,7 @@ const Configuration:React.FC<IProps> = ({ config, setConfig, gameState, setGameS
                     label: "Yes",
                     onClick: () => {
                         setConfig({
-                            rounds: 25,
+                            rounds: 15,
                             winningScore: 21,
                             courts: [],
                             players: []
@@ -95,6 +97,11 @@ const Configuration:React.FC<IProps> = ({ config, setConfig, gameState, setGameS
                         variant="h5"
                     >
                         General
+                    </Typography>
+                    <Typography
+                        variant="subtitle2"
+                    >
+                        The session code is <b>{sessionId}</b>
                     </Typography>
                     <TextField
                         id="inputMatches"

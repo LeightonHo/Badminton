@@ -1,5 +1,6 @@
 import { Box, Button, Card, CardContent, TextField, Typography } from "@material-ui/core";
 import React, { useState } from "react";
+import { useHistory } from "react-router";
 import { IState as Props } from "./Main";
 
 interface IProps {
@@ -10,7 +11,7 @@ interface IProps {
 }
 
 const Lobby: React.FunctionComponent<IProps> = ({ socket, gameState, sessionId, setSessionId }) => {
-
+    
     const handleSessionChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
         setSessionId(e.target.value);
     }
@@ -22,12 +23,11 @@ const Lobby: React.FunctionComponent<IProps> = ({ socket, gameState, sessionId, 
             sessionId: sessionId
         }
 
-        console.log(`Joining session..`, payload);
         socket.send(JSON.stringify(payload));
     }
 
     const createSession = () => {
-        // TODO: check for clashes.
+        // TODO: session ID should be generated on the server.
         const sessionId = generateSessionId(4);
         const payload: any = {
             action: "session",
@@ -35,9 +35,7 @@ const Lobby: React.FunctionComponent<IProps> = ({ socket, gameState, sessionId, 
             sessionId: sessionId
         };
 
-        console.log(`Creating session..`, payload);
         socket.send(JSON.stringify(payload));
-
         setSessionId(sessionId);
     }
 

@@ -1,16 +1,19 @@
 import { Box, TextField, Typography } from "@material-ui/core";
 import React, { useState, KeyboardEvent } from "react";
 import { IState as Props} from "./Main";
+import { pushGameState } from "../functions/SocketHelper";
 
 interface IProps {
     byeKey: number,
     player: string,
-    gameData: Props["gameState"],
-    setGameData: React.Dispatch<React.SetStateAction<Props["gameState"]>>,
-    roundKey: number
+    gameState: Props["gameState"],
+    setGameState: React.Dispatch<React.SetStateAction<Props["gameState"]>>,
+    roundKey: number,
+    socket: WebSocket,
+    sessionId: string
 }
 
-const Bye: React.FC<IProps> = ({ byeKey, player, gameData, setGameData, roundKey }) => {
+const Bye: React.FC<IProps> = ({ byeKey, player, gameState: gameState, setGameState, roundKey, socket, sessionId }) => {
 
     const [input, setInput] = useState({
         previousValue: "",
@@ -48,12 +51,13 @@ const Bye: React.FC<IProps> = ({ byeKey, player, gameData, setGameData, roundKey
             }
 
             // Remove the existing bye and add the new one.
-            gameData[roundKey].byes.splice(gameData[roundKey].byes.indexOf(player), 1);
-            gameData[roundKey].byes.push(input.value);
+            gameState[roundKey].byes.splice(gameState[roundKey].byes.indexOf(player), 1);
+            gameState[roundKey].byes.push(input.value);
 
-            setGameData([
-                ...gameData
-            ]);
+            // setGameState([
+            //     ...gameState
+            // ]);
+            pushGameState(socket, sessionId, gameState);
 
             setInput({
                 ...input,
