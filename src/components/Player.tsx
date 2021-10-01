@@ -4,8 +4,8 @@ import { IProps as Props } from "./RoundRobin";
 
 interface IProps {
     player: string,
-    gameData: Props["gameData"],
-    setGameData: React.Dispatch<React.SetStateAction<Props["gameData"]>>,
+    gameData: Props["gameState"],
+    setGameData: React.Dispatch<React.SetStateAction<Props["gameState"]>>,
     roundKey: number,
     matchKey: number
 }

@@ -6,8 +6,10 @@ import { Box, Card, CardContent, Divider, Grid, Typography } from "@material-ui/
 
 export interface IProps {
     config: Props["config"],
-    gameData: Props["gameData"],
-    setGameData: React.Dispatch<React.SetStateAction<Props["gameData"]>>
+    gameState: Props["gameData"],
+    setGameState: React.Dispatch<React.SetStateAction<Props["gameData"]>>,
+    socket: WebSocket,
+    sessionId: string
 }
 
 export interface IMatch {
@@ -30,14 +32,14 @@ export interface IRound {
     byes: Props["config"]["players"]
 }
 
-const RoundRobin: React.FC<IProps> = ({ config, gameData, setGameData }) => {
+const RoundRobin: React.FC<IProps> = ({ config, gameState, setGameState, socket, sessionId }) => {
 
     const initRoundRobin = (): void => {
         // If there is no game data, generate the brackets.
-        if (gameData.length === 0) {
+        if (gameState.length === 0) {
             const bracket = generateBracket();
 
-            setGameData([...bracket]);
+            setGameState([...bracket]);
         }
     }
 
@@ -331,7 +333,7 @@ const RoundRobin: React.FC<IProps> = ({ config, gameData, setGameData }) => {
     const renderView = () => {
         return (
             <Box>
-                {gameData.map((round, roundKey) => {
+                {gameState.map((round, roundKey) => {
                     return (
                         <Card 
                             key={roundKey}
@@ -363,7 +365,7 @@ const RoundRobin: React.FC<IProps> = ({ config, gameData, setGameData }) => {
                                                     item xs
                                                     className="match"
                                                 >
-                                                    <Match match={match} gameData={gameData} setGameData={setGameData} roundKey={roundKey} matchKey={matchKey} />
+                                                    <Match match={match} gameState={gameState} setGameState={setGameState} roundKey={roundKey} matchKey={matchKey} socket={socket} sessionId={sessionId} />
                                                 </Grid>
                                                 {addMatchDivider(matchKey, round.matches.length)}
                                             </Box>
@@ -373,7 +375,7 @@ const RoundRobin: React.FC<IProps> = ({ config, gameData, setGameData }) => {
                                     {round.byes.length > 0 ? <Divider /> : ""}
 
                                     <Grid item xs>
-                                        <ByeContainer players={round.byes} gameData={gameData} setGameData={setGameData} roundKey={roundKey}></ByeContainer>
+                                        <ByeContainer players={round.byes} gameData={gameState} setGameData={setGameState} roundKey={roundKey}></ByeContainer>
                                     </Grid>
                                 </Grid>
                             </CardContent>

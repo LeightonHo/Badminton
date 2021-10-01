@@ -36,41 +36,7 @@ const useStickyState = (defaultValue: (IRound[] | IConfig), key: string) => {
   return [value, setValue];
 }
 
-// socket.addEventListener("open", () => {
-//   console.log("WebSocket is connected");
-// });
-
-// socket.addEventListener("close", (e) => {
-//   console.log(e);
-//   console.log("WebSocket is closed");
-// });
-
-// socket.addEventListener("error", (e) => {
-//   console.log(e);
-//   console.log("WebSocket is in error");
-// });
-
-// socket.addEventListener("message", (e: MessageEvent<any>) => {
-//   console.log(e.data);
-//   console.log(`Response from server: ${JSON.parse(e.data).message}`);
-// });
-
-// setTimeout(() => {
-//   const payload: any = {
-//     action: "session",
-//     method: "create",
-//     sessionId: "ABC12345"
-//   }
-
-//   console.log(payload);
-  
-//   socket.send(JSON.stringify(payload));
-// }, 1000);
-
 const socket = new WebSocket("wss://n3ko2em1n4.execute-api.ap-southeast-2.amazonaws.com/production");
-
-
-
 
 socket.addEventListener("open", () => {
   console.log("WebSocket is connected");
@@ -95,14 +61,14 @@ const Main = () => {
       const gameState = JSON.parse(data.gameState);
       console.log("Syncing game state...", gameState);
 
-      setGameData([...gameState]);
+      setGameState([...gameState]);
     }
   }
   
   socket.onmessage = onMessage;
 
-  const [gameState, setGameState] = useState([]);
-  const [gameData, setGameData] = useStickyState([], "badminton-game-data");
+  const [sessionId, setSessionId] = useState("");
+  const [gameState, setGameState] = useStickyState([], "badminton-game-data");
 
   // Default values
   const [config, setConfig] = useStickyState({
@@ -170,6 +136,11 @@ const Main = () => {
         onClose={handleMobileMenuClose}
       >
         <MenuItem>
+          <IconButton color="inherit" onClick={(() => { handleNavigation("/lobby") })}>
+            <Typography>Lobby</Typography>
+          </IconButton>
+        </MenuItem>
+        <MenuItem>
           <IconButton color="inherit" onClick={(() => { handleNavigation("/round-robin") })}>
             <Typography>Games</Typography>
           </IconButton>
@@ -196,6 +167,9 @@ const Main = () => {
             </Typography>
             <div className={classes.grow} />
             <div className={classes.sectionDesktop}>
+              <IconButton color="inherit" onClick={(() => { handleNavigation("/lobby") })}>
+                <Typography>Lobby</Typography>
+              </IconButton>
               <IconButton color="inherit" onClick={(() => { handleNavigation("/round-robin") })}>
                 <Typography>Games</Typography>
               </IconButton>
@@ -234,21 +208,21 @@ const Main = () => {
           path="/"
           render={() => {
             return (
-              gameData.length == 0 ? <Redirect to="/configuration" /> : <Redirect to="/round-robin" />
+              gameState.length == 0 ? <Redirect to="/configuration" /> : <Redirect to="/round-robin" />
             );
           }}
         />
         <Route path="/lobby">
-          <Lobby socket={socket} gameData={gameData} />
+          <Lobby socket={socket} gameState={gameState} sessionId={sessionId} setSessionId={setSessionId} />
         </Route>
         <Route path="/round-robin">
-          <RoundRobin config={config} gameData={gameData} setGameData={setGameData} />
+          <RoundRobin config={config} gameState={gameState} setGameState={setGameState} socket={socket} sessionId={sessionId}/>
         </Route>
         <Route path="/scoreboard">
-          <Scoreboard config={config} gameData={gameData} />
+          <Scoreboard config={config} gameState={gameState} />
         </Route>
         <Route path="/configuration">
-          <Configuration config={config} setConfig={setConfig} gameData={gameData} setGameData={setGameData} />
+          <Configuration config={config} setConfig={setConfig} gameState={gameState} setGameState={setGameState} />
         </Route>
       </Switch>
     </Box>

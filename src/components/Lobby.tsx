@@ -4,27 +4,22 @@ import { IState as Props } from "./Main";
 
 interface IProps {
     socket: WebSocket,
-    gameData: Props["gameData"]
+    gameState: Props["gameData"],
+    sessionId: string,
+    setSessionId: React.Dispatch<React.SetStateAction<string>>
 }
 
-const Lobby: React.FunctionComponent<IProps> = ({ socket, gameData }) => {
-
-    const [input, setInput] = useState({
-        sessionId: ""
-    });
+const Lobby: React.FunctionComponent<IProps> = ({ socket, gameState: gameData, sessionId, setSessionId }) => {
 
     const handleSessionChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-        setInput({
-            ...input,
-            sessionId: e.target.value
-        });
+        setSessionId(e.target.value);
     }
 
     const joinSession = () => {
         const payload: any = {
             action: "session",
             method: "join",
-            sessionId: input.sessionId
+            sessionId: sessionId
         }
 
         console.log(`Joining session..`, payload);
@@ -43,10 +38,7 @@ const Lobby: React.FunctionComponent<IProps> = ({ socket, gameData }) => {
         console.log(`Creating session..`, payload);
         socket.send(JSON.stringify(payload));
 
-        setInput({
-            ...input,
-            sessionId: sessionId
-        });
+        setSessionId(sessionId);
     }
 
     const generateSessionId = (length: number) => {
@@ -64,7 +56,7 @@ const Lobby: React.FunctionComponent<IProps> = ({ socket, gameData }) => {
         const payload: any = {
             action: "session",
             method: "pushGameState",
-            sessionId: input.sessionId,
+            sessionId: sessionId,
             gameState: JSON.stringify(gameData)
         }
 
@@ -83,7 +75,7 @@ const Lobby: React.FunctionComponent<IProps> = ({ socket, gameData }) => {
                 onChange={handleSessionChange}
                 name="session"
                 className="general-input"
-                value={input.sessionId}
+                value={sessionId}
             />
 
             <Button

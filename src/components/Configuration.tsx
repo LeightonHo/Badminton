@@ -18,11 +18,11 @@ export interface IConfig {
 interface IProps {
     config: Props["config"],
     setConfig: React.Dispatch<React.SetStateAction<Props["config"]>>,
-    gameData: Props["gameData"],
-    setGameData: React.Dispatch<React.SetStateAction<Props["gameData"]>>
+    gameState: Props["gameData"],
+    setGameState: React.Dispatch<React.SetStateAction<Props["gameData"]>>
 }
 
-const Configuration:React.FC<IProps> = ({ config, setConfig, gameData, setGameData }) => {
+const Configuration:React.FC<IProps> = ({ config, setConfig, gameState, setGameState }) => {
     const history = useHistory();
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
@@ -43,7 +43,7 @@ const Configuration:React.FC<IProps> = ({ config, setConfig, gameData, setGameDa
                     label: "Yes",
                     onClick: () => {
                         setConfig({
-                            rounds: 10,
+                            rounds: 25,
                             winningScore: 21,
                             courts: [],
                             players: []
@@ -66,7 +66,7 @@ const Configuration:React.FC<IProps> = ({ config, setConfig, gameData, setGameDa
                 {
                     label: "Yes",
                     onClick: () => {
-                        setGameData([]);
+                        setGameState([]);
                         history.push("/round-robin");
                     }
                 },
@@ -79,7 +79,7 @@ const Configuration:React.FC<IProps> = ({ config, setConfig, gameData, setGameDa
     }
 
     const handleExport = () => {
-        const data = `data:text/json;charsett=utf-8,${encodeURIComponent(JSON.stringify(gameData))}`;
+        const data = `data:text/json;charsett=utf-8,${encodeURIComponent(JSON.stringify(gameState))}`;
         let downloadAnchorElement = document.getElementById("downloadAnchorElement");
 
         downloadAnchorElement?.setAttribute("href", data);

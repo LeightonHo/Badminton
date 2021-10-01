@@ -17,10 +17,10 @@ interface IPlayerStats {
 
 interface IProps {
     config: Props["config"],
-    gameData: Props["gameData"]
+    gameState: Props["gameData"]
 }
 
-const Scoreboard:React.FC<IProps> = ({ config, gameData }) => {
+const Scoreboard:React.FC<IProps> = ({ config, gameState: gameData }) => {
 
     const players: string[] = []
     const processedGameData: Props["gameData"] = JSON.parse(JSON.stringify(gameData));

@@ -5,13 +5,15 @@ import { IMatch, IProps as Props } from "./RoundRobin";
 
 interface IProps {
     match: IMatch,
-    gameData: Props["gameData"],
-    setGameData: React.Dispatch<React.SetStateAction<Props["gameData"]>>,
+    gameState: Props["gameState"],
+    setGameState: React.Dispatch<React.SetStateAction<Props["gameState"]>>,
     roundKey: number,
-    matchKey: number
+    matchKey: number,
+    socket: WebSocket,
+    sessionId: string
 }
 
-const Match: React.FC<IProps> = ({ match, gameData, setGameData, roundKey, matchKey }) => {
+const Match: React.FC<IProps> = ({ match, gameState, setGameState, roundKey, matchKey, socket, sessionId }) => {
     
     const handleScoreChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
         if (isNaN(parseInt(e.target.value))) {
@@ -20,7 +22,7 @@ const Match: React.FC<IProps> = ({ match, gameData, setGameData, roundKey, match
 
         // Update the game data state
         if (e.target.name === "team1Score") { 
-            gameData[roundKey].matches[matchKey] = {
+            gameState[roundKey].matches[matchKey] = {
                 ...match,
                 team1: {
                     ...match.team1,
@@ -28,18 +30,25 @@ const Match: React.FC<IProps> = ({ match, gameData, setGameData, roundKey, match
                 }
             }
         } else {
-            gameData[roundKey].matches[matchKey] = {
+            gameState[roundKey].matches[matchKey] = {
                 ...match,
                 team2: {
                     ...match.team2,
                     score: parseInt(e.target.value)
                 }
             }
+        }        
+    }
+
+    const pushGameState = () => {
+        const payload: any = {
+            action: "session",
+            method: "pushGameState",
+            sessionId: sessionId,
+            gameState: JSON.stringify(gameState)
         }
 
-        setGameData([
-            ...gameData
-        ]);
+        socket.send(JSON.stringify(payload));
     }
 
     return (
@@ -67,15 +76,15 @@ const Match: React.FC<IProps> = ({ match, gameData, setGameData, roundKey, match
             >
                 <Player 
                     player="player1" 
-                    gameData={gameData} 
-                    setGameData={setGameData} 
+                    gameData={gameState} 
+                    setGameData={setGameState}
                     roundKey={roundKey} 
                     matchKey={matchKey} 
                 />
                 <Player 
                     player="player2" 
-                    gameData={gameData} 
-                    setGameData={setGameData}
+                    gameData={gameState} 
+                    setGameData={setGameState}
                     roundKey={roundKey} 
                     matchKey={matchKey} 
                 />
@@ -84,6 +93,7 @@ const Match: React.FC<IProps> = ({ match, gameData, setGameData, roundKey, match
                         variant="outlined"
                         type="number"
                         onChange={handleScoreChange}
+                        onBlur={pushGameState}
                         name="team1Score"
                         placeholder={match.team1.score.toString()}
                         size="small"
@@ -104,15 +114,15 @@ const Match: React.FC<IProps> = ({ match, gameData, setGameData, roundKey, match
             >
                 <Player 
                     player="player3" 
-                    gameData={gameData} 
-                    setGameData={setGameData}
+                    gameData={gameState} 
+                    setGameData={setGameState}
                     roundKey={roundKey} 
                     matchKey={matchKey} 
                 />
                 <Player 
                     player="player4" 
-                    gameData={gameData} 
-                    setGameData={setGameData}
+                    gameData={gameState} 
+                    setGameData={setGameState}
                     roundKey={roundKey} 
                     matchKey={matchKey} 
                 />
@@ -121,6 +131,7 @@ const Match: React.FC<IProps> = ({ match, gameData, setGameData, roundKey, match
                         variant="outlined"
                         type="number"
                         onChange={handleScoreChange}
+                        onBlur={pushGameState}
                         name="team2Score"
                         placeholder={match.team2.score.toString()}
                         size="small"
