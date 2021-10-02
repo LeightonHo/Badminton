@@ -20,10 +20,10 @@ interface IProps {
     gameState: Props["gameState"]
 }
 
-const Scoreboard:React.FC<IProps> = ({ config, gameState: gameData }) => {
+const Scoreboard:React.FC<IProps> = ({ config, gameState }) => {
 
-    const players: string[] = []
-    const processedGameData: Props["gameState"] = JSON.parse(JSON.stringify(gameData));
+    const players: string[] = [];
+    const processedGameData: Props["gameState"] = JSON.parse(JSON.stringify(gameState));
 
     const cleanPlayerName = (player: string): string => {
         const indexOfAsterisk = player.indexOf("*");

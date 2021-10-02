@@ -21,10 +21,11 @@ interface IProps {
     gameState: Props["gameState"],
     setGameState: React.Dispatch<React.SetStateAction<Props["gameState"]>>,
     socket: WebSocket,
-    sessionId: string
+    sessionId: string,
+    setCreateRoundRobin: React.Dispatch<React.SetStateAction<boolean>>,
 }
 
-const Configuration:React.FC<IProps> = ({ config, setConfig, gameState, setGameState, socket, sessionId }) => {
+const Configuration:React.FC<IProps> = ({ config, setConfig, gameState, setGameState, socket, sessionId, setCreateRoundRobin }) => {
     const history = useHistory();
     
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
@@ -69,6 +70,7 @@ const Configuration:React.FC<IProps> = ({ config, setConfig, gameState, setGameS
                     label: "Yes",
                     onClick: () => {
                         setGameState([]);
+                        setCreateRoundRobin(true);
                         history.push("/round-robin");
                     }
                 },

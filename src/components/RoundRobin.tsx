@@ -9,8 +9,10 @@ export interface IProps {
     config: Props["config"],
     gameState: Props["gameState"],
     setGameState: React.Dispatch<React.SetStateAction<Props["gameState"]>>,
-    socket: WebSocket,
-    sessionId: string
+    socket: Props["socket"],
+    sessionId: string,
+    createRoundRobin: boolean,
+    setCreateRoundRobin: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 export interface IMatch {
@@ -33,14 +35,14 @@ export interface IRound {
     byes: Props["config"]["players"]
 }
 
-const RoundRobin: React.FC<IProps> = ({ config, gameState, setGameState, socket, sessionId }) => {
+const RoundRobin: React.FC<IProps> = ({ config, gameState, setGameState, socket, sessionId, createRoundRobin, setCreateRoundRobin }) => {
 
     const initRoundRobin = (): void => {
         // If there is no game data, generate the brackets.
-        if (gameState.length === 0) {
+        if (gameState.length === 0 && createRoundRobin) {
             const bracket = generateBracket();
 
-            // setGameState([...bracket]);
+            console.log("Pushing game state from round robin.");
             pushGameState(socket, sessionId, [...bracket]);
         }
     }
@@ -412,7 +414,10 @@ const RoundRobin: React.FC<IProps> = ({ config, gameState, setGameState, socket,
     return (
         <>
             {initRoundRobin()}
-            {renderView()}
+            {gameState.length === 0
+            ? <div>Waiting for game data..</div>
+            : renderView()
+            }
         </>
     );
 }

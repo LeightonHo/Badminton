@@ -14,10 +14,12 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import Lobby from "./Lobby";
+import { joinSession, leaveSession } from "../functions/SocketHelper";
 
 export interface IState {
   config: IConfig,
-  gameState: IRound[]
+  gameState: IRound[],
+  socket: WebSocket
 }
 
 const useStickyState = (defaultValue: (IRound[] | IConfig | string), key: string) => {
@@ -36,16 +38,38 @@ const useStickyState = (defaultValue: (IRound[] | IConfig | string), key: string
   return [value, setValue];
 }
 
-const socket = new WebSocket("wss://n3ko2em1n4.execute-api.ap-southeast-2.amazonaws.com/production");
+const heartbeat = () => {
+  console.log(`Heartbeat running.. ${new Date()}`);
 
-socket.addEventListener("open", () => {
-  console.log("WebSocket is connected");
-});
+  const payload: any = {
+    action: "ping"
+  }
 
-socket.addEventListener("close", (e) => {
-  console.log(e);
-  console.log("WebSocket is closed");
-});
+  socket.send(JSON.stringify(payload));
+  setTimeout(heartbeat, 60000);
+}
+
+const initSocket = (): WebSocket => {
+  console.log("Initialising web socket.");
+  let socket = new WebSocket("wss://op47bt7cik.execute-api.ap-southeast-2.amazonaws.com/test");
+
+  socket.addEventListener("open", () => {
+    console.log("WebSocket is connected.");
+  });
+
+  socket.addEventListener("close", (e) => {
+    console.log(e);
+    console.log("WebSocket is closed.");
+  });
+
+  socket.onclose = (ev: CloseEvent) => {
+    console.log("On close fired:", ev);
+  }
+
+  return socket;
+}
+
+let socket: WebSocket = initSocket();
 
 const Main = () => {
   const history = useHistory();
@@ -53,34 +77,53 @@ const Main = () => {
     history.push(path);
   }
 
-  const onMessage = (ev: MessageEvent<any>) => {
+  socket.addEventListener("joinedSession", () => {
+    console.log("Joined session custom event listener.");
+  });
+
+  socket.onopen = () => {
+    joinSession(socket, sessionId);
+    heartbeat();
+  }
+
+  socket.onclose = () => {
+    console.log("Leaving session.");
+    // leaveSession(socket, sessionId);
+  }
+
+  socket.onmessage = (ev: MessageEvent<any>) => {
     const data = JSON.parse(ev.data);
-    console.log(data.action);
+    console.log(data);
     
     if (data.action === "syncGameState") {
-      const gameState = JSON.parse(data.gameState);
-      console.log("Syncing game state...", gameState);
+      const newGameState = JSON.parse(data.gameState);
+      console.log("Syncing game state...", newGameState);
 
-      setGameState([...gameState]);
+      setGameState([...newGameState]);
     }
 
     if (data.action === "createSession") {
-      console.log("Session was created.");
+      console.log(data.message);
       history.push("/configuration");
     }
 
-    if (data.action === "joinSession") {
-      console.log("Joined session.");
+    if (data.action === "joinedSession") {
+      console.log(data.message);
+      setJoinedSession(true);
       // If no game state is returned, then the game hasn't started yet, so show a loading screen until data is pushed.
-      
+      if (data.gameState.length > 0) {
+        const gameState = JSON.parse(data.gameState);
+
+        setGameState(gameState);
+      }
     }
   }
-  
-  socket.onmessage = onMessage;
 
+  const [createRoundRobin, setCreateRoundRobin] = useState<boolean>(false);
   const [sessionId, setSessionId] = useStickyState("", "badminton-session-code");
-  // const [gameState, setGameState] = useState<IState["gameState"]>([]);
-  const [gameState, setGameState] = useStickyState([], "badminton-game-data");
+  const [joinedSession, setJoinedSession] = useState<boolean>(false);
+  const [gameState, setGameState] = useState<IState["gameState"]>([]);
+  // const [gameState, setGameState] = useStickyState([], "badminton-game-data");
 
   // Default values
   const [config, setConfig] = useStickyState({
@@ -220,21 +263,21 @@ const Main = () => {
           path="/"
           render={() => {
             return (
-              sessionId === "" ? <Redirect to="/lobby" /> : <Redirect to="/round-robin" />
+              !joinedSession ? <Redirect to="/lobby" /> : <Redirect to="/round-robin" />
             );
           }}
         />
         <Route path="/lobby">
-          <Lobby socket={socket} gameState={gameState} sessionId={sessionId} setSessionId={setSessionId} />
+          <Lobby socket={socket} gameState={gameState} sessionId={sessionId} setSessionId={setSessionId} joinedSession={joinedSession} setJoinedSession={setJoinedSession} />
         </Route>
         <Route path="/round-robin">
-          <RoundRobin config={config} gameState={gameState} setGameState={setGameState} socket={socket} sessionId={sessionId}/>
+          <RoundRobin config={config} gameState={gameState} setGameState={setGameState} socket={socket} sessionId={sessionId} createRoundRobin={createRoundRobin} setCreateRoundRobin={setCreateRoundRobin} />
         </Route>
         <Route path="/scoreboard">
           <Scoreboard config={config} gameState={gameState} />
         </Route>
         <Route path="/configuration">
-          <Configuration config={config} setConfig={setConfig} gameState={gameState} setGameState={setGameState} socket={socket} sessionId={sessionId} />
+          <Configuration config={config} setConfig={setConfig} gameState={gameState} setGameState={setGameState} socket={socket} sessionId={sessionId} setCreateRoundRobin={setCreateRoundRobin} />
         </Route>
       </Switch>
     </Box>

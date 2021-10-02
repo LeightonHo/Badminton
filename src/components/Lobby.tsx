@@ -2,28 +2,28 @@ import { Box, Button, Card, CardContent, TextField, Typography } from "@material
 import React, { useState } from "react";
 import { useHistory } from "react-router";
 import { IState as Props } from "./Main";
+import { joinSession, leaveSession } from "../functions/SocketHelper";
 
-interface IProps {
-    socket: WebSocket,
-    gameState: Props["gameState"],
+interface ILobby {
     sessionId: string,
-    setSessionId: React.Dispatch<React.SetStateAction<string>>
+
 }
 
-const Lobby: React.FunctionComponent<IProps> = ({ socket, gameState, sessionId, setSessionId }) => {
-    
+interface IProps {
+    socket: Props["socket"],
+    gameState: Props["gameState"],
+    sessionId: string,
+    setSessionId: React.Dispatch<React.SetStateAction<string>>,
+    joinedSession: boolean,
+    setJoinedSession: React.Dispatch<React.SetStateAction<boolean>>
+}
+
+const Lobby: React.FunctionComponent<IProps> = ({ socket, gameState, sessionId, setSessionId, joinedSession, setJoinedSession }) => {
+
+    const history = useHistory();
+    const [disableInputs, setDisableInputs] = useState<boolean>(false);
     const handleSessionChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
         setSessionId(e.target.value);
-    }
-
-    const joinSession = () => {
-        const payload: any = {
-            action: "session",
-            method: "join",
-            sessionId: sessionId
-        }
-
-        socket.send(JSON.stringify(payload));
     }
 
     const createSession = () => {
@@ -37,6 +37,17 @@ const Lobby: React.FunctionComponent<IProps> = ({ socket, gameState, sessionId, 
 
         socket.send(JSON.stringify(payload));
         setSessionId(sessionId);
+    }
+
+    const handleJoinClick = () => {
+        joinSession(socket, sessionId);
+        setDisableInputs(true);
+    }
+
+    const handleLeaveClick = () => {
+        leaveSession(socket, sessionId);
+        setJoinedSession(false);
+        setSessionId("");
     }
 
     const generateSessionId = (length: number) => {
@@ -62,7 +73,7 @@ const Lobby: React.FunctionComponent<IProps> = ({ socket, gameState, sessionId, 
                     <Typography
                         variant="subtitle2"
                     >
-                        If you have a session code, enter it below and hit "Join".  Otherwise click "Create" to generate a new session.
+                        If you have a session code, enter it below and click "Join".  Otherwise click "Create" to start a new session.
                     </Typography>
                     <TextField
                         id="inputSession"
@@ -75,25 +86,42 @@ const Lobby: React.FunctionComponent<IProps> = ({ socket, gameState, sessionId, 
                         className="general-input"
                         value={sessionId}
                         fullWidth
+                        disabled={joinedSession}
                     />
+
+                    List of players here
                 </CardContent>
             </Card>
             <Box className="config-buttons">
+                {!joinedSession 
+                ? <>
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={handleJoinClick}
+                        disabled={disableInputs}
+                    >
+                        Join Session
+                    </Button>
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={createSession}
+                        disabled={disableInputs}
+                    >
+                        Create Session
+                    </Button>
+                </>
+                :
                 <Button
                     variant="contained"
-                    color="primary"
-                    onClick={joinSession}
+                    color="secondary"
+                    onClick={handleLeaveClick}
+                    disabled={disableInputs}
                 >
-                    Join Session
+                    Leave Session
                 </Button>
-
-                <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={createSession}
-                >
-                    Create Session
-                </Button>
+                }
             </Box>
         </Box>
     );
