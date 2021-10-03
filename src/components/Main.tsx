@@ -95,10 +95,15 @@ const Main = () => {
     }
     
     if (data.action === "syncGameState") {
+      const config = JSON.parse(data.config);
       const gameState = JSON.parse(data.gameState);
       console.log("Syncing game state...", gameState);
 
       setGameState(gameState);
+
+      if (data.config) {
+        setConfig(config);
+      }
     }
 
     if (data.action === "createSession") {

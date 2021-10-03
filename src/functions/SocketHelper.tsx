@@ -1,10 +1,11 @@
 import { IState } from "../components/Main";
 
-export function pushGameState(socket: IState["socket"], sessionId: string, gameState: IState["gameState"]) {
+export function pushGameState(socket: IState["socket"], sessionId: string, config: IState["config"], gameState: IState["gameState"]) {
     const payload: any = {
         action: "session",
         method: "pushGameState",
         sessionId: sessionId,
+        config: JSON.stringify(config),
         gameState: JSON.stringify(gameState)
     };
 

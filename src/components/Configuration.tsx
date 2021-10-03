@@ -69,8 +69,8 @@ const Configuration:React.FC<IProps> = ({ config, setConfig, gameState, socket, 
                 {
                     label: "Yes",
                     onClick: () => {
-                        const results = generateRoundRobin(config);
-                        pushGameState(socket, sessionId, results);
+                        const roundRobin = generateRoundRobin(config);
+                        pushGameState(socket, sessionId, config, roundRobin);
                         history.push("/round-robin");
                     }
                 },
