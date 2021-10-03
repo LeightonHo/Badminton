@@ -124,7 +124,6 @@ const Main = () => {
   }
 
   const [isHost, setIsHost] = useState<boolean>(false);
-  const [createRoundRobin, setCreateRoundRobin] = useState<boolean>(false);
   const [sessionId, setSessionId] = useStickyState("", "badminton-session-code");
   const [joinedSession, setJoinedSession] = useState<boolean>(false);
   const [gameState, setGameState] = useState<IState["gameState"]>([]);
@@ -276,13 +275,13 @@ const Main = () => {
           <Lobby socket={socket} setGameState={setGameState} sessionId={sessionId} setSessionId={setSessionId} joinedSession={joinedSession} setJoinedSession={setJoinedSession} setIsHost={setIsHost} />
         </Route>
         <Route path="/round-robin">
-          <RoundRobin config={config} gameState={gameState} setGameState={setGameState} socket={socket} sessionId={sessionId} createRoundRobin={createRoundRobin} isHost={isHost} />
+          <RoundRobin config={config} gameState={gameState} socket={socket} sessionId={sessionId} isHost={isHost} />
         </Route>
         <Route path="/scoreboard">
           <Scoreboard config={config} gameState={gameState} />
         </Route>
         <Route path="/configuration">
-          <Configuration config={config} setConfig={setConfig} gameState={gameState} setGameState={setGameState} socket={socket} sessionId={sessionId} setCreateRoundRobin={setCreateRoundRobin} />
+          <Configuration config={config} setConfig={setConfig} gameState={gameState} socket={socket} sessionId={sessionId} />
         </Route>
       </Switch>
     </Box>

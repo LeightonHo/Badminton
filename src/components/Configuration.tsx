@@ -7,6 +7,8 @@ import { IState as Props } from "./Main";
 import { confirmAlert } from "react-confirm-alert";
 import "react-confirm-alert/src/react-confirm-alert.css";
 import { useHistory } from "react-router-dom";
+import { generateRoundRobin } from "../functions/RoundRobinGenerator";
+import { pushGameState } from "../functions/SocketHelper";
 
 export interface IConfig {
     rounds: number,
@@ -19,13 +21,11 @@ interface IProps {
     config: Props["config"],
     setConfig: React.Dispatch<React.SetStateAction<Props["config"]>>,
     gameState: Props["gameState"],
-    setGameState: React.Dispatch<React.SetStateAction<Props["gameState"]>>,
     socket: WebSocket,
-    sessionId: string,
-    setCreateRoundRobin: React.Dispatch<React.SetStateAction<boolean>>,
+    sessionId: string
 }
 
-const Configuration:React.FC<IProps> = ({ config, setConfig, gameState, setGameState, socket, sessionId, setCreateRoundRobin }) => {
+const Configuration:React.FC<IProps> = ({ config, setConfig, gameState, socket, sessionId }) => {
     const history = useHistory();
     
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
@@ -69,8 +69,8 @@ const Configuration:React.FC<IProps> = ({ config, setConfig, gameState, setGameS
                 {
                     label: "Yes",
                     onClick: () => {
-                        setGameState([]);
-                        setCreateRoundRobin(true);
+                        const results = generateRoundRobin(config);
+                        pushGameState(socket, sessionId, results);
                         history.push("/round-robin");
                     }
                 },
