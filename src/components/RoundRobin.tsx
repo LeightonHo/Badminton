@@ -12,7 +12,7 @@ export interface IProps {
     socket: Props["socket"],
     sessionId: string,
     createRoundRobin: boolean,
-    setCreateRoundRobin: React.Dispatch<React.SetStateAction<boolean>>
+    isHost: boolean
 }
 
 export interface IMatch {
@@ -35,7 +35,7 @@ export interface IRound {
     byes: Props["config"]["players"]
 }
 
-const RoundRobin: React.FC<IProps> = ({ config, gameState, setGameState, socket, sessionId, createRoundRobin, setCreateRoundRobin }) => {
+const RoundRobin: React.FC<IProps> = ({ config, gameState, setGameState, socket, sessionId, createRoundRobin, isHost }) => {
 
     const initRoundRobin = (): void => {
         // If there is no game data, generate the brackets.
@@ -371,12 +371,12 @@ const RoundRobin: React.FC<IProps> = ({ config, gameState, setGameState, socket,
                                                 >
                                                     <Match 
                                                         match={match} 
-                                                        gameState={gameState} 
-                                                        setGameState={setGameState} 
                                                         roundKey={roundKey} 
                                                         matchKey={matchKey} 
                                                         socket={socket} 
-                                                        sessionId={sessionId} />
+                                                        sessionId={sessionId} 
+                                                        isHost={isHost}
+                                                    />
                                                 </Grid>
                                                 {addMatchDivider(matchKey, round.matches.length)}
                                             </Box>

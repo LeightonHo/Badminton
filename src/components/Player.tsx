@@ -1,42 +1,24 @@
 import { Box, Grid, TextField, Typography } from "@material-ui/core";
 import React, { useState, KeyboardEvent } from "react";
-import { IProps as Props } from "./RoundRobin";
-import { pushGameState } from "../functions/SocketHelper";
+import { updatePlayer } from "../functions/SocketHelper";
 
 interface IProps {
-    player: string,
-    gameState: Props["gameState"],
-    setGameState: React.Dispatch<React.SetStateAction<Props["gameState"]>>,
+    player: number,
+    name: string,
     roundKey: number,
     matchKey: number,
     socket: WebSocket,
-    sessionId: string
+    sessionId: string,
+    isHost: boolean
 }
 
-const Player: React.FC<IProps> = ({ player, gameState, setGameState, roundKey, matchKey, socket, sessionId }) => {
+const Player: React.FC<IProps> = ({ player, name, roundKey, matchKey, socket, sessionId, isHost }) => {
 
-    let playerName = "";
-    const match = gameState[roundKey].matches[matchKey];
     const [input, setInput] = useState({
         value: "",
         editing: false,
         edited: false
     });
-
-    switch (player) {
-        case "player1":
-            playerName = match.team1.player1;
-            break;
-        case "player2":
-            playerName = match.team1.player2;
-            break;
-        case "player3":
-            playerName = match.team2.player3;
-            break;
-        case "player4":
-            playerName = match.team2.player4;
-            break;
-    }
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.value === "") {
@@ -67,29 +49,7 @@ const Player: React.FC<IProps> = ({ player, gameState, setGameState, roundKey, m
                 return;
             }
 
-            if (player === "player1" || player === "player2") { 
-                gameState[roundKey].matches[matchKey] = {
-                    ...match,
-                    team1: {
-                        ...match.team1,
-                        [player]: input.value
-                    }
-                }
-            } else {
-                gameState[roundKey].matches[matchKey] = {
-                    ...match,
-                    team2: {
-                        ...match.team2,
-                        [player]: input.value
-                    }
-                }
-            }
-
-            // setGameData([
-            //     ...gameData
-            // ]);
-            pushGameState(socket, sessionId, gameState)
-
+            updatePlayer(socket, sessionId, roundKey, matchKey, player, input.value);
             setInput({
                 ...input,
                 editing: false,
@@ -127,21 +87,21 @@ const Player: React.FC<IProps> = ({ player, gameState, setGameState, roundKey, m
                     variant="overline"
                     className="player-name"
                 >
-                    {playerName}
+                    {name}
                 </Typography>
             </Box>
             : <TextField 
                 autoFocus
-                id={`inputPlayer-${playerName}-${roundKey}-${matchKey}`}
+                id={`inputPlayer-${name}-${roundKey}-${matchKey}`}
                 className={"text-input"}
                 variant="outlined" 
                 size="small"
                 type="text" 
-                placeholder={playerName}
+                placeholder={name}
                 onChange={handleChange}
                 onKeyPress={handleKeyPress}
                 onBlur={handleOnBlur}
-                name={playerName}
+                name={name}
             />
             }
         </Grid>

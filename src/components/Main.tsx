@@ -123,6 +123,7 @@ const Main = () => {
     }
   }
 
+  const [isHost, setIsHost] = useState<boolean>(false);
   const [createRoundRobin, setCreateRoundRobin] = useState<boolean>(false);
   const [sessionId, setSessionId] = useStickyState("", "badminton-session-code");
   const [joinedSession, setJoinedSession] = useState<boolean>(false);
@@ -272,10 +273,10 @@ const Main = () => {
           }}
         />
         <Route path="/lobby">
-          <Lobby socket={socket} setGameState={setGameState} sessionId={sessionId} setSessionId={setSessionId} joinedSession={joinedSession} setJoinedSession={setJoinedSession} />
+          <Lobby socket={socket} setGameState={setGameState} sessionId={sessionId} setSessionId={setSessionId} joinedSession={joinedSession} setJoinedSession={setJoinedSession} setIsHost={setIsHost} />
         </Route>
         <Route path="/round-robin">
-          <RoundRobin config={config} gameState={gameState} setGameState={setGameState} socket={socket} sessionId={sessionId} createRoundRobin={createRoundRobin} setCreateRoundRobin={setCreateRoundRobin} />
+          <RoundRobin config={config} gameState={gameState} setGameState={setGameState} socket={socket} sessionId={sessionId} createRoundRobin={createRoundRobin} isHost={isHost} />
         </Route>
         <Route path="/scoreboard">
           <Scoreboard config={config} gameState={gameState} />

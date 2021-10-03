@@ -16,9 +16,10 @@ interface IProps {
     setSessionId: React.Dispatch<React.SetStateAction<string>>,
     joinedSession: boolean,
     setJoinedSession: React.Dispatch<React.SetStateAction<boolean>>
+    setIsHost: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-const Lobby: React.FunctionComponent<IProps> = ({ socket, setGameState, sessionId, setSessionId, joinedSession, setJoinedSession }) => {
+const Lobby: React.FunctionComponent<IProps> = ({ socket, setGameState, sessionId, setSessionId, joinedSession, setJoinedSession, setIsHost }) => {
 
     const history = useHistory();
     const [error, setError] = useState<string>("");
@@ -54,21 +55,23 @@ const Lobby: React.FunctionComponent<IProps> = ({ socket, setGameState, sessionI
         setDisableInputs(true);
         setJoinedSession(true);
         setSessionId(sessionId);
+        setIsHost(true);
         setError("");
     }
 
     const handleJoinClick = () => {
         setDisableInputs(true);
         setError("");
-        
         joinSession(socket, sessionId);
+        setIsHost(false);
     }
 
     const handleLeaveClick = () => {
         leaveSession(socket, sessionId);
+        setGameState([]);
         setJoinedSession(false);
         setSessionId("");
-        setGameState([]);
+        setIsHost(false);
         setError("");
     }
 

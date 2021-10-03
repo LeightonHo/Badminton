@@ -26,13 +26,10 @@ const Score: React.FC<IProps> = ({ team, score, roundKey, matchKey, socket, sess
             updatedValue = 0;
         }
 
-        console.log("setting ", updatedValue)
-
         setInputScore(updatedValue);
     }
 
     const pushScoreChange = () => {
-        console.log(inputScore)
         pushMatchScore(socket, sessionId, roundKey, matchKey, team, inputScore);
     }
 

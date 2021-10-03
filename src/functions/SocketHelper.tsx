@@ -1,9 +1,5 @@
 import { IState } from "../components/Main";
 
-export function initSocket(socket: WebSocket) {
-
-}
-
 export function pushGameState(socket: IState["socket"], sessionId: string, gameState: IState["gameState"]) {
     const payload: any = {
         action: "session",
@@ -27,6 +23,28 @@ export function pushMatchScore(socket: IState["socket"], sessionId: string, roun
     };
 
     socket.send(JSON.stringify(payload));
+}
+
+export function updatePlayer(socket: IState["socket"], sessionId: string, roundKey: number, matchKey: number, player: number, name: string) {
+    const payload: any = {
+        action: "session",
+        method: "updatePlayer",
+        sessionId: sessionId,
+        roundKey: roundKey,
+        matchKey: matchKey,
+        player: player,
+        name: name
+    };
+
+    socket.send(JSON.stringify(payload));
+}
+
+function updateBye() {
+
+}
+
+function createSession() {
+
 }
 
 export function joinSession(socket: IState["socket"], sessionId: string) {
