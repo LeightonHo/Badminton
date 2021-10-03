@@ -110,8 +110,6 @@ const Lobby: React.FunctionComponent<IProps> = ({ socket, setGameState, sessionI
                         error={error != "" ? true : false}
                         helperText={error}
                     />
-
-                    List of players here
                 </CardContent>
             </Card>
             <Box className="config-buttons">

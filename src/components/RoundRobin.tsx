@@ -2,7 +2,7 @@ import React from "react";
 import { IState as Props } from "./Main";
 import ByeContainer from "./ByeContainer";
 import Match from "./Match";
-import { Box, Card, CardContent, Divider, Grid, Typography } from "@material-ui/core";
+import { Box, Card, CardContent, Divider, Grid, LinearProgress, Typography } from "@material-ui/core";
 
 export interface IProps {
     config: Props["config"],
@@ -34,9 +34,9 @@ export interface IRound {
 
 const RoundRobin: React.FC<IProps> = ({ gameState, socket, sessionId, isHost }) => {
 
-    const renderView = () => {
+    const renderRoundRobin = () => {
         return (
-            <Box>
+            <>
                 {gameState.map((round, roundKey) => {
                     return (
                         <Card 
@@ -98,7 +98,7 @@ const RoundRobin: React.FC<IProps> = ({ gameState, socket, sessionId, isHost }) 
                         </Card>
                     );
                 })}
-            </Box>
+            </>
         );
     }
 
@@ -110,11 +110,21 @@ const RoundRobin: React.FC<IProps> = ({ gameState, socket, sessionId, isHost }) 
         }
     }
 
+    const showSpinner = () => {
+        return (
+            <>
+                <LinearProgress 
+                    color="primary"
+                />
+            </>
+        );
+    }
+
     return (
         <>
             {gameState.length === 0
-            ? <div>Waiting for game data..</div>
-            : renderView()
+            ? showSpinner()
+            : renderRoundRobin()
             }
         </>
     );
