@@ -2,7 +2,7 @@ import { Grid, TextField, Typography } from "@material-ui/core";
 import React, { useState, useEffect } from "react";
 import Player from "./Player";
 import { IMatch, IProps as Props } from "./RoundRobin";
-import { pushMatchScore } from "../functions/SocketHelper";
+import Score from "./Score";
 
 interface IProps {
     match: IMatch,
@@ -15,49 +15,6 @@ interface IProps {
 }
 
 const Match: React.FC<IProps> = ({ match, gameState, setGameState, roundKey, matchKey, socket, sessionId }) => {
-
-    const [input, setInput] = useState({
-        team1Score: match.team1.score,
-        team2Score: match.team2.score
-    });
-
-    useEffect(() => {
-        setInput({
-            team1Score: match.team1.score,
-            team2Score: match.team2.score
-        });
-    }, [match]);
-
-    const handleScoreChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-        let updatedValue = parseInt(e.target.value);
-
-        if (isNaN(updatedValue) || updatedValue < 0) {
-            updatedValue = 0;
-        }
-
-        console.log(updatedValue);
-
-        if (e.target.name === "team1Score") {
-            setInput({
-                ...input,
-                team1Score: updatedValue
-            });
-        } else {
-            setInput({
-                ...input,
-                team2Score: updatedValue
-            });
-        }
-    }
-
-    const pushScoreChange = (team: number) => {
-        if (team === 1) {
-            pushMatchScore(socket, sessionId, roundKey, matchKey, input.team1Score, null);
-        } 
-        if (team === 2) {
-            pushMatchScore(socket, sessionId, roundKey, matchKey, null, input.team2Score);
-        }
-    }
 
     return (
         <Grid
@@ -100,18 +57,7 @@ const Match: React.FC<IProps> = ({ match, gameState, setGameState, roundKey, mat
                     socket={socket}
                     sessionId={sessionId}
                 />
-                <Grid item xs className="score-input-grid-item">
-                    <TextField
-                        variant="outlined"
-                        type="number"
-                        onChange={handleScoreChange}
-                        onBlur={() => pushScoreChange(1)}
-                        name="team1Score"
-                        value={input.team1Score === 0 ? "" : input.team1Score.toString()}
-                        size="small"
-                        className="score-input"
-                    />
-                </Grid>
+                <Score team={1} score={match.team1.score} roundKey={roundKey} matchKey={matchKey} socket={socket} sessionId={sessionId} />
             </Grid>
             <Grid
                 item xs={1}
@@ -142,7 +88,8 @@ const Match: React.FC<IProps> = ({ match, gameState, setGameState, roundKey, mat
                     socket={socket}
                     sessionId={sessionId}
                 />
-                <Grid item xs className="score-input-grid-item">
+                <Score team={2} score={match.team2.score} roundKey={roundKey} matchKey={matchKey} socket={socket} sessionId={sessionId} />
+                {/* <Grid item xs className="score-input-grid-item">
                     <TextField
                         variant="outlined"
                         type="number"
@@ -153,7 +100,7 @@ const Match: React.FC<IProps> = ({ match, gameState, setGameState, roundKey, mat
                         size="small"
                         className="score-input"
                     />
-                </Grid>
+                </Grid> */}
             </Grid>
         </Grid>
     );

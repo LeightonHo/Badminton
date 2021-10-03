@@ -15,15 +15,15 @@ export function pushGameState(socket: IState["socket"], sessionId: string, gameS
     socket.send(JSON.stringify(payload));
 }
 
-export function pushMatchScore(socket: IState["socket"], sessionId: string, roundKey: number, matchKey: number, team1Score: number | null, team2Score: number | null) {
+export function pushMatchScore(socket: IState["socket"], sessionId: string, roundKey: number, matchKey: number, team: number, score: number) {
     const payload: any = {
         action: "session",
         method: "pushMatchScore",
         sessionId: sessionId,
         roundKey: roundKey,
         matchKey: matchKey,
-        team1Score: team1Score,
-        team2Score: team2Score
+        team: team,
+        score: score
     };
 
     socket.send(JSON.stringify(payload));
