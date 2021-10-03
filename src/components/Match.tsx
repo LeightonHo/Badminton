@@ -1,8 +1,8 @@
-import { Box, Grid, TextField, Typography } from "@material-ui/core";
-import React, { useState, KeyboardEvent, useEffect } from "react";
+import { Grid, TextField, Typography } from "@material-ui/core";
+import React, { useState, useEffect } from "react";
 import Player from "./Player";
 import { IMatch, IProps as Props } from "./RoundRobin";
-import { pushGameState, pushMatchScore } from "../functions/SocketHelper";
+import { pushMatchScore } from "../functions/SocketHelper";
 
 interface IProps {
     match: IMatch,
@@ -29,77 +29,32 @@ const Match: React.FC<IProps> = ({ match, gameState, setGameState, roundKey, mat
     }, [match]);
 
     const handleScoreChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-        if (isNaN(parseInt(e.target.value))) {
-            return;
+        let updatedValue = parseInt(e.target.value);
+
+        if (isNaN(updatedValue) || updatedValue < 0) {
+            updatedValue = 0;
         }
+
+        console.log(updatedValue);
 
         if (e.target.name === "team1Score") {
             setInput({
                 ...input,
-                team1Score: parseInt(e.target.value)
+                team1Score: updatedValue
             });
-
-            // pushMatchScore(socket, sessionId, roundKey, matchKey, parseInt(e.target.value), null);
         } else {
             setInput({
                 ...input,
-                team2Score: parseInt(e.target.value)
+                team2Score: updatedValue
             });
-
-            // pushMatchScore(socket, sessionId, roundKey, matchKey, null, parseInt(e.target.value));
         }
-
-        // if (e.target.name === "team1Score") {
-        //     setInput({
-        //         ...input,
-        //         team1Score: parseInt(e.target.value)
-        //     });
-        //     gameState[roundKey].matches[matchKey] = {
-        //         ...match,
-        //         team1: {
-        //             ...match.team1,
-        //             score: parseInt(e.target.value)
-        //         }
-        //     }
-        // } else {
-        //     setInput({
-        //         ...input,
-        //         team2Score: parseInt(e.target.value)
-        //     });
-        //     gameState[roundKey].matches[matchKey] = {
-        //         ...match,
-        //         team2: {
-        //             ...match.team2,
-        //             score: parseInt(e.target.value)
-        //         }
-        //     }
-        // }
-
-        // INPUT APPROACH
-        // // Update the game data state
-        // if (e.target.name === "team1Score") { 
-        //     setInput({
-        //         ...input,
-        //         team1Score: parseInt(e.target.value)
-        //     });
-        // } else {
-        //     setInput({
-        //         ...input,
-        //         team2Score: parseInt(e.target.value)
-        //     });
-        // }   
-    }
-
-    const handleGameStateUpdate = () => {
-        console.log(input);
-        console.log("Updating game state..", gameState[roundKey].matches[matchKey].team1.score, gameState[roundKey].matches[matchKey].team2.score);
-        pushGameState(socket, sessionId, gameState);
     }
 
     const pushScoreChange = (team: number) => {
         if (team === 1) {
             pushMatchScore(socket, sessionId, roundKey, matchKey, input.team1Score, null);
-        } else {
+        } 
+        if (team === 2) {
             pushMatchScore(socket, sessionId, roundKey, matchKey, null, input.team2Score);
         }
     }

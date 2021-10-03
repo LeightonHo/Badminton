@@ -1,5 +1,5 @@
 import { Box, Button, Card, CardContent, TextField, Typography } from "@material-ui/core";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router";
 import { IState as Props } from "./Main";
 import { joinSession, leaveSession } from "../functions/SocketHelper";
@@ -11,20 +11,35 @@ interface ILobby {
 
 interface IProps {
     socket: Props["socket"],
-    gameState: Props["gameState"],
+    setGameState: React.Dispatch<React.SetStateAction<Props["gameState"]>>,
     sessionId: string,
     setSessionId: React.Dispatch<React.SetStateAction<string>>,
     joinedSession: boolean,
     setJoinedSession: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-const Lobby: React.FunctionComponent<IProps> = ({ socket, gameState, sessionId, setSessionId, joinedSession, setJoinedSession }) => {
+const Lobby: React.FunctionComponent<IProps> = ({ socket, setGameState, sessionId, setSessionId, joinedSession, setJoinedSession }) => {
 
     const history = useHistory();
+    const [error, setError] = useState<string>("");
     const [disableInputs, setDisableInputs] = useState<boolean>(false);
     const handleSessionChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
         setSessionId(e.target.value);
     }
+
+    useEffect(() => {
+        // Scenario where the session join was successful.
+        if (joinedSession) {
+            setError("");
+            setDisableInputs(false);
+        }
+
+        // Scenario where the session was unable to be joined.
+        if (!sessionId && disableInputs) {
+            setError("Unable to join the session.");
+            setDisableInputs(false);
+        }
+    }, [joinedSession, sessionId]);
 
     const createSession = () => {
         // TODO: session ID should be generated on the server.
@@ -36,18 +51,25 @@ const Lobby: React.FunctionComponent<IProps> = ({ socket, gameState, sessionId, 
         };
 
         socket.send(JSON.stringify(payload));
+        setDisableInputs(true);
+        setJoinedSession(true);
         setSessionId(sessionId);
+        setError("");
     }
 
     const handleJoinClick = () => {
-        joinSession(socket, sessionId);
         setDisableInputs(true);
+        setError("");
+        
+        joinSession(socket, sessionId);
     }
 
     const handleLeaveClick = () => {
         leaveSession(socket, sessionId);
         setJoinedSession(false);
         setSessionId("");
+        setGameState([]);
+        setError("");
     }
 
     const generateSessionId = (length: number) => {
@@ -87,6 +109,8 @@ const Lobby: React.FunctionComponent<IProps> = ({ socket, gameState, sessionId, 
                         value={sessionId}
                         fullWidth
                         disabled={joinedSession}
+                        error={error != "" ? true : false}
+                        helperText={error}
                     />
 
                     List of players here

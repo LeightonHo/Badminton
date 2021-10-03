@@ -86,11 +86,6 @@ const Main = () => {
     heartbeat();
   }
 
-  socket.onclose = () => {
-    console.log("Leaving session.");
-    // leaveSession(socket, sessionId);
-  }
-
   socket.onmessage = (ev: MessageEvent<any>) => {
     const data = JSON.parse(ev.data);
     console.log(data);
@@ -100,10 +95,10 @@ const Main = () => {
     }
     
     if (data.action === "syncGameState") {
-      const newGameState = JSON.parse(data.gameState);
-      console.log("Syncing game state...", newGameState);
+      const gameState = JSON.parse(data.gameState);
+      console.log("Syncing game state...", gameState);
 
-      setGameState([...newGameState]);
+      setGameState(gameState);
     }
 
     if (data.action === "createSession") {
@@ -120,6 +115,11 @@ const Main = () => {
 
         setGameState(gameState);
       }
+    }
+
+    if (data.action === "joinFailed") {
+      setSessionId("");
+      setJoinedSession(false);
     }
   }
 
@@ -272,7 +272,7 @@ const Main = () => {
           }}
         />
         <Route path="/lobby">
-          <Lobby socket={socket} gameState={gameState} sessionId={sessionId} setSessionId={setSessionId} joinedSession={joinedSession} setJoinedSession={setJoinedSession} />
+          <Lobby socket={socket} setGameState={setGameState} sessionId={sessionId} setSessionId={setSessionId} joinedSession={joinedSession} setJoinedSession={setJoinedSession} />
         </Route>
         <Route path="/round-robin">
           <RoundRobin config={config} gameState={gameState} setGameState={setGameState} socket={socket} sessionId={sessionId} createRoundRobin={createRoundRobin} setCreateRoundRobin={setCreateRoundRobin} />
