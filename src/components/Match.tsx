@@ -17,28 +17,36 @@ interface IProps {
 const Match: React.FC<IProps> = ({ match, gameState, setGameState, roundKey, matchKey, socket, sessionId }) => {
 
     const [input, setInput] = useState({
-        team1Score: 0,
-        team2Score: 0
+        team1Score: match.team1.score,
+        team2Score: match.team2.score
     });
 
-    // useEffect(() => {
-    //     setInput({
-    //         team1Score: match.team1.score,
-    //         team2Score: match.team2.score
-    //     });
-    // }, [gameState]);
+    useEffect(() => {
+        setInput({
+            team1Score: match.team1.score,
+            team2Score: match.team2.score
+        });
+    }, [match]);
 
     const handleScoreChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-        console.log("handleScoreChange triggered", e.target.value)
-
         if (isNaN(parseInt(e.target.value))) {
             return;
         }
 
         if (e.target.name === "team1Score") {
-            pushMatchScore(socket, sessionId, roundKey, matchKey, parseInt(e.target.value), null);
+            setInput({
+                ...input,
+                team1Score: parseInt(e.target.value)
+            });
+
+            // pushMatchScore(socket, sessionId, roundKey, matchKey, parseInt(e.target.value), null);
         } else {
-            pushMatchScore(socket, sessionId, roundKey, matchKey, null, parseInt(e.target.value));
+            setInput({
+                ...input,
+                team2Score: parseInt(e.target.value)
+            });
+
+            // pushMatchScore(socket, sessionId, roundKey, matchKey, null, parseInt(e.target.value));
         }
 
         // if (e.target.name === "team1Score") {
@@ -88,6 +96,14 @@ const Match: React.FC<IProps> = ({ match, gameState, setGameState, roundKey, mat
         pushGameState(socket, sessionId, gameState);
     }
 
+    const pushScoreChange = (team: number) => {
+        if (team === 1) {
+            pushMatchScore(socket, sessionId, roundKey, matchKey, input.team1Score, null);
+        } else {
+            pushMatchScore(socket, sessionId, roundKey, matchKey, null, input.team2Score);
+        }
+    }
+
     return (
         <Grid
             container
@@ -134,10 +150,9 @@ const Match: React.FC<IProps> = ({ match, gameState, setGameState, roundKey, mat
                         variant="outlined"
                         type="number"
                         onChange={handleScoreChange}
-                        // onBlur={handleGameStateUpdate}
+                        onBlur={() => pushScoreChange(1)}
                         name="team1Score"
-                        // value={input.team1Score.toString()}
-                        placeholder={match.team1.score.toString()}
+                        value={input.team1Score === 0 ? "" : input.team1Score.toString()}
                         size="small"
                         className="score-input"
                     />
@@ -177,10 +192,9 @@ const Match: React.FC<IProps> = ({ match, gameState, setGameState, roundKey, mat
                         variant="outlined"
                         type="number"
                         onChange={handleScoreChange}
-                        // onBlur={handleGameStateUpdate}
+                        onBlur={() => pushScoreChange(2)}
                         name="team2Score"
-                        // value={input.team2Score.toString()}
-                        placeholder={match.team2.score.toString()}
+                        value={input.team2Score === 0 ? "" : input.team2Score.toString()}
                         size="small"
                         className="score-input"
                     />

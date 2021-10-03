@@ -95,6 +95,10 @@ const Main = () => {
     const data = JSON.parse(ev.data);
     console.log(data);
     
+    if (data.action === "pong") {
+      console.log(data.message);
+    }
+    
     if (data.action === "syncGameState") {
       const newGameState = JSON.parse(data.gameState);
       console.log("Syncing game state...", newGameState);
