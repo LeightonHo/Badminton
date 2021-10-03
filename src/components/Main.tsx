@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useState } from "react";
 import { makeStyles } from '@material-ui/core/styles';
 import { Redirect, Route, Switch, useHistory } from "react-router-dom";
 import Box from "@material-ui/core/Box";
@@ -14,7 +14,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import Lobby from "./Lobby";
-import { joinSession, leaveSession } from "../functions/SocketHelper";
+import { joinSession } from "../functions/SocketHelper";
 
 export interface IState {
   config: IConfig,

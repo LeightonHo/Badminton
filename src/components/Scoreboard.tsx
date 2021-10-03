@@ -1,4 +1,4 @@
-import { Box, Card, CardContent, Typography } from "@material-ui/core";
+import { Card, CardContent, Typography } from "@material-ui/core";
 import React from "react";
 import { IState as Props } from "./Main";
 import Table from '@material-ui/core/Table';

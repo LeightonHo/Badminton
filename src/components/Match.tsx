@@ -1,7 +1,7 @@
 import { Grid, Typography } from "@material-ui/core";
 import React from "react";
 import Player from "./Player";
-import { IMatch, IProps as Props } from "./RoundRobin";
+import { IMatch } from "./RoundRobin";
 import Score from "./Score";
 
 interface IProps {

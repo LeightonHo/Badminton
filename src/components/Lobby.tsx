@@ -4,11 +4,6 @@ import { useHistory } from "react-router";
 import { IState as Props } from "./Main";
 import { joinSession, leaveSession } from "../functions/SocketHelper";
 
-interface ILobby {
-    sessionId: string,
-
-}
-
 interface IProps {
     socket: Props["socket"],
     setGameState: React.Dispatch<React.SetStateAction<Props["gameState"]>>,
