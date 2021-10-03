@@ -39,8 +39,17 @@ export function updatePlayer(socket: IState["socket"], sessionId: string, roundK
     socket.send(JSON.stringify(payload));
 }
 
-function updateBye() {
+export function updateBye(socket: IState["socket"], sessionId: string, roundKey: number, byeKey: number, name: string) {
+    const payload: any = {
+        action: "session",
+        method: "updateBye",
+        sessionId: sessionId,
+        roundKey: roundKey,
+        byeKey: byeKey,
+        name: name
+    };
 
+    socket.send(JSON.stringify(payload));
 }
 
 function createSession() {

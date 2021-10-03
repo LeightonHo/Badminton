@@ -388,11 +388,10 @@ const RoundRobin: React.FC<IProps> = ({ config, gameState, setGameState, socket,
                                     <Grid item xs>
                                         <ByeContainer 
                                             players={round.byes} 
-                                            gameState={gameState} 
-                                            setGameState={setGameState} 
                                             roundKey={roundKey} 
                                             socket={socket} 
-                                            sessionId={sessionId} />
+                                            sessionId={sessionId} 
+                                        />
                                     </Grid>
                                 </Grid>
                             </CardContent>
