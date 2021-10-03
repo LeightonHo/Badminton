@@ -51,7 +51,7 @@ const heartbeat = () => {
 
 const initSocket = (): WebSocket => {
   console.log("Initialising web socket.");
-  let socket = new WebSocket("wss://op47bt7cik.execute-api.ap-southeast-2.amazonaws.com/test");
+  let socket = new WebSocket("wss://op47bt7cik.execute-api.ap-southeast-2.amazonaws.com/production");
 
   socket.addEventListener("open", () => {
     console.log("WebSocket is connected.");
