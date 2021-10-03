@@ -95,13 +95,13 @@ const Main = () => {
     }
     
     if (data.action === "syncGameState") {
-      const config = JSON.parse(data.config);
       const gameState = JSON.parse(data.gameState);
       console.log("Syncing game state...", gameState);
 
       setGameState(gameState);
 
       if (data.config) {
+        const config = JSON.parse(data.config);
         setConfig(config);
       }
     }
@@ -132,15 +132,14 @@ const Main = () => {
   const [sessionId, setSessionId] = useStickyState("", "badminton-session-code");
   const [joinedSession, setJoinedSession] = useState<boolean>(false);
   const [gameState, setGameState] = useState<IState["gameState"]>([]);
-  // const [gameState, setGameState] = useStickyState([], "badminton-game-data");
 
   // Default values
-  const [config, setConfig] = useStickyState({
+  const [config, setConfig] = useState<IConfig>({
     rounds: 15,
     winningScore: 21,
     courts: [],
     players: []
-  }, "badminton-config");
+  });
 
   const useStyles = makeStyles((theme) => ({
     grow: {
@@ -204,21 +203,27 @@ const Main = () => {
             <Typography>Lobby</Typography>
           </IconButton>
         </MenuItem>
-        <MenuItem>
-          <IconButton color="inherit" onClick={(() => { handleNavigation("/round-robin") })}>
-            <Typography>Games</Typography>
-          </IconButton>
-        </MenuItem>
-        <MenuItem>
-          <IconButton color="inherit" onClick={(() => { handleNavigation("/scoreboard") })}>
-            <Typography>Scoreboard</Typography>
-          </IconButton>
-        </MenuItem>
-        <MenuItem>
-          <IconButton color="inherit" onClick={(() => { handleNavigation("/configuration") })}>
-            <Typography>Config</Typography>
-          </IconButton>
-        </MenuItem>
+        {joinedSession 
+        ? <>
+          <MenuItem>
+            <IconButton color="inherit" onClick={(() => { handleNavigation("/round-robin") })}>
+              <Typography>Games</Typography>
+            </IconButton>
+          </MenuItem>
+          <MenuItem>
+            <IconButton color="inherit" onClick={(() => { handleNavigation("/scoreboard") })}>
+              <Typography>Scoreboard</Typography>
+            </IconButton>
+          </MenuItem>
+          <MenuItem>
+            <IconButton color="inherit" onClick={(() => { handleNavigation("/configuration") })}>
+              <Typography>Config</Typography>
+            </IconButton>
+          </MenuItem>
+        </>
+        : ""
+        }
+        
       </Menu>
     );
 
@@ -234,15 +239,20 @@ const Main = () => {
               <IconButton color="inherit" onClick={(() => { handleNavigation("/lobby") })}>
                 <Typography>Lobby</Typography>
               </IconButton>
-              <IconButton color="inherit" onClick={(() => { handleNavigation("/round-robin") })}>
-                <Typography>Games</Typography>
-              </IconButton>
-              <IconButton color="inherit" onClick={(() => { handleNavigation("/scoreboard") })}>
-                <Typography>Scoreboard</Typography>
-              </IconButton>
-              <IconButton color="inherit" onClick={(() => { handleNavigation("/configuration") })}>
-                <Typography>Config</Typography>
-              </IconButton>
+              {joinedSession
+              ? <>
+                <IconButton color="inherit" onClick={(() => { handleNavigation("/round-robin") })}>
+                  <Typography>Games</Typography>
+                </IconButton>
+                <IconButton color="inherit" onClick={(() => { handleNavigation("/scoreboard") })}>
+                  <Typography>Scoreboard</Typography>
+                </IconButton>
+                <IconButton color="inherit" onClick={(() => { handleNavigation("/configuration") })}>
+                  <Typography>Config</Typography>
+                </IconButton>
+              </>
+              : ""
+              }
             </div>
             <div className={classes.sectionMobile}>
               <IconButton
