@@ -6,7 +6,7 @@ import { IState as Props} from "./Main";
 interface IProps {
     players: Props["config"]["players"]
     roundKey: number,
-    socket: WebSocket,
+    socket: Props["socket"],
     sessionId: string
 }
 

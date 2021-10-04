@@ -1,23 +1,30 @@
 import { Grid, TextField } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
-import { pushMatchScore } from "../functions/SocketHelper";
+import { pushMatchScore } from "../helpers/SocketHelper";
+import { IState as Props } from "./Main";
+import { getSocket } from "../helpers/Socket";
 
 interface IProps {
     team: number,
     score: number,
     roundKey: number,
     matchKey: number,
-    socket: WebSocket,
+    socket: Props["socket"],
     sessionId: string
 }
 
-const Score: React.FC<IProps> = ({ team, score, roundKey, matchKey, socket, sessionId }) => {
+const Score: React.FC<IProps> = ({ team, score, roundKey, matchKey, sessionId }) => {
     
+    let socket = getSocket();
     const [inputScore, setInputScore] = useState<number>(score);
 
     useEffect(() => {
         setInputScore(score);
     }, [score]);
+
+    useEffect(() => {
+        socket = getSocket();
+    }, [socket]);
 
     const handleScoreChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
         let updatedValue = parseInt(e.target.value);

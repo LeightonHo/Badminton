@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { makeStyles } from '@material-ui/core/styles';
 import { Redirect, Route, Switch, useHistory } from "react-router-dom";
 import Box from "@material-ui/core/Box";
@@ -14,7 +14,8 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import Lobby from "./Lobby";
-import { joinSession } from "../functions/SocketHelper";
+import { joinSession } from "../helpers/SocketHelper";
+import { getSocket, initSocket } from "../helpers/Socket";
 
 export interface IState {
   config: IConfig,
@@ -38,94 +39,63 @@ const useStickyState = (defaultValue: (IRound[] | IConfig | string), key: string
   return [value, setValue];
 }
 
-const heartbeat = () => {
-  console.log(`Heartbeat running.. ${new Date()}`);
-
-  const payload: any = {
-    action: "ping"
-  }
-
-  socket.send(JSON.stringify(payload));
-  setTimeout(heartbeat, 60000);
-}
-
-const initSocket = (): WebSocket => {
-  console.log("Initialising web socket.");
-  let socket = new WebSocket("wss://op47bt7cik.execute-api.ap-southeast-2.amazonaws.com/test");
-
-  socket.addEventListener("open", () => {
-    console.log("WebSocket is connected.");
-  });
-
-  socket.addEventListener("close", (e) => {
-    console.log(e);
-    console.log("WebSocket is closed.");
-  });
-
-  socket.onclose = (ev: CloseEvent) => {
-    console.log("On close fired:", ev);
-  }
-
-  return socket;
-}
-
-let socket: WebSocket = initSocket();
-
 const Main = () => {
+  
+  let socket: WebSocket = getSocket();
+
+  useEffect(() => {
+    socket = getSocket();
+
+    socket.onopen = () => {
+      joinSession(socket, sessionId);
+    }
+  
+    socket.onmessage = (ev: MessageEvent<any>) => {
+      const data = JSON.parse(ev.data);
+      console.log(data);
+      
+      if (data.action === "pong") {
+        console.log(data.message);
+      }
+      
+      if (data.action === "syncGameState") {
+        const gameState = JSON.parse(data.gameState);
+        console.log("Syncing game state...", gameState);
+  
+        setGameState(gameState);
+  
+        if (data.config) {
+          const config = JSON.parse(data.config);
+          setConfig(config);
+        }
+      }
+  
+      if (data.action === "createSession") {
+        console.log(data.message);
+        history.push("/configuration");
+      }
+  
+      if (data.action === "joinedSession") {
+        console.log(data.message);
+        setJoinedSession(true);
+        // If no game state is returned, then the game hasn't started yet, so show a loading screen until data is pushed.
+        if (data.gameState.length > 0) {
+          const gameState = JSON.parse(data.gameState);
+  
+          setGameState(gameState);
+        }
+      }
+  
+      if (data.action === "joinFailed") {
+        setSessionId("");
+        setJoinedSession(false);
+      }
+    }
+  }, [socket]);
+
   const history = useHistory();
   const handleNavigation = (path: string) => {
     history.push(path);
-  }
-
-  socket.addEventListener("joinedSession", () => {
-    console.log("Joined session custom event listener.");
-  });
-
-  socket.onopen = () => {
-    joinSession(socket, sessionId);
-    heartbeat();
-  }
-
-  socket.onmessage = (ev: MessageEvent<any>) => {
-    const data = JSON.parse(ev.data);
-    console.log(data);
-    
-    if (data.action === "pong") {
-      console.log(data.message);
-    }
-    
-    if (data.action === "syncGameState") {
-      const gameState = JSON.parse(data.gameState);
-      console.log("Syncing game state...", gameState);
-
-      setGameState(gameState);
-
-      if (data.config) {
-        const config = JSON.parse(data.config);
-        setConfig(config);
-      }
-    }
-
-    if (data.action === "createSession") {
-      console.log(data.message);
-      history.push("/configuration");
-    }
-
-    if (data.action === "joinedSession") {
-      console.log(data.message);
-      setJoinedSession(true);
-      // If no game state is returned, then the game hasn't started yet, so show a loading screen until data is pushed.
-      if (data.gameState.length > 0) {
-        const gameState = JSON.parse(data.gameState);
-
-        setGameState(gameState);
-      }
-    }
-
-    if (data.action === "joinFailed") {
-      setSessionId("");
-      setJoinedSession(false);
-    }
   }
 
   const [isHost, setIsHost] = useState<boolean>(false);

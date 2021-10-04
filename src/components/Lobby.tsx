@@ -2,7 +2,7 @@ import { Box, Button, Card, CardContent, TextField, Typography } from "@material
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router";
 import { IState as Props } from "./Main";
-import { joinSession, leaveSession } from "../functions/SocketHelper";
+import { joinSession, leaveSession } from "../helpers/SocketHelper";
 
 interface IProps {
     socket: Props["socket"],

@@ -1,12 +1,13 @@
 import { Box, TextField, Typography } from "@material-ui/core";
 import React, { useState, KeyboardEvent } from "react";
-import { updateBye } from "../functions/SocketHelper";
+import { updateBye } from "../helpers/SocketHelper";
+import { IState as Props } from "./Main";
 
 interface IProps {
     byeKey: number,
     player: string,
     roundKey: number,
-    socket: WebSocket,
+    socket: Props["socket"],
     sessionId: string
 }
 

@@ -7,8 +7,8 @@ import { IState as Props } from "./Main";
 import { confirmAlert } from "react-confirm-alert";
 import "react-confirm-alert/src/react-confirm-alert.css";
 import { useHistory } from "react-router-dom";
-import { generateRoundRobin } from "../functions/RoundRobinGenerator";
-import { pushGameState } from "../functions/SocketHelper";
+import { generateRoundRobin } from "../helpers/RoundRobinGenerator";
+import { pushGameState } from "../helpers/SocketHelper";
 
 export interface IConfig {
     rounds: number,
@@ -21,7 +21,7 @@ interface IProps {
     config: Props["config"],
     setConfig: React.Dispatch<React.SetStateAction<Props["config"]>>,
     gameState: Props["gameState"],
-    socket: WebSocket,
+    socket: Props["socket"],
     sessionId: string
 }
 

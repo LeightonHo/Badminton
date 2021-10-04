@@ -2,18 +2,22 @@ import { Grid, Typography } from "@material-ui/core";
 import React from "react";
 import Player from "./Player";
 import { IMatch } from "./RoundRobin";
+import { IState as Props } from "./Main";
 import Score from "./Score";
+import { getSocket } from "../helpers/Socket";
 
 interface IProps {
     match: IMatch,
     roundKey: number,
     matchKey: number,
-    socket: WebSocket,
+    socket: Props["socket"],
     sessionId: string,
     isHost: boolean
 }
 
-const Match: React.FC<IProps> = ({ match, roundKey, matchKey, socket, sessionId, isHost }) => {
+const Match: React.FC<IProps> = ({ match, roundKey, matchKey, sessionId, isHost }) => {
+
+    const socket = getSocket();
 
     return (
         <Grid
