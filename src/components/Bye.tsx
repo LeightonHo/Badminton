@@ -1,18 +1,19 @@
 import { Box, TextField, Typography } from "@material-ui/core";
 import React, { useState, KeyboardEvent } from "react";
 import { updateBye } from "../helpers/SocketHelper";
-import { IState as Props } from "./Main";
+import { getSocket } from "../helpers/Socket";
 
 interface IProps {
     byeKey: number,
     player: string,
     roundKey: number,
-    socket: Props["socket"],
-    sessionId: string
+    sessionId: string,
+    isConnected: boolean
 }
 
-const Bye: React.FC<IProps> = ({ byeKey, player, roundKey, socket, sessionId }) => {
+const Bye: React.FC<IProps> = ({ byeKey, player, roundKey, sessionId, isConnected }) => {
 
+    const socket = getSocket();
     const [input, setInput] = useState({
         previousValue: "",
         value: "",
@@ -59,6 +60,10 @@ const Bye: React.FC<IProps> = ({ byeKey, player, roundKey, socket, sessionId }) 
     let clickHoldTimer: any = null;
 
     const handlePress = () => {
+        if (!isConnected) {
+            return;
+        }
+        
         clickHoldTimer = setTimeout(() => {
             setInput({
                 ...input,

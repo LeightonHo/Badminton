@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { makeStyles } from '@material-ui/core/styles';
 import { Redirect, Route, Switch, useHistory } from "react-router-dom";
 import Box from "@material-ui/core/Box";
@@ -14,7 +14,6 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import Lobby from "./Lobby";
-import { joinSession } from "../helpers/SocketHelper";
 import { getSocket, initSocket, setCallback_GameState, setCallback_JoinedSession, setCallback_SetConfig, setCallback_SetSessionId, setCallback_SetIsConnected } from "../helpers/Socket";
 
 export interface IState {
@@ -215,16 +214,16 @@ const Main = () => {
           }}
         />
         <Route path="/lobby">
-          <Lobby socket={socket} setGameState={setGameState} sessionId={sessionId} setSessionId={setSessionId} joinedSession={joinedSession} setJoinedSession={setJoinedSession} setIsHost={setIsHost} />
+          <Lobby setGameState={setGameState} sessionId={sessionId} setSessionId={setSessionId} joinedSession={joinedSession} setJoinedSession={setJoinedSession} setIsHost={setIsHost} />
         </Route>
         <Route path="/round-robin">
-          <RoundRobin config={config} gameState={gameState} socket={socket} sessionId={sessionId} isHost={isHost} />
+          <RoundRobin config={config} gameState={gameState} sessionId={sessionId} isHost={isHost} isConnected={isConnected} />
         </Route>
         <Route path="/scoreboard">
           <Scoreboard config={config} gameState={gameState} />
         </Route>
         <Route path="/configuration">
-          <Configuration config={config} setConfig={setConfig} gameState={gameState} socket={socket} sessionId={sessionId} />
+          <Configuration config={config} setConfig={setConfig} gameState={gameState} sessionId={sessionId} />
         </Route>
       </Switch>
     </Box>

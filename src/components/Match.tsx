@@ -2,22 +2,18 @@ import { Grid, Typography } from "@material-ui/core";
 import React from "react";
 import Player from "./Player";
 import { IMatch } from "./RoundRobin";
-import { IState as Props } from "./Main";
 import Score from "./Score";
-import { getSocket } from "../helpers/Socket";
 
 interface IProps {
     match: IMatch,
     roundKey: number,
     matchKey: number,
-    socket: Props["socket"],
     sessionId: string,
-    isHost: boolean
+    isHost: boolean,
+    isConnected: boolean
 }
 
-const Match: React.FC<IProps> = ({ match, roundKey, matchKey, sessionId, isHost }) => {
-
-    const socket = getSocket();
+const Match: React.FC<IProps> = ({ match, roundKey, matchKey, sessionId, isHost, isConnected }) => {
 
     return (
         <Grid
@@ -47,26 +43,26 @@ const Match: React.FC<IProps> = ({ match, roundKey, matchKey, sessionId, isHost 
                     name={match.team1.player1}
                     roundKey={roundKey} 
                     matchKey={matchKey}
-                    socket={socket}
                     sessionId={sessionId}
                     isHost={isHost}
+                    isConnected={isConnected}
                 />
                 <Player 
                     player={2}
                     name={match.team1.player2}
                     roundKey={roundKey}
                     matchKey={matchKey}
-                    socket={socket}
                     sessionId={sessionId}
                     isHost={isHost}
+                    isConnected={isConnected}
                 />
                 <Score 
                     team={1} 
                     score={match.team1.score} 
                     roundKey={roundKey} 
-                    matchKey={matchKey} 
-                    socket={socket} 
+                    matchKey={matchKey}
                     sessionId={sessionId} 
+                    isConnected={isConnected}
                 />
             </Grid>
             <Grid
@@ -85,26 +81,26 @@ const Match: React.FC<IProps> = ({ match, roundKey, matchKey, sessionId, isHost 
                     name={match.team2.player3}
                     roundKey={roundKey} 
                     matchKey={matchKey}
-                    socket={socket}
                     sessionId={sessionId}
                     isHost={isHost}
+                    isConnected={isConnected}
                 />
                 <Player 
                     player={4}
                     name={match.team2.player4}
                     roundKey={roundKey} 
                     matchKey={matchKey}
-                    socket={socket}
                     sessionId={sessionId}
                     isHost={isHost}
+                    isConnected={isConnected}
                 />
                 <Score 
                     team={2} 
                     score={match.team2.score} 
                     roundKey={roundKey}
                     matchKey={matchKey} 
-                    socket={socket} 
                     sessionId={sessionId} 
+                    isConnected={isConnected}
                 />
             </Grid>
         </Grid>

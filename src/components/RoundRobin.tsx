@@ -2,14 +2,14 @@ import React from "react";
 import { IState as Props } from "./Main";
 import ByeContainer from "./ByeContainer";
 import Match from "./Match";
-import { Box, Card, CardContent, Divider, Grid, LinearProgress, Typography } from "@material-ui/core";
+import { Backdrop, Box, Card, CardContent, Divider, Grid, LinearProgress, Typography } from "@material-ui/core";
 
 export interface IProps {
     config: Props["config"],
     gameState: Props["gameState"],
-    socket: Props["socket"],
     sessionId: string,
-    isHost: boolean
+    isHost: boolean,
+    isConnected: boolean
 }
 
 export interface IMatch {
@@ -32,7 +32,7 @@ export interface IRound {
     byes: Props["config"]["players"]
 }
 
-const RoundRobin: React.FC<IProps> = ({ gameState, socket, sessionId, isHost }) => {
+const RoundRobin: React.FC<IProps> = ({ gameState, sessionId, isHost, isConnected }) => {
 
     const renderRoundRobin = () => {
         return (
@@ -73,9 +73,9 @@ const RoundRobin: React.FC<IProps> = ({ gameState, socket, sessionId, isHost }) 
                                                         match={match} 
                                                         roundKey={roundKey} 
                                                         matchKey={matchKey} 
-                                                        socket={socket} 
                                                         sessionId={sessionId} 
                                                         isHost={isHost}
+                                                        isConnected={isConnected}
                                                     />
                                                 </Grid>
                                                 {addMatchDivider(matchKey, round.matches.length)}
@@ -89,8 +89,8 @@ const RoundRobin: React.FC<IProps> = ({ gameState, socket, sessionId, isHost }) 
                                         <ByeContainer 
                                             players={round.byes} 
                                             roundKey={roundKey} 
-                                            socket={socket} 
                                             sessionId={sessionId} 
+                                            isConnected={isConnected}
                                         />
                                     </Grid>
                                 </Grid>
@@ -113,6 +113,10 @@ const RoundRobin: React.FC<IProps> = ({ gameState, socket, sessionId, isHost }) 
     const showSpinner = () => {
         return (
             <>
+                <Backdrop
+                    style={{ color: '#fff', zIndex: 99 }}
+                    open={true}
+                />
                 <LinearProgress 
                     color="primary"
                 />

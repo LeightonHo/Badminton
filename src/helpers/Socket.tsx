@@ -32,21 +32,12 @@ export const initSocket = (session: string) => {
 
     socket.onmessage = (ev: MessageEvent<any>) => {
         const data = JSON.parse(ev.data);
-        console.log(data);
-        
-        if (data.action === "pong") {
-          console.log(data.message);
-        }
         
         if (data.action === "syncGameState") {
-          const gameState = JSON.parse(data.gameState);
-          console.log("Syncing game state...", gameState);
-    
-          setGameStateCallback(gameState);
+          setGameStateCallback(JSON.parse(data.gameState));
     
           if (data.config) {
-            const config = JSON.parse(data.config);
-            setConfigCallback(config);
+            setConfigCallback(JSON.parse(data.config));
           }
         }
     
@@ -61,9 +52,11 @@ export const initSocket = (session: string) => {
 
           // If no game state is returned, then the game hasn't started yet, so show a loading screen until data is pushed.
           if (data.gameState.length > 0) {
-            const gameState = JSON.parse(data.gameState);
-    
-            setGameStateCallback(gameState);
+            setGameStateCallback(JSON.parse(data.gameState));
+
+            if (data.config) {
+              setConfigCallback(JSON.parse(data.config))
+            }
           }
         }
     
@@ -115,10 +108,9 @@ export const setCallback_SetIsConnected = (cb: (isConnected: boolean) => void) =
   setIsConnectedCallback = cb;
 }
 
-
-// setTimeout(() => {
-//   socket.close();
-// }, 5000);
+setTimeout(() => {
+  socket.close();
+}, 5000);
 
 // Mechanism for re-connecting automatically.
 let scrollEventTriggered: boolean = false;

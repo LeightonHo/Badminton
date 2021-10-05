@@ -58,7 +58,6 @@ function createSession() {
 }
 
 export function joinSession(socket: IState["socket"], sessionId: string) {
-    console.log("SocketHelper.joinSession fired", sessionId);
     const payload: any = {
         action: "session",
         method: "join",

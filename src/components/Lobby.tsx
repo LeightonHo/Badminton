@@ -3,9 +3,9 @@ import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router";
 import { IState as Props } from "./Main";
 import { joinSession, leaveSession } from "../helpers/SocketHelper";
+import { getSocket } from "../helpers/Socket";
 
 interface IProps {
-    socket: Props["socket"],
     setGameState: React.Dispatch<React.SetStateAction<Props["gameState"]>>,
     sessionId: string,
     setSessionId: React.Dispatch<React.SetStateAction<string>>,
@@ -14,8 +14,9 @@ interface IProps {
     setIsHost: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-const Lobby: React.FunctionComponent<IProps> = ({ socket, setGameState, sessionId, setSessionId, joinedSession, setJoinedSession, setIsHost }) => {
+const Lobby: React.FunctionComponent<IProps> = ({ setGameState, sessionId, setSessionId, joinedSession, setJoinedSession, setIsHost }) => {
 
+    const socket = getSocket();
     const history = useHistory();
     const [error, setError] = useState<string>("");
     const [disableInputs, setDisableInputs] = useState<boolean>(false);

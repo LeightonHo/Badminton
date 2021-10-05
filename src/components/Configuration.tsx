@@ -9,6 +9,7 @@ import "react-confirm-alert/src/react-confirm-alert.css";
 import { useHistory } from "react-router-dom";
 import { generateRoundRobin } from "../helpers/RoundRobinGenerator";
 import { pushGameState } from "../helpers/SocketHelper";
+import { getSocket } from "../helpers/Socket";
 
 export interface IConfig {
     rounds: number,
@@ -21,13 +22,12 @@ interface IProps {
     config: Props["config"],
     setConfig: React.Dispatch<React.SetStateAction<Props["config"]>>,
     gameState: Props["gameState"],
-    socket: Props["socket"],
     sessionId: string
 }
 
-const Configuration:React.FC<IProps> = ({ config, setConfig, gameState, socket, sessionId }) => {
+const Configuration:React.FC<IProps> = ({ config, setConfig, gameState, sessionId }) => {
     const history = useHistory();
-    
+    const socket = getSocket();
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
         if (!isNaN(parseInt(e.target.value))) {
             setConfig({
