@@ -7,10 +7,10 @@ let socket: WebSocket = new WebSocket("wss://op47bt7cik.execute-api.ap-southeast
 let setGameStateCallback: (gameState: IRound[]) => void;
 let setJoinedSessionCallback: (joinedSession: boolean) => void;
 let setConfigCallback: (config: IConfig) => void;
+let setSessionIdCallback: (sessionId: string) => void;
+let setIsConnectedCallback: (isConnected: boolean) => void;
 
 const heartbeat = () => {
-    console.log(`Heartbeat running.. ${new Date()}`);
-
     const payload: any = {
       action: "ping"
     }
@@ -19,9 +19,12 @@ const heartbeat = () => {
     setTimeout(heartbeat, 30000);
 }
 
-export const initSocket = (sessionId: string) => {
+export const initSocket = (session: string) => {
     console.log("Initialising web socket.");
     
+    if (session) {
+      sessionId = session;
+    }
 
     if (socket.readyState !== WebSocket.CONNECTING && socket.readyState === WebSocket.CLOSED) {
       socket = new WebSocket("wss://op47bt7cik.execute-api.ap-southeast-2.amazonaws.com/test");
@@ -41,16 +44,16 @@ export const initSocket = (sessionId: string) => {
     
           setGameStateCallback(gameState);
     
-          // if (data.config) {
-          //   const config = JSON.parse(data.config);
-          //   setConfig(config);
-          // }
+          if (data.config) {
+            const config = JSON.parse(data.config);
+            setConfigCallback(config);
+          }
         }
     
-        // if (data.action === "createSession") {
-        //   console.log(data.message);
-        //   history.push("/configuration");
-        // }
+        if (data.action === "createSession") {
+          console.log(data.message);
+          // history.push("/configuration");
+        }
     
         if (data.action === "joinedSession") {
           console.log(data.message);
@@ -64,14 +67,15 @@ export const initSocket = (sessionId: string) => {
           }
         }
     
-        // if (data.action === "joinFailed") {
-        //   setSessionId("");
-        //   setJoinedSession(false);
-        // }
+        if (data.action === "joinFailed") {
+          setSessionIdCallback("");
+          setJoinedSessionCallback(false);
+        }
       }
 
       socket.onopen = () => {
-        console.log("Joining session")
+        console.log("Joining session");
+        setIsConnectedCallback(true);
         joinSession(socket, sessionId);
         heartbeat();
       }
@@ -81,33 +85,15 @@ export const initSocket = (sessionId: string) => {
       });
   
       socket.addEventListener("close", (e) => {
+        setIsConnectedCallback(false);
         console.log(e);
         console.log("WebSocket is closed.");
       });
 }
 
 export const getSocket = () => {
-    return socket;
+  return socket;
 }
-
-// initSocket();
-
-// setTimeout(() => {
-//   socket.close();
-// }, 5000);
-
-// let scrollEventTriggered: boolean = false;
-// window.addEventListener("scroll", () => {
-//   if (!scrollEventTriggered && socket.readyState === WebSocket.CLOSED) {
-//     scrollEventTriggered = true;
-//     console.log("Web socket was closed, attempting to reconnect..", socket.readyState);
-//     initSocket();
-
-//     setTimeout(() => {
-//       scrollEventTriggered = false;
-//     }, 1000);
-//   }
-// });
 
 export const setCallback_GameState = (cb: (gameState: IRound[]) => void) => {
   setGameStateCallback = cb;
@@ -117,6 +103,34 @@ export const setCallback_JoinedSession = (cb: (joinedSession: boolean) => void) 
   setJoinedSessionCallback = cb;
 }
 
-export const socket_setSessionId = (sessionId: string): void => {
-  sessionId = sessionId;
+export const setCallback_SetConfig = (cb: (setConfig: IConfig) => void) => {
+  setConfigCallback = cb;
 }
+
+export const setCallback_SetSessionId = (cb: (sessionId: string) => void) => {
+  setSessionIdCallback = cb;
+}
+
+export const setCallback_SetIsConnected = (cb: (isConnected: boolean) => void) => {
+  setIsConnectedCallback = cb;
+}
+
+
+// setTimeout(() => {
+//   socket.close();
+// }, 5000);
+
+// Mechanism for re-connecting automatically.
+let scrollEventTriggered: boolean = false;
+
+window.addEventListener("scroll", () => {
+  if (!scrollEventTriggered && socket.readyState === WebSocket.CLOSED) {
+    scrollEventTriggered = true;
+    
+    initSocket(sessionId);
+
+    setTimeout(() => {
+      scrollEventTriggered = false;
+    }, 1000);
+  }
+});

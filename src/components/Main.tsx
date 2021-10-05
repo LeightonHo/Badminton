@@ -15,7 +15,7 @@ import Menu from '@material-ui/core/Menu';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import Lobby from "./Lobby";
 import { joinSession } from "../helpers/SocketHelper";
-import { getSocket, initSocket, setCallback_GameState, setCallback_JoinedSession, socket_setSessionId } from "../helpers/Socket";
+import { getSocket, initSocket, setCallback_GameState, setCallback_JoinedSession, setCallback_SetConfig, setCallback_SetSessionId, setCallback_SetIsConnected } from "../helpers/Socket";
 
 export interface IState {
   config: IConfig,
@@ -41,77 +41,33 @@ const useStickyState = (defaultValue: (IRound[] | IConfig | string), key: string
 
 const Main = () => {
   
-  let socket: WebSocket = getSocket();
-
-
-  // socket.onopen = () => {
-  //   joinSession(socket, sessionId);
-  // }
-
-  // socket.onmessage = (ev: MessageEvent<any>) => {
-  //   const data = JSON.parse(ev.data);
-  //   console.log(data);
-    
-  //   if (data.action === "pong") {
-  //     console.log(data.message);
-  //   }
-    
-  //   if (data.action === "syncGameState") {
-  //     const gameState = JSON.parse(data.gameState);
-  //     console.log("Syncing game state...", gameState);
-
-  //     setGameState(gameState);
-
-  //     if (data.config) {
-  //       const config = JSON.parse(data.config);
-  //       setConfig(config);
-  //     }
-  //   }
-
-  //   if (data.action === "createSession") {
-  //     console.log(data.message);
-  //     history.push("/configuration");
-  //   }
-
-  //   if (data.action === "joinedSession") {
-  //     console.log(data.message);
-  //     setJoinedSession(true);
-  //     // If no game state is returned, then the game hasn't started yet, so show a loading screen until data is pushed.
-  //     if (data.gameState.length > 0) {
-  //       const gameState = JSON.parse(data.gameState);
-
-  //       setGameState(gameState);
-  //     }
-  //   }
-
-  //   if (data.action === "joinFailed") {
-  //     setSessionId("");
-  //     setJoinedSession(false);
-  //   }
-  // }
-
   const history = useHistory();
   const handleNavigation = (path: string) => {
     history.push(path);
   }
-
+  
+  const [isConnected, setIsConnected] = useState<boolean>(false);
   const [isHost, setIsHost] = useState<boolean>(false);
   const [sessionId, setSessionId] = useStickyState("", "badminton-session-code");
   const [joinedSession, setJoinedSession] = useState<boolean>(false);
   const [gameState, setGameState] = useState<IState["gameState"]>([]);
-
-  setCallback_GameState(setGameState);
-  setCallback_JoinedSession(setJoinedSession);
-  // socket_setSessionId(sessionId);
-  initSocket(sessionId);
-
-  // Default values
   const [config, setConfig] = useState<IConfig>({
     rounds: 15,
     winningScore: 21,
     courts: [],
     players: []
   });
+  const socket: WebSocket = getSocket();
+
+  useEffect(() => {
+    setCallback_GameState(setGameState);
+    setCallback_JoinedSession(setJoinedSession);
+    setCallback_SetConfig(setConfig)
+    setCallback_SetSessionId(setSessionId);
+    setCallback_SetIsConnected(setIsConnected);
+  
+    initSocket(sessionId);
+  }, []);
 
   const useStyles = makeStyles((theme) => ({
     grow: {
@@ -204,7 +160,7 @@ const Main = () => {
         <AppBar position="sticky">
           <Toolbar>
             <Typography className={classes.title} variant="h5" noWrap>
-              Sunday Badminton
+              Sunday Badminton {isConnected.toString()}
             </Typography>
             <div className={classes.grow} />
             <div className={classes.sectionDesktop}>
