@@ -3,7 +3,7 @@ import { IRound } from "../components/RoundRobin";
 import { joinSession } from "./SocketHelper";
 
 let sessionId: string;
-let socket: WebSocket = new WebSocket("wss://op47bt7cik.execute-api.ap-southeast-2.amazonaws.com/test");
+let socket: WebSocket = new WebSocket("wss://op47bt7cik.execute-api.ap-southeast-2.amazonaws.com/production");
 let setGameStateCallback: (gameState: IRound[]) => void;
 let setJoinedSessionCallback: (joinedSession: boolean) => void;
 let setConfigCallback: (config: IConfig) => void;
@@ -27,7 +27,7 @@ export const initSocket = (session: string) => {
     }
 
     if (socket.readyState !== WebSocket.CONNECTING && socket.readyState === WebSocket.CLOSED) {
-      socket = new WebSocket("wss://op47bt7cik.execute-api.ap-southeast-2.amazonaws.com/test");
+      socket = new WebSocket("wss://op47bt7cik.execute-api.ap-southeast-2.amazonaws.com/production");
     }
 
     socket.onmessage = (ev: MessageEvent<any>) => {
