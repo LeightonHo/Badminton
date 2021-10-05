@@ -72,7 +72,7 @@ const Lobby: React.FunctionComponent<IProps> = ({ setGameState, sessionId, setSe
     }
 
     const generateSessionId = (length: number) => {
-        const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         let result = "";
 
         for (let i = 0; i < length; i++) {

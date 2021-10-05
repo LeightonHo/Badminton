@@ -63,7 +63,7 @@ const Bye: React.FC<IProps> = ({ byeKey, player, roundKey, sessionId, isConnecte
         if (!isConnected) {
             return;
         }
-        
+
         clickHoldTimer = setTimeout(() => {
             setInput({
                 ...input,
@@ -85,6 +85,7 @@ const Bye: React.FC<IProps> = ({ byeKey, player, roundKey, sessionId, isConnecte
                 onMouseUp={handleRelease}
                 onTouchEnd={handleRelease}
                 onTouchCancel={handleRelease}
+                onTouchMove={handleRelease}
             >
                 <Typography
                     variant="overline"

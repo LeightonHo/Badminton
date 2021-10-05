@@ -159,7 +159,7 @@ const Main = () => {
         <AppBar position="sticky">
           <Toolbar>
             <Typography className={classes.title} variant="h5" noWrap>
-              Sunday Badminton {isConnected.toString()}
+              Sunday Badminton
             </Typography>
             <div className={classes.grow} />
             <div className={classes.sectionDesktop}>

@@ -88,6 +88,7 @@ const Player: React.FC<IProps> = ({ player, name, roundKey, matchKey, sessionId,
                 onMouseUp={handleRelease}
                 onTouchEnd={handleRelease}
                 onTouchCancel={handleRelease}
+                onTouchMove={handleRelease}
             >
                 <Typography 
                     variant="overline"

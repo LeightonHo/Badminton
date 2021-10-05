@@ -108,9 +108,9 @@ export const setCallback_SetIsConnected = (cb: (isConnected: boolean) => void) =
   setIsConnectedCallback = cb;
 }
 
-setTimeout(() => {
-  socket.close();
-}, 5000);
+// setTimeout(() => {
+//   socket.close();
+// }, 5000);
 
 // Mechanism for re-connecting automatically.
 let scrollEventTriggered: boolean = false;
