@@ -7,6 +7,7 @@ import { getSocket } from "../helpers/Socket";
 
 interface IProps {
     setGameState: React.Dispatch<React.SetStateAction<Props["gameState"]>>,
+    setConfig: React.Dispatch<React.SetStateAction<Props["config"]>>,
     sessionId: string,
     setSessionId: React.Dispatch<React.SetStateAction<string>>,
     joinedSession: boolean,
@@ -14,7 +15,7 @@ interface IProps {
     setIsHost: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-const Lobby: React.FunctionComponent<IProps> = ({ setGameState, sessionId, setSessionId, joinedSession, setJoinedSession, setIsHost }) => {
+const Lobby: React.FunctionComponent<IProps> = ({ setGameState, setConfig, sessionId, setSessionId, joinedSession, setJoinedSession, setIsHost }) => {
 
     const socket = getSocket();
     const history = useHistory();
@@ -65,6 +66,12 @@ const Lobby: React.FunctionComponent<IProps> = ({ setGameState, sessionId, setSe
     const handleLeaveClick = () => {
         leaveSession(socket, sessionId);
         setGameState([]);
+        setConfig({
+            rounds: 15,
+            winningScore: 21,
+            courts: [],
+            players: []
+        });
         setJoinedSession(false);
         setSessionId("");
         setIsHost(false);

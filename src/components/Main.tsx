@@ -130,27 +130,32 @@ const Main = () => {
             <Typography>Lobby</Typography>
           </IconButton>
         </MenuItem>
-        {joinedSession 
-        ? <>
-          <MenuItem>
-            <IconButton color="inherit" onClick={(() => { handleNavigation("/round-robin") })}>
-              <Typography>Games</Typography>
-            </IconButton>
-          </MenuItem>
-          <MenuItem>
-            <IconButton color="inherit" onClick={(() => { handleNavigation("/scoreboard") })}>
-              <Typography>Scoreboard</Typography>
-            </IconButton>
-          </MenuItem>
-          <MenuItem>
-            <IconButton color="inherit" onClick={(() => { handleNavigation("/configuration") })}>
-              <Typography>Config</Typography>
-            </IconButton>
-          </MenuItem>
-        </>
-        : ""
+        {
+          joinedSession 
+          ? <>
+            {gameState.length > 0
+            ? <>
+              <MenuItem>
+                <IconButton color="inherit" onClick={(() => { handleNavigation("/round-robin") })}>
+                  <Typography>Games</Typography>
+                </IconButton>
+              </MenuItem>
+              <MenuItem>
+                <IconButton color="inherit" onClick={(() => { handleNavigation("/scoreboard") })}>
+                  <Typography>Scoreboard</Typography>
+                </IconButton>
+              </MenuItem>
+            </>
+            : ""
+            }
+            <MenuItem>
+              <IconButton color="inherit" onClick={(() => { handleNavigation("/configuration") })}>
+                <Typography>Config</Typography>
+              </IconButton>
+            </MenuItem>
+          </>
+          : ""
         }
-        
       </Menu>
     );
 
@@ -166,19 +171,26 @@ const Main = () => {
               <IconButton color="inherit" onClick={(() => { handleNavigation("/lobby") })}>
                 <Typography>Lobby</Typography>
               </IconButton>
-              {joinedSession
-              ? <>
-                <IconButton color="inherit" onClick={(() => { handleNavigation("/round-robin") })}>
-                  <Typography>Games</Typography>
-                </IconButton>
-                <IconButton color="inherit" onClick={(() => { handleNavigation("/scoreboard") })}>
-                  <Typography>Scoreboard</Typography>
-                </IconButton>
-                <IconButton color="inherit" onClick={(() => { handleNavigation("/configuration") })}>
-                  <Typography>Config</Typography>
-                </IconButton>
-              </>
-              : ""
+              {
+                joinedSession
+                ? <>
+                  {
+                    gameState.length > 0
+                    ? <>
+                      <IconButton color="inherit" onClick={(() => { handleNavigation("/round-robin") })}>
+                        <Typography>Games</Typography>
+                      </IconButton>
+                      <IconButton color="inherit" onClick={(() => { handleNavigation("/scoreboard") })}>
+                        <Typography>Scoreboard</Typography>
+                      </IconButton>
+                    </>
+                    : ""
+                  }
+                  <IconButton color="inherit" onClick={(() => { handleNavigation("/configuration") })}>
+                    <Typography>Config</Typography>
+                  </IconButton>
+                </>
+                : ""
               }
             </div>
             <div className={classes.sectionMobile}>
@@ -209,12 +221,14 @@ const Main = () => {
           path="/"
           render={() => {
             return (
-              !joinedSession ? <Redirect to="/lobby" /> : <Redirect to="/round-robin" />
+              !joinedSession 
+              ? <Redirect to="/lobby" />
+              : <Redirect to="/round-robin" />
             );
           }}
         />
         <Route path="/lobby">
-          <Lobby setGameState={setGameState} sessionId={sessionId} setSessionId={setSessionId} joinedSession={joinedSession} setJoinedSession={setJoinedSession} setIsHost={setIsHost} />
+          <Lobby setGameState={setGameState} setConfig={setConfig} sessionId={sessionId} setSessionId={setSessionId} joinedSession={joinedSession} setJoinedSession={setJoinedSession} setIsHost={setIsHost} />
         </Route>
         <Route path="/round-robin">
           <RoundRobin config={config} gameState={gameState} sessionId={sessionId} isHost={isHost} isConnected={isConnected} />

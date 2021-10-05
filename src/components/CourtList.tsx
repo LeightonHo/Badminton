@@ -9,10 +9,11 @@ import { ListItemText } from "@material-ui/core";
 
 interface IProps {
     config: Props["config"],
-    setConfig: React.Dispatch<React.SetStateAction<Props["config"]>>
+    setConfig: React.Dispatch<React.SetStateAction<Props["config"]>>,
+    hasGameStarted: boolean
 }
 
-const CourtList: React.FC<IProps> = ({ config, setConfig }) => {
+const CourtList: React.FC<IProps> = ({ config, setConfig, hasGameStarted }) => {
 
     const handleDelete = (index: number): void => {
         config.courts.splice(index, 1);
@@ -30,15 +31,19 @@ const CourtList: React.FC<IProps> = ({ config, setConfig }) => {
             return (
                 <ListItem key={i}>
                     <ListItemText>{court}</ListItemText>
-                    <ListItemSecondaryAction>
-                        <IconButton 
-                            edge="end" 
-                            aria-label="delete"
-                            onClick={() => { handleDelete(i); }}
-                        >
-                            <DeleteIcon /> 
-                        </IconButton>
-                    </ListItemSecondaryAction>
+                    {
+                        !hasGameStarted
+                        ? <ListItemSecondaryAction>
+                            <IconButton 
+                                edge="end" 
+                                aria-label="delete"
+                                onClick={() => { handleDelete(i); }}
+                            >
+                                <DeleteIcon /> 
+                            </IconButton>
+                        </ListItemSecondaryAction>
+                        : ""
+                    }
                 </ListItem>
             )
         });
