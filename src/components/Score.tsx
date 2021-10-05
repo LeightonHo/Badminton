@@ -24,7 +24,7 @@ const Score: React.FC<IProps> = ({ team, score, roundKey, matchKey, sessionId })
 
     useEffect(() => {
         socket = getSocket();
-    }, [socket]);
+    }, []);
 
     const handleScoreChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
         let updatedValue = parseInt(e.target.value);

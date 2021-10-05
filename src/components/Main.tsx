@@ -15,7 +15,7 @@ import Menu from '@material-ui/core/Menu';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import Lobby from "./Lobby";
 import { joinSession } from "../helpers/SocketHelper";
-import { getSocket, initSocket } from "../helpers/Socket";
+import { getSocket, initSocket, setCallback_GameState, setCallback_JoinedSession, socket_setSessionId } from "../helpers/Socket";
 
 export interface IState {
   config: IConfig,
@@ -43,55 +43,52 @@ const Main = () => {
   
   let socket: WebSocket = getSocket();
 
-  useEffect(() => {
-    socket = getSocket();
 
-    socket.onopen = () => {
-      joinSession(socket, sessionId);
-    }
-  
-    socket.onmessage = (ev: MessageEvent<any>) => {
-      const data = JSON.parse(ev.data);
-      console.log(data);
-      
-      if (data.action === "pong") {
-        console.log(data.message);
-      }
-      
-      if (data.action === "syncGameState") {
-        const gameState = JSON.parse(data.gameState);
-        console.log("Syncing game state...", gameState);
-  
-        setGameState(gameState);
-  
-        if (data.config) {
-          const config = JSON.parse(data.config);
-          setConfig(config);
-        }
-      }
-  
-      if (data.action === "createSession") {
-        console.log(data.message);
-        history.push("/configuration");
-      }
-  
-      if (data.action === "joinedSession") {
-        console.log(data.message);
-        setJoinedSession(true);
-        // If no game state is returned, then the game hasn't started yet, so show a loading screen until data is pushed.
-        if (data.gameState.length > 0) {
-          const gameState = JSON.parse(data.gameState);
-  
-          setGameState(gameState);
-        }
-      }
-  
-      if (data.action === "joinFailed") {
-        setSessionId("");
-        setJoinedSession(false);
-      }
-    }
-  }, [socket]);
+  // socket.onopen = () => {
+  //   joinSession(socket, sessionId);
+  // }
+
+  // socket.onmessage = (ev: MessageEvent<any>) => {
+  //   const data = JSON.parse(ev.data);
+  //   console.log(data);
+    
+  //   if (data.action === "pong") {
+  //     console.log(data.message);
+  //   }
+    
+  //   if (data.action === "syncGameState") {
+  //     const gameState = JSON.parse(data.gameState);
+  //     console.log("Syncing game state...", gameState);
+
+  //     setGameState(gameState);
+
+  //     if (data.config) {
+  //       const config = JSON.parse(data.config);
+  //       setConfig(config);
+  //     }
+  //   }
+
+  //   if (data.action === "createSession") {
+  //     console.log(data.message);
+  //     history.push("/configuration");
+  //   }
+
+  //   if (data.action === "joinedSession") {
+  //     console.log(data.message);
+  //     setJoinedSession(true);
+  //     // If no game state is returned, then the game hasn't started yet, so show a loading screen until data is pushed.
+  //     if (data.gameState.length > 0) {
+  //       const gameState = JSON.parse(data.gameState);
+
+  //       setGameState(gameState);
+  //     }
+  //   }
+
+  //   if (data.action === "joinFailed") {
+  //     setSessionId("");
+  //     setJoinedSession(false);
+  //   }
+  // }
 
   const history = useHistory();
   const handleNavigation = (path: string) => {
@@ -102,6 +99,11 @@ const Main = () => {
   const [sessionId, setSessionId] = useStickyState("", "badminton-session-code");
   const [joinedSession, setJoinedSession] = useState<boolean>(false);
   const [gameState, setGameState] = useState<IState["gameState"]>([]);
+
+  setCallback_GameState(setGameState);
+  setCallback_JoinedSession(setJoinedSession);
+  // socket_setSessionId(sessionId);
+  initSocket(sessionId);
 
   // Default values
   const [config, setConfig] = useState<IConfig>({
