@@ -7,8 +7,9 @@ import { IState as Props } from "./Main";
 import { confirmAlert } from "react-confirm-alert";
 import "react-confirm-alert/src/react-confirm-alert.css";
 import { useHistory } from "react-router-dom";
-import { generateRoundRobin } from "../functions/RoundRobinGenerator";
-import { pushGameState } from "../functions/SocketHelper";
+import { generateRoundRobin } from "../helpers/RoundRobinGenerator";
+import { pushGameState } from "../helpers/SocketHelper";
+import { getSocket } from "../helpers/Socket";
 
 export interface IConfig {
     rounds: number,
@@ -21,13 +22,14 @@ interface IProps {
     config: Props["config"],
     setConfig: React.Dispatch<React.SetStateAction<Props["config"]>>,
     gameState: Props["gameState"],
-    socket: WebSocket,
     sessionId: string
 }
 
-const Configuration:React.FC<IProps> = ({ config, setConfig, gameState, socket, sessionId }) => {
+const Configuration:React.FC<IProps> = ({ config, setConfig, gameState, sessionId }) => {
     const history = useHistory();
-    
+    const socket = getSocket();
+    const hasGameStarted: boolean = gameState.length > 0;
+
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
         if (!isNaN(parseInt(e.target.value))) {
             setConfig({
@@ -69,8 +71,8 @@ const Configuration:React.FC<IProps> = ({ config, setConfig, gameState, socket, 
                 {
                     label: "Yes",
                     onClick: () => {
-                        const results = generateRoundRobin(config);
-                        pushGameState(socket, sessionId, results);
+                        const roundRobin = generateRoundRobin(config);
+                        pushGameState(socket, sessionId, config, roundRobin);
                         history.push("/round-robin");
                     }
                 },
@@ -91,101 +93,123 @@ const Configuration:React.FC<IProps> = ({ config, setConfig, gameState, socket, 
         downloadAnchorElement?.click();
     }
 
-    return (
-        <Box>
-            <Card className="card">
-                <CardContent className="general-card">
-                    <Typography
-                        variant="h5"
-                    >
-                        General
-                    </Typography>
-                    <Typography
-                        variant="subtitle2"
-                    >
-                        The session code is <b>{sessionId}</b>
-                    </Typography>
-                    <TextField
-                        id="inputMatches"
-                        label={`Rounds (${config.rounds.toString()})`}
-                        type="number"
-                        variant="outlined"
-                        size="small"
-                        fullWidth
-                        onChange={handleChange}
-                        placeholder={config.rounds.toString()}
-                        name="name"
-                        className="general-input"
-                    />
-                    <TextField
-                        id="inputWinningScore"
-                        label={`Winning Score (${config.winningScore.toString()})`}
-                        type="number"
-                        variant="outlined"
-                        size="small"
-                        fullWidth
-                        onChange={handleChange}
-                        placeholder={config.winningScore.toString()}
-                        name="name"
-                        className="general-input"
-                    />
-                </CardContent>
-            </Card>
+    const renderConfiguration = () => {
+        return (
+            <Box>
+                <Card className="card">
+                    <CardContent className="general-card">
+                        <Typography
+                            variant="h5"
+                        >
+                            General
+                        </Typography>
+                        <Typography
+                            variant="subtitle2"
+                        >
+                            The session code is <b>{sessionId}</b>
+                        </Typography>
+                        <TextField
+                            id="inputMatches"
+                            label={`Rounds (${config.rounds.toString()})`}
+                            type="number"
+                            variant="outlined"
+                            size="small"
+                            fullWidth
+                            onChange={handleChange}
+                            placeholder={config.rounds.toString()}
+                            name="name"
+                            className="general-input"
+                        />
+                        <TextField
+                            id="inputWinningScore"
+                            label={`Winning Score (${config.winningScore.toString()})`}
+                            type="number"
+                            variant="outlined"
+                            size="small"
+                            fullWidth
+                            onChange={handleChange}
+                            placeholder={config.winningScore.toString()}
+                            name="name"
+                            className="general-input"
+                        />
+                    </CardContent>
+                </Card>
 
-            <Card className="card courts-card">
-                <CardContent>
-                    <Typography
-                        variant="h5"
-                        gutterBottom
-                    >
-                        Courts ({config.courts.length})
-                    </Typography>
-                    <CourtForm config={config} setConfig={setConfig} />
-                    <CourtList config={config} setConfig={setConfig} />
-                </CardContent>
-            </Card>
+                <Card className="card courts-card">
+                    <CardContent>
+                        <Typography
+                            variant="h5"
+                            gutterBottom
+                        >
+                            Courts ({config.courts.length})
+                        </Typography>
+                        {
+                            !hasGameStarted
+                            ? <CourtForm config={config} setConfig={setConfig} />
+                            : ""
+                        }
+                        <CourtList config={config} setConfig={setConfig} hasGameStarted={hasGameStarted} />
+                    </CardContent>
+                </Card>
 
-            <Card className="card players-card">
-                <CardContent>
-                    <Typography
-                        variant="h5"
-                        gutterBottom
-                        className="config-card-header"
-                    >
-                        Players ({config.players.length})
-                    </Typography>
-                    <PlayerForm config={config} setConfig={setConfig} />
-                    <PlayerList config={config} setConfig={setConfig} />
-                </CardContent>
-            </Card>
+                <Card className="card players-card">
+                    <CardContent>
+                        <Typography
+                            variant="h5"
+                            gutterBottom
+                            className="config-card-header"
+                        >
+                            Players ({config.players.length})
+                        </Typography>
+                        {
+                            !hasGameStarted
+                            ? <PlayerForm config={config} setConfig={setConfig} />
+                            : ""
+                        }
+                        <PlayerList config={config} setConfig={setConfig} hasGameStarted={hasGameStarted} />
+                    </CardContent>
+                </Card>
 
-            <Box className="config-buttons">
-                <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={clearGameData}
-                >
-                    Generate round robin
-                </Button>
-
-                <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={handleExport}
-                >
-                    Export data
-                </Button>
-                <a id="downloadAnchorElement"></a>
-
-                <Button
-                    variant="contained"
-                    color="secondary"
-                    onClick={clearConfigData}
-                >
-                    Reset config
-                </Button>
+                <Box className="config-buttons">
+                    {
+                        !hasGameStarted
+                        ? <>
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                onClick={clearGameData}
+                                disabled={hasGameStarted}
+                            >
+                                Generate round robin
+                            </Button>
+                            <Button
+                                variant="contained"
+                                color="secondary"
+                                onClick={clearConfigData}
+                            >
+                                Reset config
+                            </Button>
+                        </>
+                        : <>
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                onClick={handleExport}
+                            >
+                                Export data
+                            </Button>
+                            <a id="downloadAnchorElement"></a>
+                        </>
+                    }
+                </Box>
             </Box>
-        </Box>
+        );
+    }
+
+    return (
+        <>
+            {renderConfiguration()}
+        </>
     );
 }
 

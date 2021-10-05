@@ -2,11 +2,12 @@ import { Box, Button, Card, CardContent, TextField, Typography } from "@material
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router";
 import { IState as Props } from "./Main";
-import { joinSession, leaveSession } from "../functions/SocketHelper";
+import { joinSession, leaveSession } from "../helpers/SocketHelper";
+import { getSocket } from "../helpers/Socket";
 
 interface IProps {
-    socket: Props["socket"],
     setGameState: React.Dispatch<React.SetStateAction<Props["gameState"]>>,
+    setConfig: React.Dispatch<React.SetStateAction<Props["config"]>>,
     sessionId: string,
     setSessionId: React.Dispatch<React.SetStateAction<string>>,
     joinedSession: boolean,
@@ -14,8 +15,9 @@ interface IProps {
     setIsHost: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-const Lobby: React.FunctionComponent<IProps> = ({ socket, setGameState, sessionId, setSessionId, joinedSession, setJoinedSession, setIsHost }) => {
+const Lobby: React.FunctionComponent<IProps> = ({ setGameState, setConfig, sessionId, setSessionId, joinedSession, setJoinedSession, setIsHost }) => {
 
+    const socket = getSocket();
     const history = useHistory();
     const [error, setError] = useState<string>("");
     const [disableInputs, setDisableInputs] = useState<boolean>(false);
@@ -64,6 +66,12 @@ const Lobby: React.FunctionComponent<IProps> = ({ socket, setGameState, sessionI
     const handleLeaveClick = () => {
         leaveSession(socket, sessionId);
         setGameState([]);
+        setConfig({
+            rounds: 15,
+            winningScore: 21,
+            courts: [],
+            players: []
+        });
         setJoinedSession(false);
         setSessionId("");
         setIsHost(false);
@@ -71,7 +79,7 @@ const Lobby: React.FunctionComponent<IProps> = ({ socket, setGameState, sessionI
     }
 
     const generateSessionId = (length: number) => {
-        const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         let result = "";
 
         for (let i = 0; i < length; i++) {

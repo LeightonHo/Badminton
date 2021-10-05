@@ -1,4 +1,4 @@
-import { Card, CardContent, Typography } from "@material-ui/core";
+import { Backdrop, Card, CardContent, LinearProgress, Typography } from "@material-ui/core";
 import React from "react";
 import { IState as Props } from "./Main";
 import Table from '@material-ui/core/Table';
@@ -321,8 +321,22 @@ const Scoreboard:React.FC<IProps> = ({ config, gameState }) => {
         // );
     }
 
-    return (
-        <>
+    const showSpinner = () => {
+        return (
+            <>
+                <Backdrop
+                    style={{ color: '#fff', zIndex: 99 }}
+                    open={true}
+                />
+                <LinearProgress 
+                    color="primary"
+                />
+            </>
+        );
+    }
+
+    const renderScoreboard = () => {
+        return (
             <Card className="card">
                 <CardContent>
                     <Typography 
@@ -346,6 +360,15 @@ const Scoreboard:React.FC<IProps> = ({ config, gameState }) => {
                     </TableContainer>
                 </CardContent>
             </Card>
+        );
+    }
+
+    return (
+        <>
+            {gameState.length === 0
+            ? showSpinner()
+            : renderScoreboard()
+            }
 
             {/* {generateStatistics()} */}
 

@@ -1,19 +1,21 @@
 import { Box, Grid, TextField, Typography } from "@material-ui/core";
 import React, { useState, KeyboardEvent } from "react";
-import { updatePlayer } from "../functions/SocketHelper";
+import { updatePlayer } from "../helpers/SocketHelper";
+import { getSocket } from "../helpers/Socket";
 
 interface IProps {
     player: number,
     name: string,
     roundKey: number,
     matchKey: number,
-    socket: WebSocket,
     sessionId: string,
-    isHost: boolean
+    isHost: boolean,
+    isConnected: boolean
 }
 
-const Player: React.FC<IProps> = ({ player, name, roundKey, matchKey, socket, sessionId, isHost }) => {
+const Player: React.FC<IProps> = ({ player, name, roundKey, matchKey, sessionId, isHost, isConnected }) => {
 
+    const socket = getSocket();
     const [input, setInput] = useState({
         value: "",
         editing: false,
@@ -61,6 +63,10 @@ const Player: React.FC<IProps> = ({ player, name, roundKey, matchKey, socket, se
     let clickHoldTimer: any = null;
 
     const handlePress = () => {
+        if (!isConnected) {
+            return;
+        }
+
         clickHoldTimer = setTimeout(() => {
             setInput({
                 ...input,
@@ -82,6 +88,7 @@ const Player: React.FC<IProps> = ({ player, name, roundKey, matchKey, socket, se
                 onMouseUp={handleRelease}
                 onTouchEnd={handleRelease}
                 onTouchCancel={handleRelease}
+                onTouchMove={handleRelease}
             >
                 <Typography 
                     variant="overline"
