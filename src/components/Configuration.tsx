@@ -10,7 +10,6 @@ import { useHistory } from "react-router-dom";
 import { generateRoundRobin } from "../helpers/RoundRobinGenerator";
 import { pushGameState } from "../helpers/SocketHelper";
 import { getSocket } from "../helpers/Socket";
-import { Alert } from "@material-ui/lab";
 
 export interface IConfig {
     rounds: number,
