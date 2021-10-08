@@ -16,7 +16,7 @@ const PlayerForm: React.FC<IProps> = ({ config, setConfig }) => {
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
         setInput({
             ...input,
-            [e.target.name]: e.target.value.trim()
+            [e.target.name]: e.target.value
         });
     }
 
@@ -29,7 +29,7 @@ const PlayerForm: React.FC<IProps> = ({ config, setConfig }) => {
             ...config,
             players: [
                 ...config.players,
-                input.name
+                input.name.trim()
             ]
         });
 

@@ -148,11 +148,6 @@ const Main = () => {
             </>
             : ""
             }
-            <MenuItem>
-              <IconButton color="inherit" onClick={(() => { handleNavigation("/configuration") })}>
-                <Typography>Config</Typography>
-              </IconButton>
-            </MenuItem>
           </>
           : ""
         }
@@ -186,9 +181,6 @@ const Main = () => {
                     </>
                     : ""
                   }
-                  <IconButton color="inherit" onClick={(() => { handleNavigation("/configuration") })}>
-                    <Typography>Config</Typography>
-                  </IconButton>
                 </>
                 : ""
               }
@@ -228,16 +220,23 @@ const Main = () => {
           }}
         />
         <Route path="/lobby">
-          <Lobby setGameState={setGameState} setConfig={setConfig} sessionId={sessionId} setSessionId={setSessionId} joinedSession={joinedSession} setJoinedSession={setJoinedSession} setIsHost={setIsHost} />
+          <Lobby 
+            gameState={gameState}
+            setGameState={setGameState} 
+            config={config}
+            setConfig={setConfig} 
+            sessionId={sessionId} 
+            setSessionId={setSessionId} 
+            joinedSession={joinedSession} 
+            setJoinedSession={setJoinedSession} 
+            setIsHost={setIsHost} 
+          />
         </Route>
         <Route path="/round-robin">
           <RoundRobin config={config} gameState={gameState} sessionId={sessionId} isHost={isHost} isConnected={isConnected} />
         </Route>
         <Route path="/scoreboard">
           <Scoreboard config={config} gameState={gameState} />
-        </Route>
-        <Route path="/configuration">
-          <Configuration config={config} setConfig={setConfig} gameState={gameState} sessionId={sessionId} />
         </Route>
       </Switch>
     </Box>

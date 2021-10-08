@@ -1,12 +1,15 @@
-import { Box, Button, Card, CardContent, TextField, Typography } from "@material-ui/core";
+import { Box, Button, Card, CardContent, Paper, TextField, Typography } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router";
 import { IState as Props } from "./Main";
 import { joinSession, leaveSession } from "../helpers/SocketHelper";
 import { getSocket } from "../helpers/Socket";
+import Configuration from "./Configuration";
 
 interface IProps {
+    gameState: Props["gameState"],
     setGameState: React.Dispatch<React.SetStateAction<Props["gameState"]>>,
+    config: Props["config"],
     setConfig: React.Dispatch<React.SetStateAction<Props["config"]>>,
     sessionId: string,
     setSessionId: React.Dispatch<React.SetStateAction<string>>,
@@ -15,7 +18,7 @@ interface IProps {
     setIsHost: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-const Lobby: React.FunctionComponent<IProps> = ({ setGameState, setConfig, sessionId, setSessionId, joinedSession, setJoinedSession, setIsHost }) => {
+const Lobby: React.FunctionComponent<IProps> = ({ gameState, setGameState, config, setConfig, sessionId, setSessionId, joinedSession, setJoinedSession, setIsHost }) => {
 
     const socket = getSocket();
     const history = useHistory();
@@ -96,16 +99,17 @@ const Lobby: React.FunctionComponent<IProps> = ({ setGameState, setConfig, sessi
                     <Typography
                         variant="h5"
                     >
-                        Lobby
+                        Session
                     </Typography>
-                    <Typography
-                        variant="subtitle2"
-                    >
-                        If you have a session code, enter it below and click "Join".  Otherwise click "Create" to start a new session.
-                    </Typography>
+                    {
+                        !joinedSession
+                        ? <Typography variant="subtitle2">If you have a session code, enter it below and click "Join".  Otherwise click "Create" to start a new session.</Typography>
+                        : ""
+                    }
+                    
                     <TextField
                         id="inputSession"
-                        label="Session Code"
+                        label="Code"
                         type="text"
                         variant="outlined"
                         size="small"
@@ -120,6 +124,11 @@ const Lobby: React.FunctionComponent<IProps> = ({ setGameState, setConfig, sessi
                     />
                 </CardContent>
             </Card>
+            {
+                joinedSession
+                ? <Configuration config={config} setConfig={setConfig} gameState={gameState} sessionId={sessionId} />
+                : ""
+            }
             <Box className="config-buttons">
                 {!joinedSession 
                 ? <>

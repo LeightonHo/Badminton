@@ -10,6 +10,7 @@ import { useHistory } from "react-router-dom";
 import { generateRoundRobin } from "../helpers/RoundRobinGenerator";
 import { pushGameState } from "../helpers/SocketHelper";
 import { getSocket } from "../helpers/Socket";
+import { Alert } from "@material-ui/lab";
 
 export interface IConfig {
     rounds: number,
@@ -39,49 +40,28 @@ const Configuration:React.FC<IProps> = ({ config, setConfig, gameState, sessionI
         }
     }
 
-    const clearConfigData = () => {
-        confirmAlert({
-            title: "Confirm",
-            message: "Are you sure you want to clear the local settings?",
-            buttons: [
-                {
-                    label: "Yes",
-                    onClick: () => {
-                        setConfig({
-                            rounds: 15,
-                            winningScore: 21,
-                            courts: [],
-                            players: []
-                        });
-                    }
-                },
-                {
-                    label: "No",
-                    onClick: () => { }
-                }
-            ]
-        });
-    }
+    const handleStartClick = () => {
+        const numberOfPlayers = config.players.length;
+        const numberOfCourts = config.courts.length;
 
-    const clearGameData = () => {
-        confirmAlert({
-            title: "Confirm",
-            message: "Generating a new round robin will clear existing game data.  Are you sure you want to continue?",
-            buttons: [
-                {
-                    label: "Yes",
-                    onClick: () => {
-                        const roundRobin = generateRoundRobin(config);
-                        pushGameState(socket, sessionId, config, roundRobin);
-                        history.push("/round-robin");
-                    }
-                },
-                {
-                    label: "No",
-                    onClick: () => { }
-                }
-            ]
-        });
+        if (numberOfPlayers == 0) {
+            console.log(`Please enter at least four players per court.`);
+            return;
+        }
+
+        if (numberOfCourts == 0) {
+            console.log(`Please enter at least one court.`);
+            return;
+        }
+
+        if (numberOfPlayers - (numberOfCourts * numberOfPlayers) < 0) {
+            console.log(`There are not enough players for ${numberOfCourts} courts.`);
+            return;
+        }
+
+        const roundRobin = generateRoundRobin(config);
+        pushGameState(socket, sessionId, config, roundRobin);
+        history.push("/round-robin");
     }
 
     const handleExport = () => {
@@ -95,18 +75,13 @@ const Configuration:React.FC<IProps> = ({ config, setConfig, gameState, sessionI
 
     const renderConfiguration = () => {
         return (
-            <Box>
+            <>
                 <Card className="card">
                     <CardContent className="general-card">
                         <Typography
                             variant="h5"
                         >
                             General
-                        </Typography>
-                        <Typography
-                            variant="subtitle2"
-                        >
-                            The session code is <b>{sessionId}</b>
                         </Typography>
                         <TextField
                             id="inputMatches"
@@ -119,6 +94,7 @@ const Configuration:React.FC<IProps> = ({ config, setConfig, gameState, sessionI
                             placeholder={config.rounds.toString()}
                             name="name"
                             className="general-input"
+                            disabled={hasGameStarted}
                         />
                         <TextField
                             id="inputWinningScore"
@@ -131,6 +107,7 @@ const Configuration:React.FC<IProps> = ({ config, setConfig, gameState, sessionI
                             placeholder={config.winningScore.toString()}
                             name="name"
                             className="general-input"
+                            disabled={hasGameStarted}
                         />
                     </CardContent>
                 </Card>
@@ -177,17 +154,10 @@ const Configuration:React.FC<IProps> = ({ config, setConfig, gameState, sessionI
                             <Button
                                 variant="contained"
                                 color="primary"
-                                onClick={clearGameData}
+                                onClick={handleStartClick}
                                 disabled={hasGameStarted}
                             >
-                                Generate round robin
-                            </Button>
-                            <Button
-                                variant="contained"
-                                color="secondary"
-                                onClick={clearConfigData}
-                            >
-                                Reset config
+                                Start Session
                             </Button>
                         </>
                         : <>
@@ -202,7 +172,7 @@ const Configuration:React.FC<IProps> = ({ config, setConfig, gameState, sessionI
                         </>
                     }
                 </Box>
-            </Box>
+            </>
         );
     }
 
