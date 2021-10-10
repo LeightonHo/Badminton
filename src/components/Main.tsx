@@ -13,7 +13,16 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import Lobby from "./Lobby";
-import { getSocket, initSocket, setCallback_GameState, setCallback_JoinedSession, setCallback_SetConfig, setCallback_SetSessionId, setCallback_SetIsConnected } from "../helpers/Socket";
+import { 
+  getSocket, 
+  initSocket, 
+  setCallback_SetGameState, 
+  setCallback_SetJoinedSession, 
+  setCallback_SetConfig, 
+  setCallback_SetSessionId, 
+  setCallback_SetIsConnected,
+  setCallback_SetIsHost
+} from "../helpers/Socket";
 import { IUser } from "../App";
 import Profile from "./Profile";
 
@@ -64,14 +73,15 @@ const Main: React.FC<Prop> = ({ user }) => {
   const socket: WebSocket = getSocket();
 
   useEffect(() => {
-    setCallback_GameState(setGameState);
-    setCallback_JoinedSession(setJoinedSession);
+    setCallback_SetGameState(setGameState);
+    setCallback_SetJoinedSession(setJoinedSession);
     setCallback_SetConfig(setConfig)
     setCallback_SetSessionId(setSessionId);
     setCallback_SetIsConnected(setIsConnected);
-  
-    initSocket(sessionId);
-  }, []);
+    setCallback_SetIsHost(setIsHost);
+
+    initSocket(user.userId, sessionId);
+  }, [user]);
 
   const useStyles = makeStyles((theme) => ({
     grow: {
@@ -195,7 +205,7 @@ const Main: React.FC<Prop> = ({ user }) => {
                 : ""
               }
               <IconButton color="inherit" onClick={(() => { handleNavigation("/profile") })}>
-                <img className="avatar" src={user.avatar} />
+                <img className="avatar" src={user.avatarUrl} />
               </IconButton>
             </div>
             <div className={classes.sectionMobile}>
@@ -242,7 +252,7 @@ const Main: React.FC<Prop> = ({ user }) => {
             setSessionId={setSessionId} 
             joinedSession={joinedSession} 
             setJoinedSession={setJoinedSession} 
-            setIsHost={setIsHost} 
+            isHost={isHost}
           />
         </Route>
         <Route path="/round-robin">

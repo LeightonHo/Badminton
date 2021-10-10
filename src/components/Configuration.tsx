@@ -20,10 +20,11 @@ interface IProps {
     config: Props["config"],
     setConfig: React.Dispatch<React.SetStateAction<Props["config"]>>,
     gameState: Props["gameState"],
-    sessionId: string
+    sessionId: string,
+    isHost: boolean
 }
 
-const Configuration:React.FC<IProps> = ({ config, setConfig, gameState, sessionId }) => {
+const Configuration:React.FC<IProps> = ({ config, setConfig, gameState, sessionId, isHost }) => {
     
     const history = useHistory();
     const hasGameStarted: boolean = gameState.length > 0;
@@ -70,6 +71,10 @@ const Configuration:React.FC<IProps> = ({ config, setConfig, gameState, sessionI
         downloadAnchorElement?.click();
     }
 
+    const disableInput = () => {
+        return !(isHost && !hasGameStarted);
+    }
+
     const renderConfiguration = () => {
         return (
             <>
@@ -91,7 +96,7 @@ const Configuration:React.FC<IProps> = ({ config, setConfig, gameState, sessionI
                             placeholder={config.rounds.toString()}
                             name="name"
                             className="general-input"
-                            disabled={hasGameStarted}
+                            disabled={disableInput()}
                         />
                         <TextField
                             id="inputWinningScore"
@@ -104,7 +109,7 @@ const Configuration:React.FC<IProps> = ({ config, setConfig, gameState, sessionI
                             placeholder={config.winningScore.toString()}
                             name="name"
                             className="general-input"
-                            disabled={hasGameStarted}
+                            disabled={disableInput()}
                         />
                     </CardContent>
                 </Card>
@@ -118,7 +123,7 @@ const Configuration:React.FC<IProps> = ({ config, setConfig, gameState, sessionI
                             Courts ({config.courts.length})
                         </Typography>
                         {
-                            !hasGameStarted
+                            isHost && !hasGameStarted
                             ? <CourtForm config={config} setConfig={setConfig} />
                             : ""
                         }
@@ -136,7 +141,7 @@ const Configuration:React.FC<IProps> = ({ config, setConfig, gameState, sessionI
                             Players ({config.players.length})
                         </Typography>
                         {
-                            !hasGameStarted
+                            isHost && !hasGameStarted
                             ? <PlayerForm config={config} setConfig={setConfig} />
                             : ""
                         }
@@ -146,7 +151,7 @@ const Configuration:React.FC<IProps> = ({ config, setConfig, gameState, sessionI
 
                 <Box className="config-buttons">
                     {
-                        !hasGameStarted
+                        !hasGameStarted && isHost
                         ? <>
                             <Button
                                 variant="contained"
@@ -157,7 +162,11 @@ const Configuration:React.FC<IProps> = ({ config, setConfig, gameState, sessionI
                                 Start Session
                             </Button>
                         </>
-                        : <>
+                        : ""
+                    }
+                    {
+                        hasGameStarted
+                        ? <>
                             <Button
                                 variant="contained"
                                 color="primary"
@@ -167,6 +176,7 @@ const Configuration:React.FC<IProps> = ({ config, setConfig, gameState, sessionI
                             </Button>
                             <a id="downloadAnchorElement"></a>
                         </>
+                        : ""
                     }
                 </Box>
             </>

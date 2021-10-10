@@ -1,6 +1,7 @@
 import { IConfig } from "../components/Configuration";
 import { IRound } from "../components/RoundRobin";
 
+let userId: string;
 let sessionId: string;
 let socket: WebSocket = new WebSocket("wss://op47bt7cik.execute-api.ap-southeast-2.amazonaws.com/test");
 let setGameStateCallback: (gameState: IRound[]) => void;
@@ -8,19 +9,25 @@ let setJoinedSessionCallback: (joinedSession: boolean) => void;
 let setConfigCallback: (config: IConfig) => void;
 let setSessionIdCallback: (sessionId: string) => void;
 let setIsConnectedCallback: (isConnected: boolean) => void;
+let setIsHostCallback: (isHost: boolean) => void;
 
 const heartbeat = () => {
     const payload: any = {
       action: "ping"
     }
 
-    socket.send(JSON.stringify(payload));
+    send(payload);
     setTimeout(heartbeat, 30000);
 }
 
-export const initSocket = (session: string) => {
+export const initSocket = (user: string, session: string) => {
     console.log("Initialising web socket.");
-    
+    console.log(user);
+
+    if (user) {
+      userId = user;
+    }
+
     if (session) {
       sessionId = session;
     }
@@ -42,12 +49,14 @@ export const initSocket = (session: string) => {
     
         if (data.action === "createSession") {
           console.log(data.message);
-          // history.push("/configuration");
+          setJoinedSessionCallback(true);
+          setIsHostCallback(data.isHost);
         }
     
         if (data.action === "joinedSession") {
           console.log(data.message);
           setJoinedSessionCallback(true);
+          setIsHostCallback(data.isHost);
 
           // If no game state is returned, then the game hasn't started yet, so show a loading screen until data is pushed.
           if (data.gameState.length > 0) {
@@ -87,11 +96,11 @@ export const getSocket = () => {
   return socket;
 }
 
-export const setCallback_GameState = (cb: (gameState: IRound[]) => void) => {
+export const setCallback_SetGameState = (cb: (gameState: IRound[]) => void) => {
   setGameStateCallback = cb;
 }
 
-export const setCallback_JoinedSession = (cb: (joinedSession: boolean) => void) => {
+export const setCallback_SetJoinedSession = (cb: (joinedSession: boolean) => void) => {
   setJoinedSessionCallback = cb;
 }
 
@@ -107,6 +116,10 @@ export const setCallback_SetIsConnected = (cb: (isConnected: boolean) => void) =
   setIsConnectedCallback = cb;
 }
 
+export const setCallback_SetIsHost = (cb: (isHost: boolean) => void) => {
+  setIsHostCallback = cb;
+}
+
 // setTimeout(() => {
 //   socket.close();
 // }, 5000);
@@ -118,7 +131,7 @@ window.addEventListener("scroll", () => {
   if (!scrollEventTriggered && socket.readyState === WebSocket.CLOSED) {
     scrollEventTriggered = true;
     
-    initSocket(sessionId);
+    initSocket(userId, sessionId);
 
     setTimeout(() => {
       scrollEventTriggered = false;
@@ -127,91 +140,85 @@ window.addEventListener("scroll", () => {
 });
 
 // Public Socket Helper functions
-
 export function pushGameState(sessionId: string, config: IConfig, gameState: IRound[]) {
-  const payload: any = {
-      action: "session",
-      method: "pushGameState",
-      sessionId: sessionId,
-      config: JSON.stringify(config),
-      gameState: JSON.stringify(gameState)
-  };
-
-  socket.send(JSON.stringify(payload));
+  send({
+    action: "session",
+    method: "pushGameState",
+    userId: userId,
+    sessionId: sessionId,
+    config: JSON.stringify(config),
+    gameState: JSON.stringify(gameState)
+  });
 }
 
 export function pushMatchScore(sessionId: string, roundKey: number, matchKey: number, team: number, score: number) {
-  const payload: any = {
-      action: "session",
-      method: "pushMatchScore",
-      sessionId: sessionId,
-      roundKey: roundKey,
-      matchKey: matchKey,
-      team: team,
-      score: score
-  };
-
-  socket.send(JSON.stringify(payload));
+  send({
+    action: "session",
+    method: "pushMatchScore",
+    userId: userId,
+    sessionId: sessionId,
+    roundKey: roundKey,
+    matchKey: matchKey,
+    team: team,
+    score: score
+  });
 }
 
 export function updatePlayer(sessionId: string, roundKey: number, matchKey: number, player: number, name: string) {
-  const payload: any = {
-      action: "session",
-      method: "updatePlayer",
-      sessionId: sessionId,
-      roundKey: roundKey,
-      matchKey: matchKey,
-      player: player,
-      name: name
-  };
-
-  socket.send(JSON.stringify(payload));
+  send({
+    action: "session",
+    method: "updatePlayer",
+    userId: userId,
+    sessionId: sessionId,
+    roundKey: roundKey,
+    matchKey: matchKey,
+    player: player,
+    name: name
+  });
 }
 
 export function updateBye(sessionId: string, roundKey: number, byeKey: number, name: string) {
-  const payload: any = {
-      action: "session",
-      method: "updateBye",
-      sessionId: sessionId,
-      roundKey: roundKey,
-      byeKey: byeKey,
-      name: name
-  };
-
-  socket.send(JSON.stringify(payload));
+  send({
+    action: "session",
+    method: "updateBye",
+    userId: userId,
+    sessionId: sessionId,
+    roundKey: roundKey,
+    byeKey: byeKey,
+    name: name
+  });
 }
 
 export function createSession() {
   const sessionId = generateSessionId(4);
-  const payload: any = {
-      action: "session",
-      method: "create",
-      sessionId: sessionId
-  };
+  console.log(userId);
 
-  socket.send(JSON.stringify(payload));
+  send({
+    action: "session",
+    method: "create",
+    userId: userId,
+    sessionId: sessionId
+  });
 
   return sessionId;
 }
 
 export function joinSession(sessionId: string) {
-  const payload: any = {
-      action: "session",
-      method: "join",
-      sessionId: sessionId
-  };
-
-  socket.send(JSON.stringify(payload));
+  send({
+    action: "session",
+    method: "join",
+    userId: userId,
+    sessionId: sessionId
+  });
 }
 
 export function leaveSession(sessionId: string) {
-  const payload: any = {
-      action: "session",
-      method: "leave",
-      sessionId: sessionId
-  };
-
-  socket.send(JSON.stringify(payload));
+  send({
+    action: "session",
+    method: "leave",
+    userId: userId,
+    sessionId: sessionId
+  });
 }
 
 const generateSessionId = (length: number) => {
@@ -223,4 +230,8 @@ const generateSessionId = (length: number) => {
   }
 
   return result;
+}
+
+const send = (payload: any) => {
+  socket.send(JSON.stringify(payload));
 }

@@ -7,16 +7,20 @@ import axios from "axios";
 import { Card, CardContent, Divider, Typography } from '@material-ui/core';
 
 export interface IUser {
-  userId?: string,
-  name?: string,
-  email?: string,
-  avatar?: string,
-  facebookUserId?: number
+  userId: string,
+  name: string,
+  email: string,
+  avatarUrl: string
 }
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
-  const [user, setUser] = useState<IUser>({});
+  const [user, setUser] = useState<IUser>({
+    userId: "",
+    name: "",
+    email: "",
+    avatarUrl: ""
+  });
 
   const responseFacebook = (response: ReactFacebookLoginInfo) => {
     console.log(response);
@@ -41,8 +45,7 @@ function App() {
               userId: userData.UserId,
               email: userData.Email,
               name: userData.Name,
-              avatar: userData.Avatar,
-              facebookUserId: userData.FacebookUserId
+              avatarUrl: userData.Avatar
             });
           } else {
             setIsLoggedIn(false);

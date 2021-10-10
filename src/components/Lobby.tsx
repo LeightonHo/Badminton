@@ -13,17 +13,17 @@ interface IProps {
     sessionId: string,
     setSessionId: React.Dispatch<React.SetStateAction<string>>,
     joinedSession: boolean,
-    setJoinedSession: React.Dispatch<React.SetStateAction<boolean>>
-    setIsHost: React.Dispatch<React.SetStateAction<boolean>>
+    setJoinedSession: React.Dispatch<React.SetStateAction<boolean>>,
+    isHost: boolean
 }
 
-const Lobby: React.FunctionComponent<IProps> = ({ gameState, setGameState, config, setConfig, sessionId, setSessionId, joinedSession, setJoinedSession, setIsHost }) => {
+const Lobby: React.FunctionComponent<IProps> = ({ gameState, setGameState, config, setConfig, sessionId, setSessionId, joinedSession, setJoinedSession, isHost }) => {
 
     const history = useHistory();
     const [error, setError] = useState<string>("");
     const [disableInputs, setDisableInputs] = useState<boolean>(false);
     const handleSessionChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-        setSessionId(e.target.value);
+        setSessionId(e.target.value.toUpperCase());
     }
 
     useEffect(() => {
@@ -41,12 +41,10 @@ const Lobby: React.FunctionComponent<IProps> = ({ gameState, setGameState, confi
     }, [joinedSession, sessionId]);
 
     const handleCreateSession = () => {
-        // TODO: session ID should be generated on the server.
         const sessionId = createSession();
+
         setDisableInputs(true);
-        setJoinedSession(true);
         setSessionId(sessionId);
-        setIsHost(true);
         setError("");
     }
 
@@ -54,7 +52,6 @@ const Lobby: React.FunctionComponent<IProps> = ({ gameState, setGameState, confi
         setDisableInputs(true);
         setError("");
         joinSession(sessionId);
-        setIsHost(false);
     }
 
     const handleLeaveClick = () => {
@@ -67,8 +64,6 @@ const Lobby: React.FunctionComponent<IProps> = ({ gameState, setGameState, confi
             players: []
         });
         setJoinedSession(false);
-        setSessionId("");
-        setIsHost(false);
         setError("");
     }
 
@@ -106,7 +101,7 @@ const Lobby: React.FunctionComponent<IProps> = ({ gameState, setGameState, confi
             </Card>
             {
                 joinedSession
-                ? <Configuration config={config} setConfig={setConfig} gameState={gameState} sessionId={sessionId} />
+                ? <Configuration config={config} setConfig={setConfig} gameState={gameState} sessionId={sessionId} isHost={isHost} />
                 : ""
             }
             <Box className="config-buttons">
