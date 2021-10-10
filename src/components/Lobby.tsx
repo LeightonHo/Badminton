@@ -2,8 +2,7 @@ import { Box, Button, Card, CardContent, Paper, TextField, Typography } from "@m
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router";
 import { IState as Props } from "./Main";
-import { joinSession, leaveSession } from "../helpers/SocketHelper";
-import { getSocket } from "../helpers/Socket";
+import { createSession, joinSession, leaveSession } from "../helpers/Socket";
 import Configuration from "./Configuration";
 
 interface IProps {
@@ -20,7 +19,6 @@ interface IProps {
 
 const Lobby: React.FunctionComponent<IProps> = ({ gameState, setGameState, config, setConfig, sessionId, setSessionId, joinedSession, setJoinedSession, setIsHost }) => {
 
-    const socket = getSocket();
     const history = useHistory();
     const [error, setError] = useState<string>("");
     const [disableInputs, setDisableInputs] = useState<boolean>(false);
@@ -42,16 +40,9 @@ const Lobby: React.FunctionComponent<IProps> = ({ gameState, setGameState, confi
         }
     }, [joinedSession, sessionId]);
 
-    const createSession = () => {
+    const handleCreateSession = () => {
         // TODO: session ID should be generated on the server.
-        const sessionId = generateSessionId(4);
-        const payload: any = {
-            action: "session",
-            method: "create",
-            sessionId: sessionId
-        };
-
-        socket.send(JSON.stringify(payload));
+        const sessionId = createSession();
         setDisableInputs(true);
         setJoinedSession(true);
         setSessionId(sessionId);
@@ -62,12 +53,12 @@ const Lobby: React.FunctionComponent<IProps> = ({ gameState, setGameState, confi
     const handleJoinClick = () => {
         setDisableInputs(true);
         setError("");
-        joinSession(socket, sessionId);
+        joinSession(sessionId);
         setIsHost(false);
     }
 
     const handleLeaveClick = () => {
-        leaveSession(socket, sessionId);
+        leaveSession(sessionId);
         setGameState([]);
         setConfig({
             rounds: 15,
@@ -79,17 +70,6 @@ const Lobby: React.FunctionComponent<IProps> = ({ gameState, setGameState, confi
         setSessionId("");
         setIsHost(false);
         setError("");
-    }
-
-    const generateSessionId = (length: number) => {
-        const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        let result = "";
-
-        for (let i = 0; i < length; i++) {
-            result += chars.charAt(Math.floor(Math.random() * chars.length));
-        }
-
-        return result;
     }
 
     return (
@@ -143,7 +123,7 @@ const Lobby: React.FunctionComponent<IProps> = ({ gameState, setGameState, confi
                     <Button
                         variant="contained"
                         color="primary"
-                        onClick={createSession}
+                        onClick={handleCreateSession}
                         disabled={disableInputs}
                     >
                         Create Session

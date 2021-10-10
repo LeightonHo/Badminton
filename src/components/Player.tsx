@@ -1,7 +1,6 @@
 import { Box, Grid, TextField, Typography } from "@material-ui/core";
 import React, { useState, KeyboardEvent } from "react";
-import { updatePlayer } from "../helpers/SocketHelper";
-import { getSocket } from "../helpers/Socket";
+import { getSocket, updatePlayer } from "../helpers/Socket";
 
 interface IProps {
     player: number,
@@ -15,7 +14,6 @@ interface IProps {
 
 const Player: React.FC<IProps> = ({ player, name, roundKey, matchKey, sessionId, isHost, isConnected }) => {
 
-    const socket = getSocket();
     const [input, setInput] = useState({
         value: "",
         editing: false,
@@ -51,7 +49,7 @@ const Player: React.FC<IProps> = ({ player, name, roundKey, matchKey, sessionId,
                 return;
             }
 
-            updatePlayer(socket, sessionId, roundKey, matchKey, player, input.value);
+            updatePlayer(sessionId, roundKey, matchKey, player, input.value);
             setInput({
                 ...input,
                 editing: false,

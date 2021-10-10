@@ -1,7 +1,6 @@
 import { Grid, TextField } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
-import { pushMatchScore } from "../helpers/SocketHelper";
-import { getSocket } from "../helpers/Socket";
+import { pushMatchScore } from "../helpers/Socket";
 
 interface IProps {
     team: number,
@@ -14,7 +13,6 @@ interface IProps {
 
 const Score: React.FC<IProps> = ({ team, score, roundKey, matchKey, sessionId, isConnected }) => {
     
-    const socket = getSocket();
     const [inputScore, setInputScore] = useState<number>(score);
 
     useEffect(() => {
@@ -36,7 +34,7 @@ const Score: React.FC<IProps> = ({ team, score, roundKey, matchKey, sessionId, i
             return;
         }
 
-        pushMatchScore(socket, sessionId, roundKey, matchKey, team, inputScore);
+        pushMatchScore(sessionId, roundKey, matchKey, team, inputScore);
     }
         
     const showScore = (score: number): string => {

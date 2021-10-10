@@ -4,12 +4,10 @@ import CourtList from "./CourtList";
 import PlayerForm from "./PlayerForm";
 import PlayerList from "./PlayerList";
 import { IState as Props } from "./Main";
-import { confirmAlert } from "react-confirm-alert";
 import "react-confirm-alert/src/react-confirm-alert.css";
 import { useHistory } from "react-router-dom";
 import { generateRoundRobin } from "../helpers/RoundRobinGenerator";
-import { pushGameState } from "../helpers/SocketHelper";
-import { getSocket } from "../helpers/Socket";
+import { pushGameState } from "../helpers/Socket";
 
 export interface IConfig {
     rounds: number,
@@ -26,8 +24,8 @@ interface IProps {
 }
 
 const Configuration:React.FC<IProps> = ({ config, setConfig, gameState, sessionId }) => {
+    
     const history = useHistory();
-    const socket = getSocket();
     const hasGameStarted: boolean = gameState.length > 0;
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
@@ -59,7 +57,7 @@ const Configuration:React.FC<IProps> = ({ config, setConfig, gameState, sessionI
         }
 
         const roundRobin = generateRoundRobin(config);
-        pushGameState(socket, sessionId, config, roundRobin);
+        pushGameState(sessionId, config, roundRobin);
         history.push("/round-robin");
     }
 

@@ -1,7 +1,6 @@
 import { Box, TextField, Typography } from "@material-ui/core";
 import React, { useState, KeyboardEvent } from "react";
-import { updateBye } from "../helpers/SocketHelper";
-import { getSocket } from "../helpers/Socket";
+import { getSocket, updateBye } from "../helpers/Socket";
 
 interface IProps {
     byeKey: number,
@@ -13,7 +12,6 @@ interface IProps {
 
 const Bye: React.FC<IProps> = ({ byeKey, player, roundKey, sessionId, isConnected }) => {
 
-    const socket = getSocket();
     const [input, setInput] = useState({
         previousValue: "",
         value: "",
@@ -49,7 +47,7 @@ const Bye: React.FC<IProps> = ({ byeKey, player, roundKey, sessionId, isConnecte
                 return;
             }
 
-            updateBye(socket, sessionId, roundKey, byeKey, input.value);
+            updateBye(sessionId, roundKey, byeKey, input.value);
             setInput({
                 ...input,
                 editing: false
