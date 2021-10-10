@@ -7,10 +7,11 @@ interface IProps {
     players: Props["config"]["players"]
     roundKey: number,
     sessionId: string,
+    isHost: boolean,
     isConnected: boolean
 }
 
-const ByeContainer: React.FC<IProps> = ({ players, roundKey, sessionId, isConnected }) => {
+const ByeContainer: React.FC<IProps> = ({ players, roundKey, sessionId, isHost, isConnected }) => {
 
     return (
         <Box className="divBye">
@@ -22,6 +23,7 @@ const ByeContainer: React.FC<IProps> = ({ players, roundKey, sessionId, isConnec
                         player={player} 
                         roundKey={roundKey}
                         sessionId={sessionId}
+                        isHost={isHost}
                         isConnected={isConnected}
                     />
                 )

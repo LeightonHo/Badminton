@@ -61,7 +61,7 @@ const Player: React.FC<IProps> = ({ player, name, roundKey, matchKey, sessionId,
     let clickHoldTimer: any = null;
 
     const handlePress = () => {
-        if (!isConnected) {
+        if (!isHost || !isConnected) {
             return;
         }
 

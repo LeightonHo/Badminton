@@ -90,6 +90,7 @@ const RoundRobin: React.FC<IProps> = ({ gameState, sessionId, isHost, isConnecte
                                             players={round.byes} 
                                             roundKey={roundKey} 
                                             sessionId={sessionId} 
+                                            isHost={isHost}
                                             isConnected={isConnected}
                                         />
                                     </Grid>

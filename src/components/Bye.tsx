@@ -7,10 +7,11 @@ interface IProps {
     player: string,
     roundKey: number,
     sessionId: string,
+    isHost: boolean,
     isConnected: boolean
 }
 
-const Bye: React.FC<IProps> = ({ byeKey, player, roundKey, sessionId, isConnected }) => {
+const Bye: React.FC<IProps> = ({ byeKey, player, roundKey, sessionId, isHost, isConnected }) => {
 
     const [input, setInput] = useState({
         previousValue: "",
@@ -58,7 +59,7 @@ const Bye: React.FC<IProps> = ({ byeKey, player, roundKey, sessionId, isConnecte
     let clickHoldTimer: any = null;
 
     const handlePress = () => {
-        if (!isConnected) {
+        if (!isHost || !isConnected) {
             return;
         }
 
