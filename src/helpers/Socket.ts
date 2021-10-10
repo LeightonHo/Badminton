@@ -3,7 +3,7 @@ import { IRound } from "../components/RoundRobin";
 
 let userId: string;
 let sessionId: string;
-let socket: WebSocket = new WebSocket("wss://op47bt7cik.execute-api.ap-southeast-2.amazonaws.com/test");
+let socket: any = null;
 let setGameStateCallback: (gameState: IRound[]) => void;
 let setJoinedSessionCallback: (joinedSession: boolean) => void;
 let setConfigCallback: (config: IConfig) => void;
@@ -22,7 +22,6 @@ const heartbeat = () => {
 
 export const initSocket = (user: string, session: string) => {
     console.log("Initialising web socket.");
-    console.log(user);
 
     if (user) {
       userId = user;
@@ -32,7 +31,7 @@ export const initSocket = (user: string, session: string) => {
       sessionId = session;
     }
 
-    if (socket.readyState !== WebSocket.CONNECTING && socket.readyState === WebSocket.CLOSED) {
+    if (!socket || (socket.readyState !== WebSocket.CONNECTING && socket.readyState === WebSocket.CLOSED)) {
       socket = new WebSocket("wss://op47bt7cik.execute-api.ap-southeast-2.amazonaws.com/test");
     }
 
@@ -75,19 +74,15 @@ export const initSocket = (user: string, session: string) => {
       }
 
       socket.onopen = () => {
+        console.log("WebSocket is connected.");
         console.log("Joining session");
         setIsConnectedCallback(true);
         joinSession(sessionId);
         heartbeat();
       }
   
-      socket.addEventListener("open", () => {
-        console.log("WebSocket is connected.");
-      });
-  
-      socket.addEventListener("close", (e) => {
+      socket.addEventListener("close", () => {
         setIsConnectedCallback(false);
-        console.log(e);
         console.log("WebSocket is closed.");
       });
 }

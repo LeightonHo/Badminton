@@ -52,7 +52,7 @@ const Configuration:React.FC<IProps> = ({ config, setConfig, gameState, sessionI
             return;
         }
 
-        if (numberOfPlayers - (numberOfCourts * numberOfPlayers) < 0) {
+        if (numberOfPlayers - (numberOfCourts * 4) < 0) {
             console.log(`There are not enough players for ${numberOfCourts} courts.`);
             return;
         }

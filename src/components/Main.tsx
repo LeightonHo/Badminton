@@ -73,6 +73,10 @@ const Main: React.FC<Prop> = ({ user }) => {
   const socket: WebSocket = getSocket();
 
   useEffect(() => {
+    if (!user.userId) {
+      return;
+    }
+    
     setCallback_SetGameState(setGameState);
     setCallback_SetJoinedSession(setJoinedSession);
     setCallback_SetConfig(setConfig)

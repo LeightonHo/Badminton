@@ -1,6 +1,6 @@
 import { Box, Grid, TextField, Typography } from "@material-ui/core";
 import React, { useState, KeyboardEvent } from "react";
-import { getSocket, updatePlayer } from "../helpers/Socket";
+import { updatePlayer } from "../helpers/Socket";
 
 interface IProps {
     player: number,

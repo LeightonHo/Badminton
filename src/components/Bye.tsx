@@ -1,6 +1,6 @@
 import { Box, TextField, Typography } from "@material-ui/core";
 import React, { useState, KeyboardEvent } from "react";
-import { getSocket, updateBye } from "../helpers/Socket";
+import { updateBye } from "../helpers/Socket";
 
 interface IProps {
     byeKey: number,
