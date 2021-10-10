@@ -6,7 +6,6 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
-import Configuration from "./Configuration";
 import RoundRobin, { IRound } from "./RoundRobin";
 import Scoreboard from "./Scoreboard";
 import { IConfig } from "./Configuration";
@@ -15,6 +14,12 @@ import Menu from '@material-ui/core/Menu';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import Lobby from "./Lobby";
 import { getSocket, initSocket, setCallback_GameState, setCallback_JoinedSession, setCallback_SetConfig, setCallback_SetSessionId, setCallback_SetIsConnected } from "../helpers/Socket";
+import { IUser } from "../App";
+import Profile from "./Profile";
+
+interface Prop {
+  user: IUser
+}
 
 export interface IState {
   config: IConfig,
@@ -38,7 +43,7 @@ const useStickyState = (defaultValue: (IRound[] | IConfig | string), key: string
   return [value, setValue];
 }
 
-const Main = () => {
+const Main: React.FC<Prop> = ({ user }) => {
   
   const history = useHistory();
   const handleNavigation = (path: string) => {
@@ -151,6 +156,11 @@ const Main = () => {
           </>
           : ""
         }
+        <MenuItem>
+          <IconButton color="inherit" onClick={(() => { handleNavigation("/profile") })}>
+            <Typography>Profile</Typography>
+          </IconButton>
+        </MenuItem>
       </Menu>
     );
 
@@ -184,6 +194,9 @@ const Main = () => {
                 </>
                 : ""
               }
+              <IconButton color="inherit" onClick={(() => { handleNavigation("/profile") })}>
+                <img className="avatar" src={user.avatar} />
+              </IconButton>
             </div>
             <div className={classes.sectionMobile}>
               <IconButton
@@ -237,6 +250,9 @@ const Main = () => {
         </Route>
         <Route path="/scoreboard">
           <Scoreboard config={config} gameState={gameState} />
+        </Route>
+        <Route path="/profile">
+          <Profile user={user} />
         </Route>
       </Switch>
     </Box>
