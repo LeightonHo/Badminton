@@ -3,6 +3,7 @@ import { IState as Props } from "./Main";
 import ByeContainer from "./ByeContainer";
 import Match from "./Match";
 import { Backdrop, Box, Card, CardContent, Divider, Grid, LinearProgress, Typography } from "@material-ui/core";
+import Progress from "./Progress";
 
 export interface IProps {
     config: Props["config"],
@@ -111,25 +112,12 @@ const RoundRobin: React.FC<IProps> = ({ gameState, sessionId, isHost, isConnecte
         }
     }
 
-    const showSpinner = () => {
-        return (
-            <>
-                <Backdrop
-                    style={{ color: '#fff', zIndex: 99 }}
-                    open={true}
-                />
-                <LinearProgress 
-                    color="primary"
-                />
-            </>
-        );
-    }
-
     return (
         <>
-            {gameState.length === 0
-            ? showSpinner()
-            : renderRoundRobin()
+            {
+                gameState.length === 0
+                ? <Progress />
+                : renderRoundRobin()
             }
         </>
     );

@@ -7,6 +7,7 @@ import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
+import Progress from "./Progress";
 
 interface IPlayerStats {
     [id: string]: {
@@ -321,20 +322,6 @@ const Scoreboard:React.FC<IProps> = ({ config, gameState }) => {
         // );
     }
 
-    const showSpinner = () => {
-        return (
-            <>
-                <Backdrop
-                    style={{ color: '#fff', zIndex: 99 }}
-                    open={true}
-                />
-                <LinearProgress 
-                    color="primary"
-                />
-            </>
-        );
-    }
-
     const renderScoreboard = () => {
         return (
             <Card className="card">
@@ -366,7 +353,7 @@ const Scoreboard:React.FC<IProps> = ({ config, gameState }) => {
     return (
         <>
             {gameState.length === 0
-            ? showSpinner()
+            ? <Progress />
             : renderScoreboard()
             }
 

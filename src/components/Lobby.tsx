@@ -1,9 +1,10 @@
-import { Box, Button, Card, CardContent, Paper, TextField, Typography } from "@material-ui/core";
+import { Backdrop, Box, Button, Card, CardContent, LinearProgress, Paper, TextField, Typography } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router";
 import { IState as Props } from "./Main";
 import { createSession, joinSession, leaveSession } from "../helpers/Socket";
 import Configuration from "./Configuration";
+import Progress from "./Progress";
 
 interface IProps {
     gameState: Props["gameState"],
@@ -21,7 +22,7 @@ const Lobby: React.FunctionComponent<IProps> = ({ gameState, setGameState, confi
 
     const history = useHistory();
     const [error, setError] = useState<string>("");
-    const [disableInputs, setDisableInputs] = useState<boolean>(false);
+    const [loading, setLoading] = useState<boolean>(false);
     const handleSessionChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
         setSessionId(e.target.value.toUpperCase());
     }
@@ -30,26 +31,26 @@ const Lobby: React.FunctionComponent<IProps> = ({ gameState, setGameState, confi
         // Scenario where the session join was successful.
         if (joinedSession) {
             setError("");
-            setDisableInputs(false);
+            setLoading(false);
         }
 
         // Scenario where the session was unable to be joined.
-        if (!sessionId && disableInputs) {
+        if (!sessionId && loading) {
             setError("Unable to join the session.");
-            setDisableInputs(false);
+            setLoading(false);
         }
     }, [joinedSession, sessionId]);
 
     const handleCreateSession = () => {
         const sessionId = createSession();
 
-        setDisableInputs(true);
+        setLoading(true);
         setSessionId(sessionId);
         setError("");
     }
 
     const handleJoinClick = () => {
-        setDisableInputs(true);
+        setLoading(true);
         setError("");
         joinSession(sessionId);
     }
@@ -69,6 +70,11 @@ const Lobby: React.FunctionComponent<IProps> = ({ gameState, setGameState, confi
 
     return (
         <Box>
+            {
+                loading
+                ? <Progress />
+                : ""
+            }
             <Card className="card">
                 <CardContent className="general-card">
                     <Typography
@@ -111,7 +117,7 @@ const Lobby: React.FunctionComponent<IProps> = ({ gameState, setGameState, confi
                         variant="contained"
                         color="primary"
                         onClick={handleJoinClick}
-                        disabled={disableInputs}
+                        disabled={loading}
                     >
                         Join Session
                     </Button>
@@ -119,7 +125,7 @@ const Lobby: React.FunctionComponent<IProps> = ({ gameState, setGameState, confi
                         variant="contained"
                         color="primary"
                         onClick={handleCreateSession}
-                        disabled={disableInputs}
+                        disabled={loading}
                     >
                         Create Session
                     </Button>
@@ -129,7 +135,7 @@ const Lobby: React.FunctionComponent<IProps> = ({ gameState, setGameState, confi
                     variant="contained"
                     color="secondary"
                     onClick={handleLeaveClick}
-                    disabled={disableInputs}
+                    disabled={loading}
                 >
                     Leave Session
                 </Button>
