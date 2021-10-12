@@ -123,6 +123,10 @@ export const setCallback_SetIsHost = (cb: (isHost: boolean) => void) => {
 let scrollEventTriggered: boolean = false;
 
 window.addEventListener("scroll", () => {
+  if (!socket) {
+    return;
+  }
+  
   if (!scrollEventTriggered && socket.readyState === WebSocket.CLOSED) {
     scrollEventTriggered = true;
     

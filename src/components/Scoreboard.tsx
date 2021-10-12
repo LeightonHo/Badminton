@@ -29,10 +29,10 @@ const Scoreboard:React.FC<IProps> = ({ config, gameState }) => {
         const indexOfAsterisk = player.indexOf("*");
 
         if (indexOfAsterisk > 0) {
-            return player.substring(0, player.indexOf("*"));
+            return player.substring(0, player.indexOf("*")).toUpperCase();
         }
 
-        return player;
+        return player.toUpperCase();
     }
 
     const preprocessGameData = (): void => {

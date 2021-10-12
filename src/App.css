@@ -13,10 +13,14 @@
 
 /* LOGIN */
 .login {
-  /* display: flex;
-  justify-content: center; */
+  margin: 0;
+  position: absolute;
+  top: 30%;
 }
 
+.facebook-button {
+  width: 100%;
+}
 
 /* LOBBY */
 
