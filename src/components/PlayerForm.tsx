@@ -1,5 +1,5 @@
 import React, { useState, KeyboardEvent } from "react";
-import {IState as Props} from "./Main";
+import { IState as Props } from "./Main";
 import { Box, TextField } from "@material-ui/core";
 
 interface IProps {
@@ -25,11 +25,25 @@ const PlayerForm: React.FC<IProps> = ({ config, setConfig }) => {
             return;
         }
 
+        console.log({
+            ...config,
+            players: [
+                ...config.players,
+                {
+                    userId: input.name.trim(),
+                    alias: input.name.trim()
+                }
+            ]
+        })
+
         setConfig({
             ...config,
             players: [
                 ...config.players,
-                input.name.trim()
+                {
+                    userId: input.name.trim(),
+                    alias: input.name.trim()
+                }
             ]
         });
 
@@ -46,7 +60,7 @@ const PlayerForm: React.FC<IProps> = ({ config, setConfig }) => {
 
     const isDuplicate = (name: string): boolean => {
         for (const player of config.players) {
-            if (player.toLowerCase() === input.name.toLowerCase()) {
+            if (player.alias.toLowerCase() === name.toLowerCase()) {
                 return true;
             }
         }

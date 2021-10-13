@@ -1,23 +1,23 @@
-import { IConfig } from "../components/Configuration";
 import { IState as Props } from "../components/Main";
 import { IMatch, IRound } from "../components/RoundRobin";
+import { IPlayer } from "../types";
 
-export const generateRoundRobin = (config: IConfig): Props["gameState"] => {
+export const generateRoundRobin = (config: Props["config"]): Props["gameState"] => {
     const numPlayersOnBye = config.players.length - (config.courts.length * 4);
     const rounds = config.rounds;
     let bracket: IRound[] = [];
-    let playersAlreadyOnBye: Props["config"]["players"] = [];
+    let playersAlreadyOnBye: string[] = [];
 
     initDataStructures(config.players, config.courts);
 
     for (let i = 1; i < rounds + 1; i++) {
         let matches: IMatch[] = [];
-        let playersOnBye: Props["config"]["players"] = [];
+        let playersOnBye: string[] = [];
 
         matchKeyList.sort(sortMatches);
 
         if (numPlayersOnBye === 0) {
-            matches = generateMatches(config.courts, playersOnBye);
+            matches = generateMatches(playersOnBye, config);
         } else {
             // Use the bye dictionary to select next byes.  Sort by number of times on bye.
             byeKeyList.sort(sortByes);
@@ -34,7 +34,7 @@ export const generateRoundRobin = (config: IConfig): Props["gameState"] => {
                     byeDictionary[player]++;
                 }
 
-                matches = generateMatches(config.courts, players);
+                matches = generateMatches(players, config);
 
                 if (matches.length !== config.courts.length) {
                     continue;
@@ -47,10 +47,17 @@ export const generateRoundRobin = (config: IConfig): Props["gameState"] => {
             }
         }
 
+        // enrich players on bye
+        let enrichedPlayersOnBye: IPlayer[] = [];
+
+        for (const player of playersOnBye) {
+            enrichedPlayersOnBye.push(getPlayer(player, config.players));
+        }
+
         const round: IRound = {
             number: i,
             matches: matches,
-            byes: playersOnBye
+            byes: enrichedPlayersOnBye
         }
 
         bracket.push(round);
@@ -65,10 +72,10 @@ let teamDictionary: { [name: string]: number } = {};
 let opponentDictionary: { [name: string]: { [name: string]: number } } = {};
 let byeDictionary: { [name: string]: number } = {};
 
-const initDataStructures = (players: IConfig["players"], courts: IConfig["courts"]) => {
+const initDataStructures = (players: Props["config"]["players"], courts: Props["config"]["courts"]) => {
     for (const player1 of players) {
-        byeDictionary[player1] = 0;
-        opponentDictionary[player1] = {};
+        byeDictionary[player1.userId] = 0;
+        opponentDictionary[player1.userId] = {};
 
         for (const player2 of players) {
             if (player1 === player2) {
@@ -76,7 +83,7 @@ const initDataStructures = (players: IConfig["players"], courts: IConfig["courts
             }
 
             teamDictionary[[player1, player2].sort().toString()] = 0;
-            opponentDictionary[player1][player2] = 0;
+            opponentDictionary[player1.userId][player2.userId] = 0;
         }
     }
 
@@ -107,7 +114,7 @@ const initDataStructures = (players: IConfig["players"], courts: IConfig["courts
 
     for (const player1 of players) {
         if (numPlayersOnBye === 1) {
-            byeKeyList.push(player1);
+            byeKeyList.push(player1.userId);
         } else {
             for (const player2 of players) {
                 if (numPlayersOnBye === 2 && player1 !== player2) {
@@ -205,7 +212,8 @@ const wasPreviousMatch = (currentMatchKey: string, previousMatchKey: string): bo
 }
 
 // Function for rendering each match takes in a list of players and generates the bracket
-const generateMatches = (courts: IConfig["courts"], playersOnBye: IConfig["players"]): IMatch[] => {
+const generateMatches = (playersOnBye: string[], config: Props["config"]): IMatch[] => {
+    const courts = config.courts;
     let result: IMatch[] = []
     let currentPlayers: string[] = [];
 
@@ -268,18 +276,34 @@ const generateMatches = (courts: IConfig["courts"], playersOnBye: IConfig["playe
             const match: IMatch = {
                 court: courts[i],
                 team1: {
-                    player1: team1[0],
-                    player2: team1[1],
+                    player1: getPlayer(team1[0], config.players),
+                    player2: getPlayer(team1[1], config.players),
                     score: 0
                 },
                 team2: {
-                    player3: team2[0],
-                    player4: team2[1],
+                    player3: getPlayer(team2[0], config.players),
+                    player4: getPlayer(team2[1], config.players),
                     score: 0
                 }
             }
 
             result.push(match);
+        }
+    }
+
+    return result;
+}
+
+const getPlayer = (userId: string, players: Props["config"]["players"]): IPlayer => {
+    let result: IPlayer = {
+        userId: userId,
+        alias: userId
+    };
+
+    for (const player of players) {
+        if (userId === player.userId) {
+            result = player;
+            break;
         }
     }
 

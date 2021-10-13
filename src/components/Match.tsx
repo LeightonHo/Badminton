@@ -40,7 +40,7 @@ const Match: React.FC<IProps> = ({ match, roundKey, matchKey, sessionId, isHost,
             >
                 <Player 
                     player={1}
-                    name={match.team1.player1}
+                    name={match.team1.player1.alias}
                     roundKey={roundKey} 
                     matchKey={matchKey}
                     sessionId={sessionId}
@@ -49,7 +49,7 @@ const Match: React.FC<IProps> = ({ match, roundKey, matchKey, sessionId, isHost,
                 />
                 <Player 
                     player={2}
-                    name={match.team1.player2}
+                    name={match.team1.player2.alias}
                     roundKey={roundKey}
                     matchKey={matchKey}
                     sessionId={sessionId}
@@ -78,7 +78,7 @@ const Match: React.FC<IProps> = ({ match, roundKey, matchKey, sessionId, isHost,
             >
                 <Player 
                     player={3}
-                    name={match.team2.player3}
+                    name={match.team2.player3.alias}
                     roundKey={roundKey} 
                     matchKey={matchKey}
                     sessionId={sessionId}
@@ -87,7 +87,7 @@ const Match: React.FC<IProps> = ({ match, roundKey, matchKey, sessionId, isHost,
                 />
                 <Player 
                     player={4}
-                    name={match.team2.player4}
+                    name={match.team2.player4.alias}
                     roundKey={roundKey} 
                     matchKey={matchKey}
                     sessionId={sessionId}

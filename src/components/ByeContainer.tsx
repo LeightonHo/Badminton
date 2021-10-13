@@ -20,7 +20,7 @@ const ByeContainer: React.FC<IProps> = ({ players, roundKey, sessionId, isHost, 
                     <Bye 
                         key={key}
                         byeKey={key}
-                        player={player} 
+                        player={player.alias} 
                         roundKey={roundKey}
                         sessionId={sessionId}
                         isHost={isHost}

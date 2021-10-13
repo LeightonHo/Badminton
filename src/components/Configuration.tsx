@@ -9,13 +9,6 @@ import { useHistory } from "react-router-dom";
 import { generateRoundRobin } from "../helpers/RoundRobinGenerator";
 import { pushGameState } from "../helpers/Socket";
 
-export interface IConfig {
-    rounds: number,
-    winningScore: number,
-    courts: string[],
-    players: string[]
-}
-
 interface IProps {
     config: Props["config"],
     setConfig: React.Dispatch<React.SetStateAction<Props["config"]>>,

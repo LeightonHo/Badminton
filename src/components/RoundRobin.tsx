@@ -1,4 +1,5 @@
 import React from "react";
+import { IPlayer } from "../types";
 import { IState as Props } from "./Main";
 import ByeContainer from "./ByeContainer";
 import Match from "./Match";
@@ -16,13 +17,13 @@ export interface IProps {
 export interface IMatch {
     court: string,
     team1: {
-        player1: string,
-        player2: string,
+        player1: IPlayer,
+        player2: IPlayer,
         score: number
     },
     team2: {
-        player3: string,
-        player4: string,
+        player3: IPlayer,
+        player4: IPlayer,
         score: number
     }
 }

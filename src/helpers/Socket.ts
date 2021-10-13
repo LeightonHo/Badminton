@@ -1,4 +1,4 @@
-import { IConfig } from "../components/Configuration";
+import { IConfig } from "../types";
 import { IRound } from "../components/RoundRobin";
 
 let userId: string;

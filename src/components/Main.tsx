@@ -8,7 +8,7 @@ import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import RoundRobin, { IRound } from "./RoundRobin";
 import Scoreboard from "./Scoreboard";
-import { IConfig } from "./Configuration";
+import { IConfig } from "../types";
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import MoreIcon from '@material-ui/icons/MoreVert';

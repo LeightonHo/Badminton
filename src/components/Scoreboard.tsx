@@ -39,10 +39,10 @@ const Scoreboard:React.FC<IProps> = ({ config, gameState }) => {
     const preprocessGameData = (): void => {
         for (const round of processedGameData) {
             for (const match of round.matches) {
-                match.team1.player1 = cleanPlayerName(match.team1.player1);
-                match.team1.player2 = cleanPlayerName(match.team1.player2);
-                match.team2.player3 = cleanPlayerName(match.team2.player3);
-                match.team2.player4 = cleanPlayerName(match.team2.player4);
+                match.team1.player1.userId = cleanPlayerName(match.team1.player1.userId);
+                match.team1.player2.userId = cleanPlayerName(match.team1.player2.userId);
+                match.team2.player3.userId = cleanPlayerName(match.team2.player3.userId);
+                match.team2.player4.userId = cleanPlayerName(match.team2.player4.userId);
             }
         }
     }
@@ -51,20 +51,20 @@ const Scoreboard:React.FC<IProps> = ({ config, gameState }) => {
         // Get all the unique players in the game data
         for (const round of processedGameData) {
             for (const match of round.matches) {
-                if (players.indexOf(match.team1.player1) < 0) {
-                    players.push(match.team1.player1);
+                if (players.indexOf(match.team1.player1.userId) < 0) {
+                    players.push(match.team1.player1.userId);
                 }
 
-                if (players.indexOf(match.team1.player2) < 0) {
-                    players.push(match.team1.player2);
+                if (players.indexOf(match.team1.player2.userId) < 0) {
+                    players.push(match.team1.player2.userId);
                 }
 
-                if (players.indexOf(match.team2.player3) < 0) {
-                    players.push(match.team2.player3);
+                if (players.indexOf(match.team2.player3.userId) < 0) {
+                    players.push(match.team2.player3.userId);
                 }
 
-                if (players.indexOf(match.team2.player4) < 0) {
-                    players.push(match.team2.player4);
+                if (players.indexOf(match.team2.player4.userId) < 0) {
+                    players.push(match.team2.player4.userId);
                 }
             }
         }
@@ -89,15 +89,15 @@ const Scoreboard:React.FC<IProps> = ({ config, gameState }) => {
                 if (match.team1.score >= config.winningScore || match.team2.score >= config.winningScore) {
                     // Adjust player stats.
                     if (match.team1.score > match.team2.score) {
-                        result[match.team1.player1].win++;
-                        result[match.team1.player2].win++;
-                        result[match.team2.player3].loss++;
-                        result[match.team2.player4].loss++;
+                        result[match.team1.player1.userId].win++;
+                        result[match.team1.player2.userId].win++;
+                        result[match.team2.player3.userId].loss++;
+                        result[match.team2.player4.userId].loss++;
                     } else {
-                        result[match.team1.player1].loss++;
-                        result[match.team1.player2].loss++;
-                        result[match.team2.player3].win++;
-                        result[match.team2.player4].win++;
+                        result[match.team1.player1.userId].loss++;
+                        result[match.team1.player2.userId].loss++;
+                        result[match.team2.player3.userId].win++;
+                        result[match.team2.player4.userId].win++;
                     }
                 }
             }
@@ -180,147 +180,147 @@ const Scoreboard:React.FC<IProps> = ({ config, gameState }) => {
         return Math.round(win / (win + loss) * 100);
     }
     
-    const generateStatistics = () => {
-        let playerCourtDictionary: { [name: string]: { [name: string]: number } };
-        let partnerDictionary: { [name: string]: { [name: string]: number } } = { };
-        let opponentDictionary: { [name: string]: { [name: string]: number } } = { };
-        let gamesPlayedDictionary: { [name: string]: number} = { };
+    // const generateStatistics = () => {
+    //     let playerCourtDictionary: { [name: string]: { [name: string]: number } };
+    //     let partnerDictionary: { [name: string]: { [name: string]: number } } = { };
+    //     let opponentDictionary: { [name: string]: { [name: string]: number } } = { };
+    //     let gamesPlayedDictionary: { [name: string]: number} = { };
         
-        // Init dictionaries.
-        for (const player1 of config.players) {
-            partnerDictionary[player1] = { }
-            opponentDictionary[player1] = { }
-            gamesPlayedDictionary[player1] = 0;
+    //     // Init dictionaries.
+    //     for (const player1 of config.players) {
+    //         partnerDictionary[player1] = { }
+    //         opponentDictionary[player1] = { }
+    //         gamesPlayedDictionary[player1] = 0;
 
-            for (const player2 of config.players) {
-                if (player1 === player2) {
-                    continue;
-                }
+    //         for (const player2 of config.players) {
+    //             if (player1 === player2) {
+    //                 continue;
+    //             }
 
-                partnerDictionary[player1][player2] = 0;
-                opponentDictionary[player1][player2] = 0;
-            }
-        }
+    //             partnerDictionary[player1][player2] = 0;
+    //             opponentDictionary[player1][player2] = 0;
+    //         }
+    //     }
 
-        for (const game of processedGameData) {
-            // Update bye dictionary.
+    //     for (const game of processedGameData) {
+    //         // Update bye dictionary.
 
-            for (const match of game.matches) {
-                gamesPlayedDictionary[match.team1.player1]++;
-                gamesPlayedDictionary[match.team1.player2]++;
-                gamesPlayedDictionary[match.team2.player3]++;
-                gamesPlayedDictionary[match.team2.player4]++;
+    //         for (const match of game.matches) {
+    //             gamesPlayedDictionary[match.team1.player1]++;
+    //             gamesPlayedDictionary[match.team1.player2]++;
+    //             gamesPlayedDictionary[match.team2.player3]++;
+    //             gamesPlayedDictionary[match.team2.player4]++;
 
-                // Update partner dictionary.
-                partnerDictionary[match.team1.player1][match.team1.player2]++;
-                partnerDictionary[match.team1.player2][match.team1.player1]++;
+    //             // Update partner dictionary.
+    //             partnerDictionary[match.team1.player1][match.team1.player2]++;
+    //             partnerDictionary[match.team1.player2][match.team1.player1]++;
 
-                partnerDictionary[match.team2.player3][match.team2.player4]++;
-                partnerDictionary[match.team2.player4][match.team2.player3]++;
+    //             partnerDictionary[match.team2.player3][match.team2.player4]++;
+    //             partnerDictionary[match.team2.player4][match.team2.player3]++;
 
-                // Update opponent dictionary.
-                opponentDictionary[match.team1.player1][match.team2.player3]++;
-                opponentDictionary[match.team1.player1][match.team2.player4]++;
+    //             // Update opponent dictionary.
+    //             opponentDictionary[match.team1.player1][match.team2.player3]++;
+    //             opponentDictionary[match.team1.player1][match.team2.player4]++;
 
-                opponentDictionary[match.team1.player2][match.team2.player3]++;
-                opponentDictionary[match.team1.player2][match.team2.player4]++;
+    //             opponentDictionary[match.team1.player2][match.team2.player3]++;
+    //             opponentDictionary[match.team1.player2][match.team2.player4]++;
 
-                opponentDictionary[match.team2.player3][match.team1.player1]++;
-                opponentDictionary[match.team2.player3][match.team1.player2]++;
+    //             opponentDictionary[match.team2.player3][match.team1.player1]++;
+    //             opponentDictionary[match.team2.player3][match.team1.player2]++;
 
-                opponentDictionary[match.team2.player4][match.team1.player1]++;
-                opponentDictionary[match.team2.player4][match.team1.player2]++;
-            }
-        }
+    //             opponentDictionary[match.team2.player4][match.team1.player1]++;
+    //             opponentDictionary[match.team2.player4][match.team1.player2]++;
+    //         }
+    //     }
 
-        let partnerStatisticsMessageList: string[] = [];
-        let opponentStatisticsMessageList: string[] = [];
+    //     let partnerStatisticsMessageList: string[] = [];
+    //     let opponentStatisticsMessageList: string[] = [];
 
-        for (const player1 of Object.keys(partnerDictionary)) {
-            let playerList = [...config.players];
-            let partnerStatisticsMessage = `[Partner Statistics] ${player1}: `;
+    //     for (const player1 of Object.keys(partnerDictionary)) {
+    //         let playerList = [...config.players];
+    //         let partnerStatisticsMessage = `[Partner Statistics] ${player1}: `;
 
-            playerList.splice(playerList.indexOf(player1), 1);
+    //         playerList.splice(playerList.indexOf(player1), 1);
 
-            // Generate partner statistics.
-            playerList.sort((a, b) => {
-                return partnerDictionary[player1][b] - partnerDictionary[player1][a];
-            });
+    //         // Generate partner statistics.
+    //         playerList.sort((a, b) => {
+    //             return partnerDictionary[player1][b] - partnerDictionary[player1][a];
+    //         });
 
-            for (const player2 of playerList) {
-                if (player1 === player2) {
-                    continue;
-                }
+    //         for (const player2 of playerList) {
+    //             if (player1 === player2) {
+    //                 continue;
+    //             }
 
-                const gamesPlayedWith = partnerDictionary[player1][player2];
+    //             const gamesPlayedWith = partnerDictionary[player1][player2];
 
-                partnerStatisticsMessage += `${player2} (${gamesPlayedWith}), `;
-            }
+    //             partnerStatisticsMessage += `${player2} (${gamesPlayedWith}), `;
+    //         }
             
-            partnerStatisticsMessageList.push(partnerStatisticsMessage);
-        }
+    //         partnerStatisticsMessageList.push(partnerStatisticsMessage);
+    //     }
 
-        for (const player1 of Object.keys(partnerDictionary)) {
-            let playerList = [...config.players];
-            let opponentStatisticsMessage = `[Opponent Statistics] ${player1}: `;
+    //     for (const player1 of Object.keys(partnerDictionary)) {
+    //         let playerList = [...config.players];
+    //         let opponentStatisticsMessage = `[Opponent Statistics] ${player1}: `;
 
-            // Generate opponent statistics.
-            playerList.sort((a, b) => {
-                return opponentDictionary[player1][b] - opponentDictionary[player1][a];
-            });
+    //         // Generate opponent statistics.
+    //         playerList.sort((a, b) => {
+    //             return opponentDictionary[player1][b] - opponentDictionary[player1][a];
+    //         });
 
-            for (const player2 of playerList) {
-                if (player1 === player2) {
-                    continue;
-                }
+    //         for (const player2 of playerList) {
+    //             if (player1 === player2) {
+    //                 continue;
+    //             }
 
-                const gamesPlayedAgainst = opponentDictionary[player1][player2];
+    //             const gamesPlayedAgainst = opponentDictionary[player1][player2];
 
-                opponentStatisticsMessage += `${player2} (${gamesPlayedAgainst}), `;
-            }
+    //             opponentStatisticsMessage += `${player2} (${gamesPlayedAgainst}), `;
+    //         }
 
-            opponentStatisticsMessageList.push(opponentStatisticsMessage);
-        }
+    //         opponentStatisticsMessageList.push(opponentStatisticsMessage);
+    //     }
 
-        // Generate games played statistics.
-        let playerList = [...config.players];
+    //     // Generate games played statistics.
+    //     let playerList = [...config.players];
 
-        playerList.sort((a, b) => {
-            return gamesPlayedDictionary[a] - gamesPlayedDictionary[b];
-        });
+    //     playerList.sort((a, b) => {
+    //         return gamesPlayedDictionary[a] - gamesPlayedDictionary[b];
+    //     });
 
-        for (const player of playerList) {
-            console.log(`${player} played ${gamesPlayedDictionary[player]} times and was on bye ${processedGameData.length - gamesPlayedDictionary[player]} times.`)
-        }
+    //     for (const player of playerList) {
+    //         console.log(`${player} played ${gamesPlayedDictionary[player]} times and was on bye ${processedGameData.length - gamesPlayedDictionary[player]} times.`)
+    //     }
 
-        for (const message of partnerStatisticsMessageList) {
-            console.log(message);
-        }
+    //     for (const message of partnerStatisticsMessageList) {
+    //         console.log(message);
+    //     }
 
-        for (const message of opponentStatisticsMessageList) {
-            console.log(message);
-        }
+    //     for (const message of opponentStatisticsMessageList) {
+    //         console.log(message);
+    //     }
 
-        // console.log({...partnerDictionary});
-        // console.log({...opponentDictionary});
+    //     // console.log({...partnerDictionary});
+    //     // console.log({...opponentDictionary});
 
-        const messages = partnerStatisticsMessageList.concat(opponentStatisticsMessageList);
+    //     const messages = partnerStatisticsMessageList.concat(opponentStatisticsMessageList);
 
-        // return (
-        //     messages.map((message, key) => {
-        //         return (
-        //             <Box>
-        //                 <Typography 
-        //                     key={key}
-        //                     variant="inherit"
-        //                 >
-        //                     {message}
-        //                 </Typography>
-        //             </Box>
-        //         );
-        //     })
-        // );
-    }
+    //     // return (
+    //     //     messages.map((message, key) => {
+    //     //         return (
+    //     //             <Box>
+    //     //                 <Typography 
+    //     //                     key={key}
+    //     //                     variant="inherit"
+    //     //                 >
+    //     //                     {message}
+    //     //                 </Typography>
+    //     //             </Box>
+    //     //         );
+    //     //     })
+    //     // );
+    // }
 
     const renderScoreboard = () => {
         return (
