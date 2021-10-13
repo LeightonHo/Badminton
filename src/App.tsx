@@ -3,13 +3,7 @@ import { useState } from "react";
 import Main from "./components/Main";
 import Login from "./components/Login";
 import { HashRouter } from "react-router-dom";
-
-export interface IUser {
-  userId: string,
-  name: string,
-  email: string,
-  avatarUrl: string
-}
+import { IUser } from "./types";
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);

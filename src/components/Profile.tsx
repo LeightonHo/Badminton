@@ -1,7 +1,6 @@
-import { Box, Card, CardContent, Typography } from "@material-ui/core";
+import { Card, CardContent, Typography } from "@material-ui/core";
 import React from "react";
-import { IUser } from "../App";
-import axios from "axios";
+import { IUser } from "../types";
 
 interface Prop {
     user: IUser

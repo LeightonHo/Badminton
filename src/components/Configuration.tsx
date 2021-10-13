@@ -32,27 +32,35 @@ const Configuration:React.FC<IProps> = ({ config, setConfig, gameState, sessionI
     }
 
     const handleStartClick = () => {
+        const roundRobin = generateRoundRobin(config);
+        pushGameState(sessionId, config, roundRobin);
+        history.push("/round-robin");
+    }
+
+    const disableStartButton = () => {
         const numberOfPlayers = config.players.length;
         const numberOfCourts = config.courts.length;
 
+        if (hasGameStarted) {
+            return true;
+        }
+
         if (numberOfPlayers == 0) {
             console.log(`Please enter at least four players per court.`);
-            return;
+            return true;
         }
 
         if (numberOfCourts == 0) {
             console.log(`Please enter at least one court.`);
-            return;
+            return true;
         }
 
         if (numberOfPlayers - (numberOfCourts * 4) < 0) {
             console.log(`There are not enough players for ${numberOfCourts} courts.`);
-            return;
+            return true;
         }
 
-        const roundRobin = generateRoundRobin(config);
-        pushGameState(sessionId, config, roundRobin);
-        history.push("/round-robin");
+        return false;
     }
 
     const handleExport = () => {
@@ -150,7 +158,7 @@ const Configuration:React.FC<IProps> = ({ config, setConfig, gameState, sessionI
                                 variant="contained"
                                 color="primary"
                                 onClick={handleStartClick}
-                                disabled={hasGameStarted}
+                                disabled={disableStartButton()}
                             >
                                 Start Session
                             </Button>

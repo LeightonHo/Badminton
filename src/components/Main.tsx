@@ -8,7 +8,7 @@ import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import RoundRobin, { IRound } from "./RoundRobin";
 import Scoreboard from "./Scoreboard";
-import { IConfig } from "../types";
+import { IConfig, IUser } from "../types";
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import MoreIcon from '@material-ui/icons/MoreVert';
@@ -23,7 +23,6 @@ import {
   setCallback_SetIsConnected,
   setCallback_SetIsHost
 } from "../helpers/Socket";
-import { IUser } from "../App";
 import Profile from "./Profile";
 
 interface Prop {
@@ -32,8 +31,7 @@ interface Prop {
 
 export interface IState {
   config: IConfig,
-  gameState: IRound[],
-  socket: WebSocket
+  gameState: IRound[]
 }
 
 const useStickyState = (defaultValue: (IRound[] | IConfig | string), key: string) => {

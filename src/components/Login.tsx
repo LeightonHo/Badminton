@@ -1,10 +1,9 @@
 import { Box, Card, CardContent, LinearProgress, Paper, Typography } from "@material-ui/core";
 import React, { useState } from "react";
-import { IUser } from "../App";
+import { IUser } from "../types";
 import FacebookLogin, { ReactFacebookLoginInfo } from "react-facebook-login";
 import axios from "axios";
 import Image from "../static/login_background.jpg";
-import { StylesContext } from "@material-ui/styles";
 
 interface Props {
     setIsLoggedIn: React.Dispatch<React.SetStateAction<boolean>>,
