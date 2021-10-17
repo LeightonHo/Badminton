@@ -82,7 +82,7 @@ const initDataStructures = (players: Props["config"]["players"], courts: Props["
                 continue;
             }
 
-            teamDictionary[[player1, player2].sort().toString()] = 0;
+            teamDictionary[[player1.userId, player2.userId].sort().toString()] = 0;
             opponentDictionary[player1.userId][player2.userId] = 0;
         }
     }
@@ -276,13 +276,13 @@ const generateMatches = (playersOnBye: string[], config: Props["config"]): IMatc
             const match: IMatch = {
                 court: courts[i],
                 team1: {
-                    player1: getPlayer(team1[0], config.players),
-                    player2: getPlayer(team1[1], config.players),
+                    player1: team1[0],
+                    player2: team1[1],
                     score: 0
                 },
                 team2: {
-                    player3: getPlayer(team2[0], config.players),
-                    player4: getPlayer(team2[1], config.players),
+                    player3: team2[0],
+                    player4: team2[1],
                     score: 0
                 }
             }

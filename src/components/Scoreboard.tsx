@@ -39,10 +39,10 @@ const Scoreboard:React.FC<IProps> = ({ config, gameState }) => {
     const preprocessGameData = (): void => {
         for (const round of processedGameData) {
             for (const match of round.matches) {
-                match.team1.player1.userId = cleanPlayerName(match.team1.player1.userId);
-                match.team1.player2.userId = cleanPlayerName(match.team1.player2.userId);
-                match.team2.player3.userId = cleanPlayerName(match.team2.player3.userId);
-                match.team2.player4.userId = cleanPlayerName(match.team2.player4.userId);
+                match.team1.player1 = cleanPlayerName(match.team1.player1);
+                match.team1.player2 = cleanPlayerName(match.team1.player2);
+                match.team2.player3 = cleanPlayerName(match.team2.player3);
+                match.team2.player4 = cleanPlayerName(match.team2.player4);
             }
         }
     }
@@ -51,20 +51,20 @@ const Scoreboard:React.FC<IProps> = ({ config, gameState }) => {
         // Get all the unique players in the game data
         for (const round of processedGameData) {
             for (const match of round.matches) {
-                if (players.indexOf(match.team1.player1.userId) < 0) {
-                    players.push(match.team1.player1.userId);
+                if (players.indexOf(match.team1.player1) < 0) {
+                    players.push(match.team1.player1);
                 }
 
-                if (players.indexOf(match.team1.player2.userId) < 0) {
-                    players.push(match.team1.player2.userId);
+                if (players.indexOf(match.team1.player2) < 0) {
+                    players.push(match.team1.player2);
                 }
 
-                if (players.indexOf(match.team2.player3.userId) < 0) {
-                    players.push(match.team2.player3.userId);
+                if (players.indexOf(match.team2.player3) < 0) {
+                    players.push(match.team2.player3);
                 }
 
-                if (players.indexOf(match.team2.player4.userId) < 0) {
-                    players.push(match.team2.player4.userId);
+                if (players.indexOf(match.team2.player4) < 0) {
+                    players.push(match.team2.player4);
                 }
             }
         }
@@ -89,15 +89,15 @@ const Scoreboard:React.FC<IProps> = ({ config, gameState }) => {
                 if (match.team1.score >= config.winningScore || match.team2.score >= config.winningScore) {
                     // Adjust player stats.
                     if (match.team1.score > match.team2.score) {
-                        result[match.team1.player1.userId].win++;
-                        result[match.team1.player2.userId].win++;
-                        result[match.team2.player3.userId].loss++;
-                        result[match.team2.player4.userId].loss++;
+                        result[match.team1.player1].win++;
+                        result[match.team1.player2].win++;
+                        result[match.team2.player3].loss++;
+                        result[match.team2.player4].loss++;
                     } else {
-                        result[match.team1.player1.userId].loss++;
-                        result[match.team1.player2.userId].loss++;
-                        result[match.team2.player3.userId].win++;
-                        result[match.team2.player4.userId].win++;
+                        result[match.team1.player1].loss++;
+                        result[match.team1.player2].loss++;
+                        result[match.team2.player3].win++;
+                        result[match.team2.player4].win++;
                     }
                 }
             }
@@ -352,9 +352,10 @@ const Scoreboard:React.FC<IProps> = ({ config, gameState }) => {
 
     return (
         <>
-            {gameState.length === 0
-            ? <Progress />
-            : renderScoreboard()
+            {
+                gameState.length === 0
+                ? <Progress />
+                : renderScoreboard()
             }
 
             {/* {generateStatistics()} */}

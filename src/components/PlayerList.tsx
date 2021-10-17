@@ -32,7 +32,7 @@ const PlayerList: React.FC<IProps> = ({ config, setConfig, hasGameStarted }) => 
                 <ListItem 
                     key={key}
                 >
-                    <ListItemText>{player}</ListItemText>
+                    <ListItemText>{player.alias}</ListItemText>
                     {
                         !hasGameStarted
                         ? <ListItemSecondaryAction>

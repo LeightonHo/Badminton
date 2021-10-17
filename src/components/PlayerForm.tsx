@@ -25,17 +25,6 @@ const PlayerForm: React.FC<IProps> = ({ config, setConfig }) => {
             return;
         }
 
-        console.log({
-            ...config,
-            players: [
-                ...config.players,
-                {
-                    userId: input.name.trim(),
-                    alias: input.name.trim()
-                }
-            ]
-        })
-
         setConfig({
             ...config,
             players: [

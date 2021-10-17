@@ -46,17 +46,14 @@ const Configuration:React.FC<IProps> = ({ config, setConfig, gameState, sessionI
         }
 
         if (numberOfPlayers == 0) {
-            console.log(`Please enter at least four players per court.`);
             return true;
         }
 
         if (numberOfCourts == 0) {
-            console.log(`Please enter at least one court.`);
             return true;
         }
 
         if (numberOfPlayers - (numberOfCourts * 4) < 0) {
-            console.log(`There are not enough players for ${numberOfCourts} courts.`);
             return true;
         }
 

@@ -17,13 +17,13 @@ export interface IProps {
 export interface IMatch {
     court: string,
     team1: {
-        player1: IPlayer,
-        player2: IPlayer,
+        player1: string,
+        player2: string,
         score: number
     },
     team2: {
-        player3: IPlayer,
-        player4: IPlayer,
+        player3: string,
+        player4: string,
         score: number
     }
 }

@@ -50,6 +50,11 @@ const Lobby: React.FunctionComponent<IProps> = ({ gameState, setGameState, confi
     }
 
     const handleJoinClick = () => {
+        if (!sessionId) {
+            setError("Session code cannot be blank.");
+            return;
+        }
+
         setLoading(true);
         setError("");
         joinSession(sessionId);

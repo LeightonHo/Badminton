@@ -148,24 +148,21 @@ const Main: React.FC<Prop> = ({ user }) => {
           </IconButton>
         </MenuItem>
         {
-          joinedSession 
-          ? <>
-            {gameState.length > 0
-            ? <>
-              <MenuItem>
-                <IconButton color="inherit" onClick={(() => { handleNavigation("/round-robin") })}>
-                  <Typography>Games</Typography>
-                </IconButton>
-              </MenuItem>
-              <MenuItem>
-                <IconButton color="inherit" onClick={(() => { handleNavigation("/scoreboard") })}>
-                  <Typography>Scoreboard</Typography>
-                </IconButton>
-              </MenuItem>
-            </>
-            : ""
-            }
-          </>
+          joinedSession && gameState.length > 0
+          ? <MenuItem>
+            <IconButton color="inherit" onClick={(() => { handleNavigation("/round-robin") })}>
+              <Typography>Games</Typography>
+            </IconButton>
+          </MenuItem>
+          : ""
+        }
+        {
+          joinedSession && gameState.length > 0
+          ? <MenuItem>
+          <IconButton color="inherit" onClick={(() => { handleNavigation("/scoreboard") })}>
+            <Typography>Scoreboard</Typography>
+          </IconButton>
+        </MenuItem>
           : ""
         }
         <MenuItem>
