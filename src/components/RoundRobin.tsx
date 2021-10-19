@@ -1,10 +1,11 @@
 import React from "react";
-import { IPlayer } from "../types";
 import { IState as Props } from "./Main";
 import ByeContainer from "./ByeContainer";
 import Match from "./Match";
-import { Backdrop, Box, Card, CardContent, Divider, Grid, LinearProgress, Typography } from "@material-ui/core";
+import { Button, Box, Card, CardContent, Divider, Grid, Typography } from "@material-ui/core";
 import Progress from "./Progress";
+import { generateRound } from "../helpers/Socket";
+import { IPlayer } from "../types";
 
 export interface IProps {
     config: Props["config"],
@@ -17,19 +18,19 @@ export interface IProps {
 export interface IMatch {
     court: string,
     team1: {
-        player1: string,
-        player2: string,
+        player1: IPlayer,
+        player2: IPlayer,
         score: number
     },
     team2: {
-        player3: string,
-        player4: string,
+        player3: IPlayer,
+        player4: IPlayer,
         score: number
     }
 }
 
 export interface IRound {
-    number: number,
+    round: number,
     matches: IMatch[],
     byes: Props["config"]["players"]
 }
@@ -39,7 +40,7 @@ const RoundRobin: React.FC<IProps> = ({ gameState, sessionId, isHost, isConnecte
     const renderRoundRobin = () => {
         return (
             <>
-                {gameState.map((round, roundKey) => {
+                {[...gameState].reverse().map((round, roundKey) => {
                     return (
                         <Card 
                             key={roundKey}
@@ -58,7 +59,7 @@ const RoundRobin: React.FC<IProps> = ({ gameState, sessionId, isHost, isConnecte
                                             className="spnGameLabel"
                                             gutterBottom
                                         >
-                                            ROUND {round.number}
+                                            ROUND {round.round}
                                         </Typography>
                                     </Grid>
 
@@ -113,8 +114,26 @@ const RoundRobin: React.FC<IProps> = ({ gameState, sessionId, isHost, isConnecte
         }
     }
 
+    const handleGenerateRoundClick = () => {
+        // TODO: Show spinner
+        generateRound(sessionId);
+    }
+
     return (
         <>
+            {
+                isHost
+                ? <>
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={handleGenerateRoundClick}
+                    >
+                        Next round
+                    </Button>
+                </>
+                : ""
+            }
             {
                 gameState.length === 0
                 ? <Progress />
