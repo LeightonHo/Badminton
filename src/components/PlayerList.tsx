@@ -5,7 +5,7 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
-import { ListItemText } from "@material-ui/core";
+import { Avatar, ListItemAvatar, ListItemText } from "@material-ui/core";
 import { removePlayer } from "../helpers/Socket";
 
 interface IProps {
@@ -27,6 +27,11 @@ const PlayerList: React.FC<IProps> = ({ sessionId, config, hasGameStarted }) => 
                 <ListItem 
                     key={key}
                 >
+                    <ListItemAvatar>
+                        <Avatar>
+                            <img src={player.avatarUrl} />
+                        </Avatar>
+                    </ListItemAvatar>
                     <ListItemText>{player.alias}</ListItemText>
                     {
                         !hasGameStarted

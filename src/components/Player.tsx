@@ -1,10 +1,11 @@
-import { Box, Grid, TextField, Typography } from "@material-ui/core";
+import { Avatar, Box, Grid, TextField, Typography } from "@material-ui/core";
 import React, { useState, KeyboardEvent } from "react";
 import { updatePlayer } from "../helpers/Socket";
+import { IPlayer } from "../types";
 
 interface IProps {
-    player: number,
-    name: string,
+    playerKey: number,
+    player: IPlayer,
     roundKey: number,
     matchKey: number,
     sessionId: string,
@@ -12,7 +13,7 @@ interface IProps {
     isConnected: boolean
 }
 
-const Player: React.FC<IProps> = ({ player, name, roundKey, matchKey, sessionId, isHost, isConnected }) => {
+const Player: React.FC<IProps> = ({ playerKey, player, roundKey, matchKey, sessionId, isHost, isConnected }) => {
 
     const [input, setInput] = useState({
         value: "",
@@ -49,7 +50,7 @@ const Player: React.FC<IProps> = ({ player, name, roundKey, matchKey, sessionId,
                 return;
             }
 
-            updatePlayer(sessionId, roundKey, matchKey, player, input.value);
+            updatePlayer(sessionId, roundKey, matchKey, playerKey, input.value);
             setInput({
                 ...input,
                 editing: false,
@@ -79,35 +80,41 @@ const Player: React.FC<IProps> = ({ player, name, roundKey, matchKey, sessionId,
 
     return (
         <Grid item xs>
-            {!input.editing
-            ? <Box
-                onMouseDown={handlePress}
-                onTouchStart={handlePress}
-                onMouseUp={handleRelease}
-                onTouchEnd={handleRelease}
-                onTouchCancel={handleRelease}
-                onTouchMove={handleRelease}
-            >
-                <Typography 
-                    variant="overline"
-                    className="player-name"
+            {
+                !input.editing
+                ? <Box
+                    onMouseDown={handlePress}
+                    onTouchStart={handlePress}
+                    onMouseUp={handleRelease}
+                    onTouchEnd={handleRelease}
+                    onTouchCancel={handleRelease}
+                    onTouchMove={handleRelease}
+                    className="player-box"
                 >
-                    {name}
-                </Typography>
-            </Box>
-            : <TextField 
-                autoFocus
-                id={`inputPlayer-${name}-${roundKey}-${matchKey}`}
-                className={"text-input"}
-                variant="outlined" 
-                size="small"
-                type="text" 
-                placeholder={name}
-                onChange={handleChange}
-                onKeyPress={handleKeyPress}
-                onBlur={handleOnBlur}
-                name={name}
-            />
+                    {/* <Avatar style={{ margin: "auto", height: "30px", width: "30px" }}> */}
+                    <Avatar style={{ margin: "auto" }}>
+                        <img src={player.avatarUrl} />
+                    </Avatar>
+                    <Typography 
+                        variant="overline"
+                        className="player-name"
+                    >
+                        {player.alias}
+                    </Typography>
+                </Box>
+                : <TextField 
+                    autoFocus
+                    id={`inputPlayer-${player.userId}-${roundKey}-${matchKey}`}
+                    className={"text-input"}
+                    variant="outlined" 
+                    size="small"
+                    type="text" 
+                    placeholder={player.alias}
+                    onChange={handleChange}
+                    onKeyPress={handleKeyPress}
+                    onBlur={handleOnBlur}
+                    name={player.alias}
+                />
             }
         </Grid>
     );

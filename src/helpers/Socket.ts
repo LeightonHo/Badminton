@@ -42,7 +42,7 @@ export const initSocket = (user: string, session: string) => {
           setConfigCallback(JSON.parse(data.config));
         }
 
-        if (data.action === "syncGameState") {
+        if (data.action === "update_gamestate") {
           setGameStateCallback(JSON.parse(data.gameState));
     
           if (data.config) {
@@ -50,13 +50,14 @@ export const initSocket = (user: string, session: string) => {
           }
         }
     
-        if (data.action === "createSession") {
+        if (data.action === "create_session") {
           console.log(data.message);
+          setConfigCallback(JSON.parse(data.config));
           setJoinedSessionCallback(true);
           setIsHostCallback(data.isHost);
         }
     
-        if (data.action === "joinedSession") {
+        if (data.action === "joined_session") {
           console.log(data.message);
           setJoinedSessionCallback(true);
           setIsHostCallback(data.isHost);
@@ -71,7 +72,7 @@ export const initSocket = (user: string, session: string) => {
           }
         }
     
-        if (data.action === "joinFailed") {
+        if (data.action === "join_failed") {
           setSessionIdCallback("");
           setJoinedSessionCallback(false);
         }

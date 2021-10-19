@@ -24,6 +24,7 @@ import {
   setCallback_SetIsHost
 } from "../helpers/Socket";
 import Profile from "./Profile";
+import { Avatar } from "@material-ui/core";
 
 interface Prop {
   user: IUser
@@ -204,7 +205,9 @@ const Main: React.FC<Prop> = ({ user }) => {
                 : ""
               }
               <IconButton color="inherit" onClick={(() => { handleNavigation("/profile") })}>
-                <img className="avatar" src={user.avatarUrl} />
+                <Avatar>
+                  <img src={user.avatarUrl} />
+                </Avatar>
               </IconButton>
             </div>
             <div className={classes.sectionMobile}>

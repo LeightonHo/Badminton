@@ -30,7 +30,7 @@ const Login: React.FC<Props> = ({ setIsLoggedIn, setUser }) => {
                 facebookUserId: response.userID,
                 name: response.name,
                 email: response.email,
-                avatar: response.picture?.data.url,
+                avatarUrl: response.picture?.data.url,
             };
 
             axios.post<any>("https://n4x7vjzngg.execute-api.ap-southeast-2.amazonaws.com/production", payload).then(
@@ -44,7 +44,7 @@ const Login: React.FC<Props> = ({ setIsLoggedIn, setUser }) => {
                             userId: userData.UserId,
                             email: userData.Email,
                             name: userData.Name,
-                            avatarUrl: userData.Avatar
+                            avatarUrl: userData.AvatarUrl
                         });
                     } else {
                         setIsLoggedIn(false);
