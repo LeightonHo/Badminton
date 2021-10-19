@@ -1,46 +1,33 @@
 import { Box, TextField } from "@material-ui/core";
 import React, { useState, KeyboardEvent} from "react";
 import { IState as Props } from "./Main";
+import { addCourt } from "../helpers/Socket";
 
 interface IProps {
-    config: Props["config"],
-    setConfig: React.Dispatch<React.SetStateAction<Props["config"]>>
+    sessionId: string,
+    config: Props["config"]
 }
 
-const CourtForm: React.FC<IProps> = ({ config, setConfig }) => {
+const CourtForm: React.FC<IProps> = ({ sessionId, config }) => {
 
-    const [input, setInput] = useState({
-        court: ""
-    });
+    const [input, setInput] = useState("");
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-        setInput({
-            ...input,
-            [e.target.name]: e.target.value.trim()
-        });
+        setInput(e.target.value.trim());
     }
 
     const handleClick = (): void => {
-        if (!input.court || isDuplicate(input.court)) {
+        if (!input || isDuplicate(input)) {
             return;
         }
 
-        setConfig({
-            ...config,
-            courts: [
-                ...config.courts,
-                input.court
-            ]
-        })
-
-        setInput({
-            court: ""
-        });
+        addCourt(sessionId, input);
+        setInput("");
     }
 
-    const isDuplicate = (name: string): boolean => {
+    const isDuplicate = (input: string): boolean => {
         for (const court of config.courts) {
-            if (court.toLowerCase() === input.court.toLowerCase()) {
+            if (court.toLowerCase() === input.toLowerCase()) {
                 return true;
             }
         }
@@ -65,7 +52,7 @@ const CourtForm: React.FC<IProps> = ({ config, setConfig }) => {
                 variant="outlined" 
                 size="small"
                 type="text" 
-                value={input.court}
+                value={input}
                 onChange={handleChange}
                 onKeyPress={handleKeyPress}
                 name="court"

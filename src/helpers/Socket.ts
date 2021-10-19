@@ -38,6 +38,10 @@ export const initSocket = (user: string, session: string) => {
     socket.onmessage = (ev: MessageEvent<any>) => {
         const data = JSON.parse(ev.data);
         
+        if (data.action === "update_config") {
+          setConfigCallback(JSON.parse(data.config));
+        }
+
         if (data.action === "syncGameState") {
           setGameStateCallback(JSON.parse(data.gameState));
     
@@ -139,21 +143,60 @@ window.addEventListener("scroll", () => {
 });
 
 // Public Socket Helper functions
-export function pushGameState(sessionId: string, config: IConfig, gameState: IRound[]) {
+export const generateRound = (sessionId: string) => {
   send({
-    action: "session",
-    method: "pushGameState",
+    action: "generate_round",
     userId: userId,
-    sessionId: sessionId,
-    config: JSON.stringify(config),
-    gameState: JSON.stringify(gameState)
+    sessionId: sessionId
   });
 }
 
-export function pushMatchScore(sessionId: string, roundKey: number, matchKey: number, team: number, score: number) {
+export const addCourt = (sessionId: string, court: string) => {
   send({
     action: "session",
-    method: "pushMatchScore",
+    method: "add_court",
+    userId: userId,
+    sessionId: sessionId,
+    court: court
+  });
+}
+
+export const removeCourt = (sessionId: string, court: string) => {
+  send({
+    action: "session",
+    method: "remove_court",
+    userId: userId,
+    sessionId: sessionId,
+    court: court
+  });
+}
+
+export const addPlayer = (sessionId: string, playerId: string, alias: string, avatarUrl: string) => {
+  send({
+    action: "session",
+    method: "add_player",
+    userId: userId,
+    sessionId: sessionId,
+    playerId: playerId,
+    alias: alias,
+    avatarUrl: avatarUrl
+  });
+}
+
+export const removePlayer = (sessionId: string, playerId: string) => {
+  send({
+    action: "session",
+    method: "remove_player",
+    userId: userId,
+    sessionId: sessionId,
+    playerId: playerId
+  });
+}
+
+export const pushMatchScore = (sessionId: string, roundKey: number, matchKey: number, team: number, score: number) => {
+  send({
+    action: "session",
+    method: "push_match_score",
     userId: userId,
     sessionId: sessionId,
     roundKey: roundKey,
@@ -163,10 +206,10 @@ export function pushMatchScore(sessionId: string, roundKey: number, matchKey: nu
   });
 }
 
-export function updatePlayer(sessionId: string, roundKey: number, matchKey: number, player: number, name: string) {
+export const updatePlayer = (sessionId: string, roundKey: number, matchKey: number, player: number, name: string) => {
   send({
     action: "session",
-    method: "updatePlayer",
+    method: "update_player",
     userId: userId,
     sessionId: sessionId,
     roundKey: roundKey,
@@ -176,10 +219,10 @@ export function updatePlayer(sessionId: string, roundKey: number, matchKey: numb
   });
 }
 
-export function updateBye(sessionId: string, roundKey: number, byeKey: number, name: string) {
+export const updateBye = (sessionId: string, roundKey: number, byeKey: number, name: string) => {
   send({
     action: "session",
-    method: "updateBye",
+    method: "update_bye",
     userId: userId,
     sessionId: sessionId,
     roundKey: roundKey,
@@ -188,7 +231,7 @@ export function updateBye(sessionId: string, roundKey: number, byeKey: number, n
   });
 }
 
-export function createSession() {
+export const createSession = () => {
   const sessionId = generateSessionId(4);
   console.log(userId);
 
@@ -202,7 +245,7 @@ export function createSession() {
   return sessionId;
 }
 
-export function joinSession(sessionId: string) {
+export const joinSession = (sessionId: string) => {
   send({
     action: "session",
     method: "join",
@@ -211,7 +254,7 @@ export function joinSession(sessionId: string) {
   });
 }
 
-export function leaveSession(sessionId: string) {
+export const leaveSession = (sessionId: string) => {
   send({
     action: "session",
     method: "leave",

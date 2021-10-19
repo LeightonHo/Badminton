@@ -1,4 +1,4 @@
-import { Box, Button, Card, CardContent, TextField, Typography } from "@material-ui/core";
+import { Box, Button, Card, CardContent, Typography } from "@material-ui/core";
 import CourtForm from "./CourtForm";
 import CourtList from "./CourtList";
 import PlayerForm from "./PlayerForm";
@@ -6,8 +6,7 @@ import PlayerList from "./PlayerList";
 import { IState as Props } from "./Main";
 import "react-confirm-alert/src/react-confirm-alert.css";
 import { useHistory } from "react-router-dom";
-import { generateRoundRobin } from "../helpers/RoundRobinGenerator";
-import { pushGameState } from "../helpers/Socket";
+import { generateRound } from "../helpers/Socket";
 
 interface IProps {
     config: Props["config"],
@@ -32,8 +31,10 @@ const Configuration:React.FC<IProps> = ({ config, setConfig, gameState, sessionI
     }
 
     const handleStartClick = () => {
-        const roundRobin = generateRoundRobin(config);
-        pushGameState(sessionId, config, roundRobin);
+        // TODO: Invoke the generate round endpoint instead.
+        generateRound(sessionId);
+
+        // TODO: Move this to the socket listener?
         history.push("/round-robin");
     }
 
@@ -76,7 +77,7 @@ const Configuration:React.FC<IProps> = ({ config, setConfig, gameState, sessionI
     const renderConfiguration = () => {
         return (
             <>
-                <Card className="card">
+                {/* <Card className="card">
                     <CardContent className="general-card">
                         <Typography
                             variant="h5"
@@ -110,7 +111,7 @@ const Configuration:React.FC<IProps> = ({ config, setConfig, gameState, sessionI
                             disabled={disableInput()}
                         />
                     </CardContent>
-                </Card>
+                </Card> */}
 
                 <Card className="card courts-card">
                     <CardContent>
@@ -122,10 +123,10 @@ const Configuration:React.FC<IProps> = ({ config, setConfig, gameState, sessionI
                         </Typography>
                         {
                             isHost && !hasGameStarted
-                            ? <CourtForm config={config} setConfig={setConfig} />
+                            ? <CourtForm sessionId={sessionId} config={config} />
                             : ""
                         }
-                        <CourtList config={config} setConfig={setConfig} hasGameStarted={hasGameStarted} />
+                        <CourtList sessionId={sessionId} config={config} hasGameStarted={hasGameStarted} />
                     </CardContent>
                 </Card>
 
@@ -140,10 +141,14 @@ const Configuration:React.FC<IProps> = ({ config, setConfig, gameState, sessionI
                         </Typography>
                         {
                             isHost && !hasGameStarted
-                            ? <PlayerForm config={config} setConfig={setConfig} />
+                            ? <PlayerForm sessionId={sessionId} config={config} />
                             : ""
                         }
-                        <PlayerList config={config} setConfig={setConfig} hasGameStarted={hasGameStarted} />
+                        <PlayerList 
+                            sessionId={sessionId}
+                            config={config} 
+                            setConfig={setConfig} 
+                            hasGameStarted={hasGameStarted} />
                     </CardContent>
                 </Card>
 

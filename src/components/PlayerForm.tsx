@@ -1,13 +1,14 @@
 import React, { useState, KeyboardEvent } from "react";
 import { IState as Props } from "./Main";
 import { Box, TextField } from "@material-ui/core";
+import { addPlayer } from "../helpers/Socket";
 
 interface IProps {
-    config: Props["config"],
-    setConfig: React.Dispatch<React.SetStateAction<Props["config"]>>
+    sessionId: string,
+    config: Props["config"]
 }
 
-const PlayerForm: React.FC<IProps> = ({ config, setConfig }) => {
+const PlayerForm: React.FC<IProps> = ({ sessionId, config }) => {
 
     const [input, setInput] = useState({
         name: ""
@@ -25,16 +26,11 @@ const PlayerForm: React.FC<IProps> = ({ config, setConfig }) => {
             return;
         }
 
-        setConfig({
-            ...config,
-            players: [
-                ...config.players,
-                {
-                    userId: input.name.trim(),
-                    alias: input.name.trim()
-                }
-            ]
-        });
+        const playerId = input.name.trim();
+        const alias = input.name.trim();
+        const avatarUrl = ""; // TODO: Get some default avatar URL
+
+        addPlayer(sessionId, input.name.trim(), input.name.trim(), "");
 
         setInput({
             name: ""

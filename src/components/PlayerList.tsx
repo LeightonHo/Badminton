@@ -6,28 +6,23 @@ import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { ListItemText } from "@material-ui/core";
+import { removePlayer } from "../helpers/Socket";
 
 interface IProps {
+    sessionId: string,
     config: Props["config"],
     setConfig: React.Dispatch<React.SetStateAction<Props["config"]>>,
     hasGameStarted: boolean
 }
 
-const PlayerList: React.FC<IProps> = ({ config, setConfig, hasGameStarted }) => {
+const PlayerList: React.FC<IProps> = ({ sessionId, config, hasGameStarted }) => {
 
-    const handleDelete = (index: number): void => {
-        config.players.splice(index, 1);
-
-        setConfig({
-            ...config,
-            players: [
-                ...config.players
-            ]
-        });
+    const handleDelete = (userId: string): void => {
+        removePlayer(sessionId, userId);
     }
 
     const renderList = (): JSX.Element[] => {
-        return config.players.map((player, key) => {
+        return config.players?.map((player, key) => {
             return (
                 <ListItem 
                     key={key}
@@ -39,7 +34,7 @@ const PlayerList: React.FC<IProps> = ({ config, setConfig, hasGameStarted }) => 
                             <IconButton 
                                 edge="end" 
                                 aria-label="delete" 
-                                onClick={(() => { handleDelete(key); })}
+                                onClick={(() => { handleDelete(player.userId); })}
                             >
                                 <DeleteIcon /> 
                             </IconButton>
