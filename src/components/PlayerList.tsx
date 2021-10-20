@@ -33,19 +33,15 @@ const PlayerList: React.FC<IProps> = ({ sessionId, config, hasGameStarted }) => 
                         </Avatar>
                     </ListItemAvatar>
                     <ListItemText>{player.alias}</ListItemText>
-                    {
-                        !hasGameStarted
-                        ? <ListItemSecondaryAction>
-                            <IconButton 
-                                edge="end" 
-                                aria-label="delete" 
-                                onClick={(() => { handleDelete(player.userId); })}
-                            >
-                                <DeleteIcon /> 
-                            </IconButton>
-                        </ListItemSecondaryAction>
-                        : ""
-                    }
+                    <ListItemSecondaryAction>
+                        <IconButton 
+                            edge="end" 
+                            aria-label="delete" 
+                            onClick={(() => { handleDelete(player.userId); })}
+                        >
+                            <DeleteIcon /> 
+                        </IconButton>
+                    </ListItemSecondaryAction>
                 </ListItem>
             );
         });

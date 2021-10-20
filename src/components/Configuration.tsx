@@ -21,17 +21,7 @@ const Configuration:React.FC<IProps> = ({ config, setConfig, gameState, sessionI
     const history = useHistory();
     const hasGameStarted: boolean = gameState.length > 0;
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-        if (!isNaN(parseInt(e.target.value))) {
-            setConfig({
-                ...config,
-                rounds: parseInt(e.target.value)
-            });
-        }
-    }
-
     const handleStartClick = () => {
-        // TODO: Invoke the generate round endpoint instead.
         generateRound(sessionId);
 
         // TODO: Move this to the socket listener?
@@ -41,6 +31,7 @@ const Configuration:React.FC<IProps> = ({ config, setConfig, gameState, sessionI
     const disableStartButton = () => {
         const numberOfPlayers = config.players.length;
         const numberOfCourts = config.courts.length;
+        const numberOfPlayersOnBye = config.players.length - (config.courts.length * 4);
 
         if (hasGameStarted) {
             return true;
@@ -58,6 +49,10 @@ const Configuration:React.FC<IProps> = ({ config, setConfig, gameState, sessionI
             return true;
         }
 
+        if (numberOfPlayersOnBye > 3) {
+            return true;
+        }
+
         return false;
     }
 
@@ -70,49 +65,9 @@ const Configuration:React.FC<IProps> = ({ config, setConfig, gameState, sessionI
         downloadAnchorElement?.click();
     }
 
-    const disableInput = () => {
-        return !(isHost && !hasGameStarted);
-    }
-
     const renderConfiguration = () => {
         return (
             <>
-                {/* <Card className="card">
-                    <CardContent className="general-card">
-                        <Typography
-                            variant="h5"
-                        >
-                            General
-                        </Typography>
-                        <TextField
-                            id="inputMatches"
-                            label={`Rounds (${config.rounds.toString()})`}
-                            type="number"
-                            variant="outlined"
-                            size="small"
-                            fullWidth
-                            onChange={handleChange}
-                            placeholder={config.rounds.toString()}
-                            name="name"
-                            className="general-input"
-                            disabled={disableInput()}
-                        />
-                        <TextField
-                            id="inputWinningScore"
-                            label={`Winning Score (${config.winningScore.toString()})`}
-                            type="number"
-                            variant="outlined"
-                            size="small"
-                            fullWidth
-                            onChange={handleChange}
-                            placeholder={config.winningScore.toString()}
-                            name="name"
-                            className="general-input"
-                            disabled={disableInput()}
-                        />
-                    </CardContent>
-                </Card> */}
-
                 <Card className="card courts-card">
                     <CardContent>
                         <Typography
@@ -122,7 +77,7 @@ const Configuration:React.FC<IProps> = ({ config, setConfig, gameState, sessionI
                             Courts ({config.courts.length})
                         </Typography>
                         {
-                            isHost && !hasGameStarted
+                            isHost // && !hasGameStarted
                             ? <CourtForm sessionId={sessionId} config={config} />
                             : ""
                         }
@@ -140,7 +95,7 @@ const Configuration:React.FC<IProps> = ({ config, setConfig, gameState, sessionI
                             Players ({config.players.length})
                         </Typography>
                         {
-                            isHost && !hasGameStarted
+                            isHost // && !hasGameStarted
                             ? <PlayerForm sessionId={sessionId} config={config} />
                             : ""
                         }

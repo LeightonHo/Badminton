@@ -9,6 +9,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Progress from "./Progress";
 
+
 interface IPlayerStats {
     [id: string]: {
         win: number,
@@ -87,19 +88,23 @@ const Scoreboard:React.FC<IProps> = ({ config, gameState }) => {
             for (const match of round.matches) {
                 // Check if the match is finished, based on the configured winning score.
                 // Adjust player stats.
-                if (match.team1.score > match.team2.score) {
-                    result[match.team1.player1.userId].win++;
-                    result[match.team1.player2.userId].win++;
-                    result[match.team2.player3.userId].loss++;
-                    result[match.team2.player4.userId].loss++;
-                } else {
-                    result[match.team1.player1.userId].loss++;
-                    result[match.team1.player2.userId].loss++;
-                    result[match.team2.player3.userId].win++;
-                    result[match.team2.player4.userId].win++;
+                if (match.team1.score && match.team2.score) {
+                    if (match.team1.score > match.team2.score) {
+                        result[match.team1.player1.userId].win++;
+                        result[match.team1.player2.userId].win++;
+                        result[match.team2.player3.userId].loss++;
+                        result[match.team2.player4.userId].loss++;
+                    } else {
+                        result[match.team1.player1.userId].loss++;
+                        result[match.team1.player2.userId].loss++;
+                        result[match.team2.player3.userId].win++;
+                        result[match.team2.player4.userId].win++;
+                    }
                 }
             }
         }
+
+        console.log(config.players)
 
         const sortedResults = sortPlayerStats(result);
 
@@ -111,7 +116,7 @@ const Scoreboard:React.FC<IProps> = ({ config, gameState }) => {
                             hover
                             key={key}
                         >
-                            <TableCell>{playerStat.name} {displayEmoji(key, players.length)}</TableCell>
+                            <TableCell>{getPlayerAlias(playerStat.name)} {displayEmoji(key, players.length)}</TableCell>
                             <TableCell align="right">{playerStat.win}</TableCell>
                             <TableCell align="right">{playerStat.loss}</TableCell>
                             <TableCell align="right">{calculateWinRate(playerStat.win, playerStat.loss)}%</TableCell>
@@ -120,6 +125,14 @@ const Scoreboard:React.FC<IProps> = ({ config, gameState }) => {
                 }) }
             </TableBody>
         );
+    }
+
+    const getPlayerAlias = (userId: string) => {
+        for (const player of config.players) {
+            if (player.userId === userId) {
+                return player.alias;
+            }
+        }
     }
 
     const displayEmoji = (key: number, players: number): string => {
@@ -184,19 +197,25 @@ const Scoreboard:React.FC<IProps> = ({ config, gameState }) => {
     //     let opponentDictionary: { [name: string]: { [name: string]: number } } = { };
     //     let gamesPlayedDictionary: { [name: string]: number} = { };
         
+    //     console.log(config)
+
+    //     if (config.players.length === 0 ) {
+    //         return;
+    //     }
+
     //     // Init dictionaries.
     //     for (const player1 of config.players) {
-    //         partnerDictionary[player1] = { }
-    //         opponentDictionary[player1] = { }
-    //         gamesPlayedDictionary[player1] = 0;
+    //         partnerDictionary[player1.userId] = {}
+    //         opponentDictionary[player1.userId] = {}
+    //         gamesPlayedDictionary[player1.userId] = 0;
 
     //         for (const player2 of config.players) {
-    //             if (player1 === player2) {
+    //             if (player1.userId === player2.userId) {
     //                 continue;
     //             }
 
-    //             partnerDictionary[player1][player2] = 0;
-    //             opponentDictionary[player1][player2] = 0;
+    //             partnerDictionary[player1.userId][player2.userId] = 0;
+    //             opponentDictionary[player1.userId][player2.userId] = 0;
     //         }
     //     }
 
@@ -204,30 +223,30 @@ const Scoreboard:React.FC<IProps> = ({ config, gameState }) => {
     //         // Update bye dictionary.
 
     //         for (const match of game.matches) {
-    //             gamesPlayedDictionary[match.team1.player1]++;
-    //             gamesPlayedDictionary[match.team1.player2]++;
-    //             gamesPlayedDictionary[match.team2.player3]++;
-    //             gamesPlayedDictionary[match.team2.player4]++;
+    //             gamesPlayedDictionary[match.team1.player1.userId]++;
+    //             gamesPlayedDictionary[match.team1.player2.userId]++;
+    //             gamesPlayedDictionary[match.team2.player3.userId]++;
+    //             gamesPlayedDictionary[match.team2.player4.userId]++;
 
     //             // Update partner dictionary.
-    //             partnerDictionary[match.team1.player1][match.team1.player2]++;
-    //             partnerDictionary[match.team1.player2][match.team1.player1]++;
+    //             partnerDictionary[match.team1.player1.userId][match.team1.player2.userId]++;
+    //             partnerDictionary[match.team1.player2.userId][match.team1.player1.userId]++;
 
-    //             partnerDictionary[match.team2.player3][match.team2.player4]++;
-    //             partnerDictionary[match.team2.player4][match.team2.player3]++;
+    //             partnerDictionary[match.team2.player3.userId][match.team2.player4.userId]++;
+    //             partnerDictionary[match.team2.player4.userId][match.team2.player3.userId]++;
 
     //             // Update opponent dictionary.
-    //             opponentDictionary[match.team1.player1][match.team2.player3]++;
-    //             opponentDictionary[match.team1.player1][match.team2.player4]++;
+    //             opponentDictionary[match.team1.player1.userId][match.team2.player3.userId]++;
+    //             opponentDictionary[match.team1.player1.userId][match.team2.player4.userId]++;
 
-    //             opponentDictionary[match.team1.player2][match.team2.player3]++;
-    //             opponentDictionary[match.team1.player2][match.team2.player4]++;
+    //             opponentDictionary[match.team1.player2.userId][match.team2.player3.userId]++;
+    //             opponentDictionary[match.team1.player2.userId][match.team2.player4.userId]++;
 
-    //             opponentDictionary[match.team2.player3][match.team1.player1]++;
-    //             opponentDictionary[match.team2.player3][match.team1.player2]++;
+    //             opponentDictionary[match.team2.player3.userId][match.team1.player1.userId]++;
+    //             opponentDictionary[match.team2.player3.userId][match.team1.player2.userId]++;
 
-    //             opponentDictionary[match.team2.player4][match.team1.player1]++;
-    //             opponentDictionary[match.team2.player4][match.team1.player2]++;
+    //             opponentDictionary[match.team2.player4.userId][match.team1.player1.userId]++;
+    //             opponentDictionary[match.team2.player4.userId][match.team1.player2.userId]++;
     //         }
     //     }
 
@@ -238,19 +257,24 @@ const Scoreboard:React.FC<IProps> = ({ config, gameState }) => {
     //         let playerList = [...config.players];
     //         let partnerStatisticsMessage = `[Partner Statistics] ${player1}: `;
 
-    //         playerList.splice(playerList.indexOf(player1), 1);
+    //         for (let i = 0; i < playerList.length; i++) {
+    //             if (playerList[i].userId === player1) {
+    //                 playerList.splice(i, 1);
+    //                 break;
+    //             }
+    //         }
 
     //         // Generate partner statistics.
     //         playerList.sort((a, b) => {
-    //             return partnerDictionary[player1][b] - partnerDictionary[player1][a];
+    //             return partnerDictionary[player1][b.userId] - partnerDictionary[player1][a.userId];
     //         });
 
     //         for (const player2 of playerList) {
-    //             if (player1 === player2) {
+    //             if (player1 === player2.userId) {
     //                 continue;
     //             }
 
-    //             const gamesPlayedWith = partnerDictionary[player1][player2];
+    //             const gamesPlayedWith = partnerDictionary[player1][player2.userId];
 
     //             partnerStatisticsMessage += `${player2} (${gamesPlayedWith}), `;
     //         }
@@ -264,15 +288,15 @@ const Scoreboard:React.FC<IProps> = ({ config, gameState }) => {
 
     //         // Generate opponent statistics.
     //         playerList.sort((a, b) => {
-    //             return opponentDictionary[player1][b] - opponentDictionary[player1][a];
+    //             return opponentDictionary[player1][b.userId] - opponentDictionary[player1][a.userId];
     //         });
 
     //         for (const player2 of playerList) {
-    //             if (player1 === player2) {
+    //             if (player1 === player2.userId) {
     //                 continue;
     //             }
 
-    //             const gamesPlayedAgainst = opponentDictionary[player1][player2];
+    //             const gamesPlayedAgainst = opponentDictionary[player1][player2.userId];
 
     //             opponentStatisticsMessage += `${player2} (${gamesPlayedAgainst}), `;
     //         }
@@ -284,11 +308,11 @@ const Scoreboard:React.FC<IProps> = ({ config, gameState }) => {
     //     let playerList = [...config.players];
 
     //     playerList.sort((a, b) => {
-    //         return gamesPlayedDictionary[a] - gamesPlayedDictionary[b];
+    //         return gamesPlayedDictionary[a.userId] - gamesPlayedDictionary[b.userId];
     //     });
 
     //     for (const player of playerList) {
-    //         console.log(`${player} played ${gamesPlayedDictionary[player]} times and was on bye ${processedGameData.length - gamesPlayedDictionary[player]} times.`)
+    //         console.log(`${player} played ${gamesPlayedDictionary[player.userId]} times and was on bye ${processedGameData.length - gamesPlayedDictionary[player.userId]} times.`)
     //     }
 
     //     for (const message of partnerStatisticsMessageList) {
@@ -299,8 +323,8 @@ const Scoreboard:React.FC<IProps> = ({ config, gameState }) => {
     //         console.log(message);
     //     }
 
-    //     // console.log({...partnerDictionary});
-    //     // console.log({...opponentDictionary});
+    //     console.log({...partnerDictionary});
+    //     console.log({...opponentDictionary});
 
     //     const messages = partnerStatisticsMessageList.concat(opponentStatisticsMessageList);
 

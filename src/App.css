@@ -155,12 +155,20 @@
 }
 
 /* ROUND ROBIN SCREEN */
+.generate-round-button {
+  margin-top: 15px;
+}
+
 .round-card {
   text-align: center;
 }
 
 .round-card > div {
   padding: 10px 15px 10px 15px !important;
+}
+
+.match-box {
+  margin-top: 5px;
 }
 
 .match-box > div {

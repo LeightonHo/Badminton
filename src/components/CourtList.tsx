@@ -25,19 +25,15 @@ const CourtList: React.FC<IProps> = ({ sessionId, config, hasGameStarted }) => {
             return (
                 <ListItem key={i}>
                     <ListItemText>{court}</ListItemText>
-                    {
-                        !hasGameStarted
-                        ? <ListItemSecondaryAction>
-                            <IconButton 
-                                edge="end" 
-                                aria-label="delete"
-                                onClick={() => { handleDelete(court); }}
-                            >
-                                <DeleteIcon /> 
-                            </IconButton>
-                        </ListItemSecondaryAction>
-                        : ""
-                    }
+                    <ListItemSecondaryAction>
+                        <IconButton 
+                            edge="end" 
+                            aria-label="delete"
+                            onClick={() => { handleDelete(court); }}
+                        >
+                            <DeleteIcon /> 
+                        </IconButton>
+                    </ListItemSecondaryAction>
                 </ListItem>
             )
         });

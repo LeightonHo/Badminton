@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { IState as Props } from "./Main";
 import ByeContainer from "./ByeContainer";
 import Match from "./Match";
@@ -37,6 +37,12 @@ export interface IRound {
 
 const RoundRobin: React.FC<IProps> = ({ gameState, sessionId, isHost, isConnected }) => {
 
+    const [loading, setLoading] = useState(false);
+
+    useEffect(() => {
+        setLoading(false);
+    }, [gameState]);
+
     const renderRoundRobin = () => {
         return (
             <>
@@ -74,7 +80,7 @@ const RoundRobin: React.FC<IProps> = ({ gameState, sessionId, isHost, isConnecte
                                                 >
                                                     <Match 
                                                         match={match} 
-                                                        roundKey={roundKey} 
+                                                        roundKey={round.round - 1} 
                                                         matchKey={matchKey} 
                                                         sessionId={sessionId} 
                                                         isHost={isHost}
@@ -116,22 +122,28 @@ const RoundRobin: React.FC<IProps> = ({ gameState, sessionId, isHost, isConnecte
 
     const handleGenerateRoundClick = () => {
         // TODO: Show spinner
+        setLoading(true);
         generateRound(sessionId);
     }
 
     return (
         <>
             {
+                loading
+                ? <Progress />
+                : ""
+            }
+            {
                 isHost
-                ? <>
+                ? <Box className="generate-round-button config-buttons">
                     <Button
                         variant="contained"
                         color="primary"
                         onClick={handleGenerateRoundClick}
                     >
-                        Next round
+                        Generate Next Round
                     </Button>
-                </>
+                </Box>
                 : ""
             }
             {
