@@ -10,10 +10,10 @@ interface IProps {
     sessionId: string,
     config: Props["config"],
     setConfig: React.Dispatch<React.SetStateAction<Props["config"]>>,
-    hasGameStarted: boolean
+    isHost: boolean
 }
 
-const PlayerList: React.FC<IProps> = ({ sessionId, config, hasGameStarted }) => {
+const PlayerList: React.FC<IProps> = ({ sessionId, config, isHost }) => {
 
     const handleDelete = (player: IPlayer): void => {
         confirmAlert({
@@ -68,14 +68,19 @@ const PlayerList: React.FC<IProps> = ({ sessionId, config, hasGameStarted }) => 
                             color="primary"
                             checked={player.active}
                             onChange={(() => { handleTogglePlayer(player.userId); })}
+                            disabled={!isHost}
                         />
-                        <IconButton 
-                            edge="end" 
-                            aria-label="delete" 
-                            onClick={(() => { handleDelete(player); })}
-                        >
-                            <DeleteIcon /> 
-                        </IconButton>
+                        {
+                            isHost
+                            ? <IconButton 
+                                edge="end" 
+                                aria-label="delete" 
+                                onClick={(() => { handleDelete(player); })}
+                            >
+                                <DeleteIcon /> 
+                            </IconButton>
+                            : ""
+                        }
                     </ListItemSecondaryAction>
                 </ListItem>
             );

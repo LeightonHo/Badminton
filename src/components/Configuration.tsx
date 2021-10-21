@@ -73,11 +73,15 @@ const Configuration:React.FC<IProps> = ({ config, setConfig, gameState, sessionI
                             Courts ({config.courts.length})
                         </Typography>
                         {
-                            isHost // && !hasGameStarted
+                            isHost
                             ? <CourtForm sessionId={sessionId} config={config} />
                             : ""
                         }
-                        <CourtList sessionId={sessionId} config={config} hasGameStarted={hasGameStarted} />
+                        <CourtList 
+                            sessionId={sessionId} 
+                            config={config} 
+                            isHost={isHost} 
+                        />
                     </CardContent>
                 </Card>
 
@@ -99,7 +103,7 @@ const Configuration:React.FC<IProps> = ({ config, setConfig, gameState, sessionI
                             sessionId={sessionId}
                             config={config} 
                             setConfig={setConfig} 
-                            hasGameStarted={hasGameStarted} />
+                            isHost={isHost} />
                     </CardContent>
                 </Card>
 
