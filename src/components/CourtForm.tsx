@@ -46,7 +46,7 @@ const CourtForm: React.FC<IProps> = ({ sessionId, config }) => {
             className="box-text-input"
         >
             <TextField 
-                id="inputPlayer" 
+                id="inputCourt" 
                 className="text-input" 
                 label="Court" 
                 variant="outlined" 

@@ -1,4 +1,4 @@
-import { Card, CardContent, Typography } from "@material-ui/core";
+import { Card, CardContent, TextField, Typography } from "@material-ui/core";
 import React from "react";
 import { IUser } from "../types";
 
@@ -22,6 +22,29 @@ const Profile: React.FC<Prop> = ({ user }) => {
                 >
                     Profile
                 </Typography>
+
+                <TextField 
+                    id="txtName" 
+                    className="text-input" 
+                    label="Name" 
+                    variant="outlined" 
+                    size="small"
+                    type="text"
+                    value={user.name} 
+                    name="Name"
+                    disabled
+                />
+
+                <TextField 
+                    id="inputAlias" 
+                    className="text-input" 
+                    label="Alias" 
+                    variant="outlined" 
+                    size="small"
+                    type="text" 
+                    name="court"
+                />
+
                 <pre>
                     {JSON.stringify(user)}
                 </pre>
