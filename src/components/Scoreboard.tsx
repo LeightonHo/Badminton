@@ -104,8 +104,6 @@ const Scoreboard:React.FC<IProps> = ({ config, gameState }) => {
             }
         }
 
-        console.log(config.players)
-
         const sortedResults = sortPlayerStats(result);
 
         return (
@@ -129,7 +127,7 @@ const Scoreboard:React.FC<IProps> = ({ config, gameState }) => {
 
     const getPlayerAlias = (userId: string) => {
         for (const player of config.players) {
-            if (player.userId === userId) {
+            if (player.userId.toLowerCase() === userId.toLowerCase()) {
                 return player.alias;
             }
         }
