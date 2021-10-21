@@ -21,21 +21,17 @@ const Configuration:React.FC<IProps> = ({ config, setConfig, gameState, sessionI
     const history = useHistory();
     const hasGameStarted: boolean = gameState.length > 0;
 
-    const handleStartClick = () => {
+    const handleGenerateRound = () => {
         generateRound(sessionId);
 
         // TODO: Move this to the socket listener?
         history.push("/round-robin");
     }
 
-    const disableStartButton = () => {
+    const disableGenerateRoundButtton = () => {
         const numberOfPlayers = config.players.length;
         const numberOfCourts = config.courts.length;
         const numberOfPlayersOnBye = config.players.length - (config.courts.length * 4);
-
-        if (hasGameStarted) {
-            return true;
-        }
 
         if (numberOfPlayers == 0) {
             return true;
@@ -95,7 +91,7 @@ const Configuration:React.FC<IProps> = ({ config, setConfig, gameState, sessionI
                             Players ({config.players.length})
                         </Typography>
                         {
-                            isHost // && !hasGameStarted
+                            isHost
                             ? <PlayerForm sessionId={sessionId} config={config} />
                             : ""
                         }
@@ -109,28 +105,28 @@ const Configuration:React.FC<IProps> = ({ config, setConfig, gameState, sessionI
 
                 <Box className="config-buttons">
                     {
-                        !hasGameStarted && isHost
+                        isHost
                         ? <>
                             <Button
                                 variant="contained"
                                 color="primary"
-                                onClick={handleStartClick}
-                                disabled={disableStartButton()}
+                                onClick={handleGenerateRound}
+                                disabled={disableGenerateRoundButtton()}
                             >
-                                Start Session
+                                Generate Round
                             </Button>
                         </>
                         : ""
                     }
                     {
-                        hasGameStarted
+                        hasGameStarted && false
                         ? <>
                             <Button
                                 variant="contained"
                                 color="primary"
                                 onClick={handleExport}
                             >
-                                Export data
+                                Export Data
                             </Button>
                             <a id="downloadAnchorElement"></a>
                         </>

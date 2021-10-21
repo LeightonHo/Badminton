@@ -8,7 +8,8 @@ export interface IConfig {
 export interface IPlayer {
     userId: string,
     alias: string,
-    avatarUrl?: string
+    avatarUrl?: string,
+    active: boolean
 }
 
 export interface IUser {

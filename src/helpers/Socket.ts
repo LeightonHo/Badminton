@@ -194,6 +194,16 @@ export const removePlayer = (sessionId: string, playerId: string) => {
   });
 }
 
+export const togglePlayer = (sessionId: string, playerId: string) => {
+  send({
+    action: "session",
+    method: "toggle_player",
+    userId: userId,
+    sessionId: sessionId,
+    playerId: playerId
+  });
+}
+
 export const pushMatchScore = (sessionId: string, roundKey: number, matchKey: number, team: number, score: number) => {
   send({
     action: "session",

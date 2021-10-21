@@ -134,7 +134,7 @@ const RoundRobin: React.FC<IProps> = ({ gameState, sessionId, isHost, isConnecte
                 : ""
             }
             {
-                isHost
+                isHost && false
                 ? <Box className="generate-round-button config-buttons">
                     <Button
                         variant="contained"

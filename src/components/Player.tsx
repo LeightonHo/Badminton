@@ -86,6 +86,7 @@ const Player: React.FC<IProps> = ({ playerKey, player, roundKey, matchKey, sessi
                     onMouseDown={handlePress}
                     onTouchStart={handlePress}
                     onMouseUp={handleRelease}
+                    onMouseMove={handleRelease}
                     onTouchEnd={handleRelease}
                     onTouchCancel={handleRelease}
                     onTouchMove={handleRelease}
