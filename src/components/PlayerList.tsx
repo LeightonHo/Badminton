@@ -5,6 +5,7 @@ import { Avatar, ListItemAvatar, ListItemText, Switch, IconButton, List, ListIte
 import { removePlayer, togglePlayer } from "../helpers/Socket";
 import { IPlayer } from "../types";
 import { confirmAlert } from "react-confirm-alert";
+import "react-confirm-alert/src/react-confirm-alert.css";
 
 interface IProps {
     sessionId: string,
@@ -17,7 +18,7 @@ const PlayerList: React.FC<IProps> = ({ sessionId, config, isHost }) => {
 
     const handleDelete = (player: IPlayer): void => {
         confirmAlert({
-            title: "Confirm Delete",
+            title: "Confirm",
             message: `Are you sure you want to remove ${player.alias} from the session?`,
             buttons: [
                 {

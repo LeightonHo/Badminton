@@ -1,4 +1,4 @@
-import { Backdrop, Card, CardContent, LinearProgress, Typography } from "@material-ui/core";
+import { Card, CardContent, Typography } from "@material-ui/core";
 import React from "react";
 import { IState as Props } from "./Main";
 import Table from '@material-ui/core/Table';
@@ -8,7 +8,6 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Progress from "./Progress";
-
 
 interface IPlayerStats {
     [id: string]: {

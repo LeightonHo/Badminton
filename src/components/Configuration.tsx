@@ -4,9 +4,10 @@ import CourtList from "./CourtList";
 import PlayerForm from "./PlayerForm";
 import PlayerList from "./PlayerList";
 import { IState as Props } from "./Main";
-import "react-confirm-alert/src/react-confirm-alert.css";
 import { useHistory } from "react-router-dom";
 import { generateRound } from "../helpers/Socket";
+import { confirmAlert } from "react-confirm-alert";
+import { IPlayer } from "../types";
 
 interface IProps {
     config: Props["config"],
@@ -20,18 +21,58 @@ const Configuration:React.FC<IProps> = ({ config, setConfig, gameState, sessionI
     
     const history = useHistory();
     const hasGameStarted: boolean = gameState.length > 0;
+    
+    const getInactivePlayers = (): IPlayer[] => {
+        let result: IPlayer[] = [];
 
-    const handleGenerateRound = () => {
-        generateRound(sessionId);
+        for (const player of config.players) {
+            if (!player.active) {
+                result.push(player);
+            }
+        }
 
-        // TODO: Move this to the socket listener?
-        history.push("/round-robin");
+        return result;
     }
 
-    const disableGenerateRoundButtton = () => {
-        const numberOfPlayers = config.players.length;
+    const handleGenerateRound = () => {
+        // If there are inactive players, ask for confirmation
+        const inactivePlayers = getInactivePlayers();
+
+        if (inactivePlayers.length > 0) {
+            const inactivePlayerAliases = inactivePlayers.map(element => element.alias);
+
+            confirmAlert({
+                title: "Confirm",
+                message: `Are you sure you want to generate a round without the following players? ${inactivePlayerAliases.join(", ")}`,
+                buttons: [
+                    {
+                        label: "Yes",
+                        onClick: () => {
+                            generateRound(sessionId);
+
+                            // TODO: Move this to the socket listener?
+                            history.push("/round-robin");
+                        }
+                    },
+                    {
+                        label: "No",
+                        onClick: () => { }
+                    }
+                ]
+            });
+        } else {
+            generateRound(sessionId);
+
+            // TODO: Move this to the socket listener?
+            history.push("/round-robin");
+        }
+    }
+
+    const disableGenerateRoundButton = (): boolean => {
+        const inactivePlayers = getInactivePlayers();
+        const numberOfPlayers = config.players.length - inactivePlayers.length;
         const numberOfCourts = config.courts.length;
-        const numberOfPlayersOnBye = config.players.length - (config.courts.length * 4);
+        const numberOfPlayersOnBye = numberOfPlayers - (config.courts.length * 4);
 
         if (numberOfPlayers == 0) {
             return true;
@@ -52,7 +93,7 @@ const Configuration:React.FC<IProps> = ({ config, setConfig, gameState, sessionI
         return false;
     }
 
-    const handleExport = () => {
+    const handleExport = (): void => {
         const data = `data:text/json;charsett=utf-8,${encodeURIComponent(JSON.stringify(gameState))}`;
         let downloadAnchorElement = document.getElementById("downloadAnchorElement");
 
@@ -92,7 +133,7 @@ const Configuration:React.FC<IProps> = ({ config, setConfig, gameState, sessionI
                             gutterBottom
                             className="config-card-header"
                         >
-                            Players ({config.players.length})
+                            Players ({config.players.length - getInactivePlayers().length})
                         </Typography>
                         {
                             isHost
@@ -115,7 +156,7 @@ const Configuration:React.FC<IProps> = ({ config, setConfig, gameState, sessionI
                                 variant="contained"
                                 color="primary"
                                 onClick={handleGenerateRound}
-                                disabled={disableGenerateRoundButtton()}
+                                disabled={disableGenerateRoundButton()}
                             >
                                 Generate Round
                             </Button>
