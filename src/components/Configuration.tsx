@@ -8,6 +8,7 @@ import { useHistory } from "react-router-dom";
 import { generateRound } from "../helpers/Socket";
 import { confirmAlert } from "react-confirm-alert";
 import { IPlayer } from "../types";
+import { useState, useEffect } from "react";
 
 interface IProps {
     config: Props["config"],
@@ -48,7 +49,7 @@ const Configuration:React.FC<IProps> = ({ config, setConfig, gameState, sessionI
                     {
                         label: "Yes",
                         onClick: () => {
-                            generateRound(sessionId);
+                            generateRound(sessionId, config);
 
                             // TODO: Move this to the socket listener?
                             history.push("/round-robin");
@@ -61,7 +62,7 @@ const Configuration:React.FC<IProps> = ({ config, setConfig, gameState, sessionI
                 ]
             });
         } else {
-            generateRound(sessionId);
+            generateRound(sessionId, config);
 
             // TODO: Move this to the socket listener?
             history.push("/round-robin");

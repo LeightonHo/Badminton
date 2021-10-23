@@ -2,7 +2,7 @@ import React from "react";
 import { IState as Props } from "./Main";
 import { List, ListItem, ListItemSecondaryAction, ListItemText, IconButton } from "@material-ui/core";
 import { removeCourt } from "../helpers/Socket";
-import DeleteIcon from '@material-ui/icons/Delete';
+import DeleteIcon from "@mui/icons-material/Delete";
 
 interface IProps {
     sessionId: string,

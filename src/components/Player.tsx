@@ -83,13 +83,13 @@ const Player: React.FC<IProps> = ({ playerKey, player, roundKey, matchKey, sessi
             {
                 !input.editing
                 ? <Box
-                    onMouseDown={handlePress}
-                    onTouchStart={handlePress}
-                    onMouseUp={handleRelease}
-                    onMouseMove={handleRelease}
-                    onTouchEnd={handleRelease}
-                    onTouchCancel={handleRelease}
-                    onTouchMove={handleRelease}
+                    // onMouseDown={handlePress}
+                    // onTouchStart={handlePress}
+                    // onMouseUp={handleRelease}
+                    // onMouseMove={handleRelease}
+                    // onTouchEnd={handleRelease}
+                    // onTouchCancel={handleRelease}
+                    // onTouchMove={handleRelease}
                     className="player-box"
                 >
                     {/* <Avatar style={{ margin: "auto", height: "30px", width: "30px" }}> */}

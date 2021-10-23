@@ -120,30 +120,11 @@ const RoundRobin: React.FC<IProps> = ({ gameState, sessionId, isHost, isConnecte
         }
     }
 
-    const handleGenerateRoundClick = () => {
-        // TODO: Show spinner
-        setLoading(true);
-        generateRound(sessionId);
-    }
-
     return (
         <>
             {
                 loading
                 ? <Progress />
-                : ""
-            }
-            {
-                isHost && false
-                ? <Box className="generate-round-button config-buttons">
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={handleGenerateRoundClick}
-                    >
-                        Generate Next Round
-                    </Button>
-                </Box>
                 : ""
             }
             {

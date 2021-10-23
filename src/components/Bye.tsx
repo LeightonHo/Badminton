@@ -79,13 +79,13 @@ const Bye: React.FC<IProps> = ({ byeKey, player, roundKey, sessionId, isHost, is
         <>
             {!input.editing
             ? <Box 
-                onMouseDown={handlePress}
-                onTouchStart={handlePress}
-                onMouseUp={handleRelease}
-                onMouseMove={handleRelease}
-                onTouchEnd={handleRelease}
-                onTouchCancel={handleRelease}
-                onTouchMove={handleRelease}
+                // onMouseDown={handlePress}
+                // onTouchStart={handlePress}
+                // onMouseUp={handleRelease}
+                // onMouseMove={handleRelease}
+                // onTouchEnd={handleRelease}
+                // onTouchCancel={handleRelease}
+                // onTouchMove={handleRelease}
             >
                 <Typography
                     variant="overline"

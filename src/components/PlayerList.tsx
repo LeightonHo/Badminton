@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { IState as Props } from "./Main";
-import DeleteIcon from '@material-ui/icons/Delete';
+import DeleteIcon from "@mui/icons-material/Delete";
 import { Avatar, ListItemAvatar, ListItemText, Switch, IconButton, List, ListItem, ListItemSecondaryAction } from "@material-ui/core";
 import { removePlayer, togglePlayer } from "../helpers/Socket";
 import { IPlayer } from "../types";
@@ -15,6 +15,12 @@ interface IProps {
 }
 
 const PlayerList: React.FC<IProps> = ({ sessionId, config, isHost }) => {
+
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        setLoading(false);
+    }, [config.players])
 
     const handleDelete = (player: IPlayer): void => {
         confirmAlert({
@@ -36,7 +42,14 @@ const PlayerList: React.FC<IProps> = ({ sessionId, config, isHost }) => {
     }
 
     const handleTogglePlayer = (userId: string): void => {
+        setLoading(true);
         togglePlayer(sessionId, userId);
+
+        // config.players[key].active = !config.players[key].active;
+
+        // setConfig({
+        //     ...config
+        // });
     }
 
     const sortPlayers = (a: IPlayer, b: IPlayer) => {
@@ -55,9 +68,8 @@ const PlayerList: React.FC<IProps> = ({ sessionId, config, isHost }) => {
                 >
                     <ListItemAvatar>
                         <Avatar
-                            onClick={() => { handleTogglePlayer(player.userId); }}
                             style={{
-                                border: player.active && false ? '4px solid #55b300' : ""
+                                border: player.active ? "3px solid #55b300" : "3px solid red"
                             }}
                         >
                             <img src={player.avatarUrl} />

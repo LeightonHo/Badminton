@@ -144,11 +144,12 @@ window.addEventListener("scroll", () => {
 });
 
 // Public Socket Helper functions
-export const generateRound = (sessionId: string) => {
+export const generateRound = (sessionId: string, config: IConfig) => {
   send({
     action: "generate_round",
     userId: userId,
-    sessionId: sessionId
+    sessionId: sessionId,
+    config: JSON.stringify(config)
   });
 }
 

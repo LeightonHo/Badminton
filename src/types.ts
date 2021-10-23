@@ -1,6 +1,4 @@
 export interface IConfig {
-    rounds: number,
-    winningScore: number,
     courts: string[],
     players: IPlayer[]
 }

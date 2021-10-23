@@ -64,8 +64,6 @@ const Lobby: React.FunctionComponent<IProps> = ({ gameState, setGameState, confi
         leaveSession(sessionId);
         setGameState([]);
         setConfig({
-            rounds: 15,
-            winningScore: 21,
             courts: [],
             players: []
         });
