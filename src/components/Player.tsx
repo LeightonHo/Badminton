@@ -2,19 +2,19 @@ import { Avatar, Box, Grid, TextField, Typography } from "@material-ui/core";
 import React, { useState, KeyboardEvent } from "react";
 import { updatePlayer } from "../helpers/Socket";
 import { IPlayer } from "../types";
+import { useSelector } from "react-redux";
+import { RootState } from "../redux/Store";
 
 interface IProps {
     playerKey: number,
     player: IPlayer,
     roundKey: number,
     matchKey: number,
-    sessionId: string,
-    isHost: boolean,
-    isConnected: boolean
+    sessionId: string
 }
 
-const Player: React.FC<IProps> = ({ playerKey, player, roundKey, matchKey, sessionId, isHost, isConnected }) => {
-
+const Player: React.FC<IProps> = ({ playerKey, player, roundKey, matchKey, sessionId }) => {
+    const { isHost, isConnected } = useSelector((state: RootState) => state.general);
     const [input, setInput] = useState({
         value: "",
         editing: false,

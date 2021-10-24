@@ -1,25 +1,24 @@
 import { Box, Button, Card, CardContent, TextField, Typography } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router";
-import { IState as Props } from "./Main";
 import { createSession, joinSession, leaveSession } from "../helpers/Socket";
 import Configuration from "./Configuration";
 import Progress from "./Progress";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { syncConfig } from "../redux/Config";
 import { syncGameState } from "../redux/GameState";
+import { RootState } from "../redux/Store";
+import { setIsLoading, setJoinedSession } from "../redux/General";
 
 interface IProps {
     sessionId: string,
-    setSessionId: React.Dispatch<React.SetStateAction<string>>,
-    joinedSession: boolean,
-    setJoinedSession: React.Dispatch<React.SetStateAction<boolean>>,
-    isHost: boolean
+    setSessionId: React.Dispatch<React.SetStateAction<string>>
 }
 
-const Lobby: React.FunctionComponent<IProps> = ({ sessionId, setSessionId, joinedSession, setJoinedSession, isHost }) => {
+const Lobby: React.FunctionComponent<IProps> = ({ sessionId, setSessionId }) => {
 
     const dispatch = useDispatch();
+    const { isLoading, joinedSession } = useSelector((state: RootState) => state.general);
     const history = useHistory();
     const [error, setError] = useState<string>("");
     const [loading, setLoading] = useState<boolean>(false);
@@ -28,6 +27,8 @@ const Lobby: React.FunctionComponent<IProps> = ({ sessionId, setSessionId, joine
     }
 
     useEffect(() => {
+        console.log(isLoading);
+
         // Scenario where the session join was successful.
         if (joinedSession) {
             setError("");
@@ -39,7 +40,7 @@ const Lobby: React.FunctionComponent<IProps> = ({ sessionId, setSessionId, joine
             setError("Unable to join the session.");
             setLoading(false);
         }
-    }, [joinedSession, sessionId]);
+    }, [isLoading, joinedSession, sessionId]);
 
     const handleCreateSession = () => {
         const sessionId = createSession();
@@ -55,7 +56,7 @@ const Lobby: React.FunctionComponent<IProps> = ({ sessionId, setSessionId, joine
             return;
         }
 
-        setLoading(true);
+        dispatch(setIsLoading(true));
         setError("");
         joinSession(sessionId);
     }
@@ -72,14 +73,14 @@ const Lobby: React.FunctionComponent<IProps> = ({ sessionId, setSessionId, joine
             players: []
         }));
         
-        setJoinedSession(false);
+        dispatch(setJoinedSession(false));
         setError("");
     }
 
     return (
         <Box>
             {
-                loading
+                isLoading
                 ? <Progress />
                 : ""
             }
@@ -115,7 +116,7 @@ const Lobby: React.FunctionComponent<IProps> = ({ sessionId, setSessionId, joine
             </Card>
             {
                 joinedSession
-                ? <Configuration sessionId={sessionId} isHost={isHost} />
+                ? <Configuration sessionId={sessionId} />
                 : ""
             }
             <Box className="config-buttons">

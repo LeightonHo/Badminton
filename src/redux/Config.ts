@@ -10,31 +10,31 @@ export const configSlice = createSlice({
 	name: "config",
 	initialState,
 	reducers: {
-		addPlayer: (state, player) => {
-			state.players = [...state.players, player.payload];
+		addPlayer: (state, action) => {
+			state.players = [...state.players, action.payload];
 		},
-		removePlayer: (state, player) => {
+		removePlayer: (state, action) => {
 			for (let i = 0; i < state.players.length; i++) {
-				if (state.players[i].userId === player.payload.userId) {
+				if (state.players[i].userId === action.payload.userId) {
 					state.players.splice(i, 1);
 					break;
 				}
 			}
 		},
-		updatePlayer: (state, player) => {
+		updatePlayer: (state, action) => {
 			for (let i = 0; i < state.players.length; i++) {
-				if (state.players[i].userId === player.payload.userId) {
-					state.players[i] = player.payload;
+				if (state.players[i].userId === action.payload.userId) {
+					state.players[i] = action.payload;
 					break;
 				}
 			}
 		},
-		addCourt: (state, court) => {
-			state.courts = [...state.courts, court.payload]
+		addCourt: (state, action) => {
+			state.courts = [...state.courts, action.payload]
 		},
-		syncConfig: (state, config) => {
-			state.courts = config.payload.courts;
-			state.players = config.payload.players;
+		syncConfig: (state, action) => {
+			state.courts = action.payload.courts;
+			state.players = action.payload.players;
 		}
 	},
 })

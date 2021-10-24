@@ -1,21 +1,27 @@
-import { IConfig, IPlayer, IRound } from "../types";
+import { IConfig } from "../types";
 import store from "../redux/Store";
+import { 
+	setIsConnected,
+	setIsHost,
+	setIsLoading,
+	setJoinedSession, 
+} from "../redux/General";
 import { 
 	addPlayer as reduxAddPlayer, 
 	removePlayer as reduxRemovePlayer,
 	syncConfig,
 	updatePlayer as reduxUpdatePlayer
 } from "../redux/Config";
-import { addRound, syncGameState } from "../redux/GameState";
+import {
+	addRound, 
+	updateScore as reduxUpdateScore,
+	syncGameState 
+} from "../redux/GameState";
 
 let userId: string;
 let sessionId: string;
 let socket: any = null;
-let setGameStateCallback: (gameState: IRound[]) => void;
-let setJoinedSessionCallback: (joinedSession: boolean) => void;
 let setSessionIdCallback: (sessionId: string) => void;
-let setIsConnectedCallback: (isConnected: boolean) => void;
-let setIsHostCallback: (isHost: boolean) => void;
 
 const heartbeat = () => {
 	const payload: any = {
@@ -60,6 +66,10 @@ export const initSocket = (user: string, session: string) => {
 			case "add_round":
 				store.dispatch(addRound(JSON.parse(data.round)));
 				store.dispatch(syncConfig(JSON.parse(data.config)));
+				store.dispatch(setIsLoading(false));
+				break;
+			case "update_score":
+				store.dispatch(reduxUpdateScore(JSON.parse(data.data)));
 				break;
 			case "update_gamestate":
 				store.dispatch(syncGameState(JSON.parse(data.gameState)));
@@ -68,21 +78,22 @@ export const initSocket = (user: string, session: string) => {
 			case "create_session":
 				console.log(data.message);
 				store.dispatch(syncConfig(JSON.parse(data.config)));
-				setJoinedSessionCallback(true);
-				setIsHostCallback(data.isHost);
+				store.dispatch(setJoinedSession(true));
+				store.dispatch(setIsHost(data.isHost));
 				break;
 			case "joined_session":
 				console.log(data.message);
-				setJoinedSessionCallback(true);
-				setIsHostCallback(data.isHost);
+				store.dispatch(setJoinedSession(true));
+				store.dispatch(setIsHost(data.isHost));
 
 				// If no game state is returned, then the game hasn't started yet, so show a loading screen until data is pushed.
 				store.dispatch(syncGameState(JSON.parse(data.gameState)));
 				store.dispatch(syncConfig(JSON.parse(data.config)));
+				store.dispatch(setIsLoading(false));
 				break;
 			case "join_failed":
 				setSessionIdCallback("");
-				setJoinedSessionCallback(false);
+				store.dispatch(setJoinedSession(false));
 				break;
 		}
 	}
@@ -90,13 +101,14 @@ export const initSocket = (user: string, session: string) => {
 	socket.onopen = () => {
 		console.log("WebSocket is connected.");
 		console.log("Joining session");
-		setIsConnectedCallback(true);
+		store.dispatch(setIsConnected(true));
+		store.dispatch(setIsLoading(true));
 		joinSession(sessionId);
 		heartbeat();
 	}
 
 	socket.addEventListener("close", () => {
-		setIsConnectedCallback(false);
+		store.dispatch(setIsConnected(false));
 		console.log("WebSocket is closed.");
 	});
 }
@@ -105,24 +117,8 @@ export const getSocket = () => {
 	return socket;
 }
 
-export const setCallback_SetGameState = (cb: (gameState: IRound[]) => void) => {
-	setGameStateCallback = cb;
-}
-
-export const setCallback_SetJoinedSession = (cb: (joinedSession: boolean) => void) => {
-	setJoinedSessionCallback = cb;
-}
-
 export const setCallback_SetSessionId = (cb: (sessionId: string) => void) => {
 	setSessionIdCallback = cb;
-}
-
-export const setCallback_SetIsConnected = (cb: (isConnected: boolean) => void) => {
-	setIsConnectedCallback = cb;
-}
-
-export const setCallback_SetIsHost = (cb: (isHost: boolean) => void) => {
-	setIsHostCallback = cb;
 }
 
 // setTimeout(() => {
@@ -210,10 +206,10 @@ export const updatePlayer = (sessionId: string, playerId: string) => {
 	});
 }
 
-export const pushMatchScore = (sessionId: string, roundKey: number, matchKey: number, team: number, score: number) => {
+export const updateScore = (sessionId: string, roundKey: number, matchKey: number, team: number, score: number) => {
 	send({
 		action: "session",
-		method: "push_match_score",
+		method: "update_score",
 		userId: userId,
 		sessionId: sessionId,
 		roundKey: roundKey,
@@ -263,6 +259,8 @@ export const createSession = () => {
 }
 
 export const joinSession = (sessionId: string) => {
+	store.dispatch(setIsLoading(true));
+
 	send({
 		action: "session",
 		method: "join",

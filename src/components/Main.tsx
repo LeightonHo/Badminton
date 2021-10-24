@@ -13,11 +13,7 @@ import Lobby from "./Lobby";
 import {
 	getSocket,
 	initSocket,
-	setCallback_SetGameState,
-	setCallback_SetJoinedSession,
-	setCallback_SetSessionId,
-	setCallback_SetIsConnected,
-	setCallback_SetIsHost
+	setCallback_SetSessionId
 } from "../helpers/Socket";
 import Profile from "./Profile";
 import { Avatar, BottomNavigation, BottomNavigationAction, Paper } from "@material-ui/core";
@@ -26,6 +22,7 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
 import { RootState } from "../redux/Store";
 import { useSelector } from "react-redux";
+import Progress from "./Progress";
 
 interface Prop {
 	user: IUser
@@ -53,36 +50,21 @@ const useStickyState = (defaultValue: (IRound[] | IConfig | string), key: string
 }
 
 const Main: React.FC<Prop> = ({ user }) => {
-
+    const { isLoading, joinedSession, isHost, isConnected } = useSelector((state: RootState) => state.general);
 	const { rounds } = useSelector((state: RootState) => state.gameState);
 	const history = useHistory();
 	const handleNavigation = (path: string) => {
 		history.push(path);
 	}
-
 	const [navigation, setNavigation] = useState<string>();
-	const [isConnected, setIsConnected] = useState<boolean>(false);
-	const [isHost, setIsHost] = useState<boolean>(false);
 	const [sessionId, setSessionId] = useStickyState("", "badminton-session-code");
-	const [joinedSession, setJoinedSession] = useState<boolean>(false);
-	const [gameState, setGameState] = useState<IState["gameState"]>([]);
-	const [config, setConfig] = useState<IConfig>({
-		courts: [],
-		players: []
-	});
-	const socket: WebSocket = getSocket();
 
 	useEffect(() => {
 		if (!user.userId) {
 			return;
 		}
 
-		setCallback_SetGameState(setGameState);
-		setCallback_SetJoinedSession(setJoinedSession);
 		setCallback_SetSessionId(setSessionId);
-		setCallback_SetIsConnected(setIsConnected);
-		setCallback_SetIsHost(setIsHost);
-
 		initSocket(user.userId, sessionId);
 	}, [user]);
 
@@ -121,22 +103,16 @@ const Main: React.FC<Prop> = ({ user }) => {
 						<div className={classes.grow} />
 						<div className={classes.sectionDesktop}>
 							{
-								joinedSession
-									? <>
-										{
-											gameState.length > 0
-												? <>
-													<IconButton color="inherit" onClick={(() => { handleNavigation("/round-robin") })}>
-														<Typography>Games</Typography>
-													</IconButton>
-													<IconButton color="inherit" onClick={(() => { handleNavigation("/scoreboard") })}>
-														<Typography>Scoreboard</Typography>
-													</IconButton>
-												</>
-												: ""
-										}
-									</>
-									: ""
+								joinedSession && rounds.length > 0
+								? <>
+									<IconButton color="inherit" onClick={(() => { handleNavigation("/round-robin") })}>
+										<Typography>Games</Typography>
+									</IconButton>
+									<IconButton color="inherit" onClick={(() => { handleNavigation("/scoreboard") })}>
+										<Typography>Scoreboard</Typography>
+									</IconButton>
+								</>
+								: ""
 							}
 							<IconButton color="inherit" onClick={(() => { handleNavigation("/lobby") })}>
 								<Typography>Lobby</Typography>
@@ -162,6 +138,12 @@ const Main: React.FC<Prop> = ({ user }) => {
 		<Box className="App">
 			{BuildNavBar()}
 
+			{
+				isLoading
+				? <Progress />
+				: ""
+			}
+
 			<Box className="app-body">
 				<Switch>
 					<Route
@@ -179,22 +161,20 @@ const Main: React.FC<Prop> = ({ user }) => {
 						<Lobby
 							sessionId={sessionId}
 							setSessionId={setSessionId}
-							joinedSession={joinedSession}
-							setJoinedSession={setJoinedSession}
-							isHost={isHost}
 						/>
 					</Route>
 					<Route path="/round-robin">
-						<RoundRobin sessionId={sessionId} isHost={isHost} isConnected={isConnected} />
+						<RoundRobin sessionId={sessionId} />
 					</Route>
 					<Route path="/scoreboard">
-						<Scoreboard config={config} gameState={gameState} />
+						<Scoreboard />
 					</Route>
 					<Route path="/profile">
 						<Profile user={user} />
 					</Route>
 				</Switch>
 			</Box>
+
 			{
 				joinedSession && rounds.length
 					? <Paper className="bottom-navigation" style={{ position: "fixed", bottom: 0, left: 0, right: 0 }} elevation={1}>
@@ -222,7 +202,6 @@ const Main: React.FC<Prop> = ({ user }) => {
 					</Paper>
 					: ""
 			}
-
 		</Box>
 	);
 }

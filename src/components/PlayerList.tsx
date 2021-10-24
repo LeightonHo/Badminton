@@ -76,25 +76,25 @@ const PlayerList: React.FC<IProps> = ({ sessionId, isHost }) => {
                         </Avatar>
                     </ListItemAvatar>
                     <ListItemText>{player.alias}</ListItemText>
-                    <ListItemSecondaryAction>
-                        <Switch
-                            color="primary"
-                            checked={player.active}
-                            onChange={(() => { handleTogglePlayer(key); })}
-                            disabled={!isHost}
-                        />
-                        {
-                            isHost
-                            ? <IconButton 
+                    {
+                        isHost
+                        ?  <ListItemSecondaryAction>
+                            <Switch
+                                color="primary"
+                                checked={player.active}
+                                onChange={(() => { handleTogglePlayer(key); })}
+                                disabled={!isHost}
+                            />
+                            <IconButton 
                                 edge="end" 
                                 aria-label="delete" 
                                 onClick={(() => { handleDelete(player); })}
                             >
                                 <DeleteIcon /> 
                             </IconButton>
-                            : ""
-                        }
-                    </ListItemSecondaryAction>
+                        </ListItemSecondaryAction>
+                        : ""
+                    }
                 </ListItem>
             );
         });

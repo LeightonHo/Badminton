@@ -6,12 +6,10 @@ import { IState as Props} from "./Main";
 interface IProps {
     players: Props["config"]["players"]
     roundKey: number,
-    sessionId: string,
-    isHost: boolean,
-    isConnected: boolean
+    sessionId: string
 }
 
-const ByeContainer: React.FC<IProps> = ({ players, roundKey, sessionId, isHost, isConnected }) => {
+const ByeContainer: React.FC<IProps> = ({ players, roundKey, sessionId }) => {
 
     return (
         <Box className="divBye">
@@ -23,8 +21,6 @@ const ByeContainer: React.FC<IProps> = ({ players, roundKey, sessionId, isHost, 
                         player={player.alias} 
                         roundKey={roundKey}
                         sessionId={sessionId}
-                        isHost={isHost}
-                        isConnected={isConnected}
                     />
                 )
             })}

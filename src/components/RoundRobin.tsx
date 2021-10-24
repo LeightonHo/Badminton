@@ -1,22 +1,15 @@
-import React, { useEffect, useState } from "react";
 import ByeContainer from "./ByeContainer";
 import Match from "./Match";
 import { Box, Card, CardContent, Divider, Grid, Typography } from "@material-ui/core";
-import Progress from "./Progress";
-import { IPlayer, IRound, IMatch } from "../types";
 import { useSelector } from "react-redux";
 import { RootState } from "../redux/Store";
 
 export interface IProps {
-    sessionId: string,
-    isHost: boolean,
-    isConnected: boolean
+    sessionId: string
 }
 
-const RoundRobin: React.FC<IProps> = ({ sessionId, isHost, isConnected }) => {
-
+const RoundRobin: React.FC<IProps> = ({ sessionId }) => {
     const { rounds } = useSelector((state: RootState) => state.gameState);
-    const [loading, setLoading] = useState(false);
 
     const renderRoundRobin = () => {
         return (
@@ -58,8 +51,6 @@ const RoundRobin: React.FC<IProps> = ({ sessionId, isHost, isConnected }) => {
                                                         roundKey={round.round - 1} 
                                                         matchKey={matchKey} 
                                                         sessionId={sessionId} 
-                                                        isHost={isHost}
-                                                        isConnected={isConnected}
                                                     />
                                                 </Grid>
                                                 {addMatchDivider(matchKey, round.matches.length)}
@@ -74,8 +65,6 @@ const RoundRobin: React.FC<IProps> = ({ sessionId, isHost, isConnected }) => {
                                             players={round.byes} 
                                             roundKey={roundKey} 
                                             sessionId={sessionId} 
-                                            isHost={isHost}
-                                            isConnected={isConnected}
                                         />
                                     </Grid>
                                 </Grid>
@@ -97,16 +86,7 @@ const RoundRobin: React.FC<IProps> = ({ sessionId, isHost, isConnected }) => {
 
     return (
         <>
-            {
-                loading
-                ? <Progress />
-                : ""
-            }
-            {
-                rounds.length === 0
-                ? <Progress />
-                : renderRoundRobin()
-            }
+            {renderRoundRobin()}
         </>
     );
 }

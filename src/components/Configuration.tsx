@@ -7,20 +7,22 @@ import { useHistory } from "react-router-dom";
 import { generateRound } from "../helpers/Socket";
 import { confirmAlert } from "react-confirm-alert";
 import { IPlayer } from "../types";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../redux/Store";
+import { setIsLoading } from "../redux/General";
 
 interface IProps {
-    sessionId: string,
-    isHost: boolean
+    sessionId: string
 }
 
-const Configuration:React.FC<IProps> = ({ sessionId, isHost }) => {
+const Configuration:React.FC<IProps> = ({ sessionId }) => {
     
     const history = useHistory();
+    const dispatch = useDispatch();
+    const { isHost } = useSelector((state: RootState) => state.general);
+    const { players, courts } = useSelector((state: RootState) => state.config);
     const { rounds } = useSelector((state: RootState) => state.gameState);
     const hasGameStarted: boolean = rounds.length > 0;
-    const { players, courts } = useSelector((state: RootState) => state.config);
     
     const getInactivePlayers = (): IPlayer[] => {
         let result: IPlayer[] = [];
@@ -48,6 +50,7 @@ const Configuration:React.FC<IProps> = ({ sessionId, isHost }) => {
                     {
                         label: "Yes",
                         onClick: () => {
+                            dispatch(setIsLoading(true));
                             generateRound(sessionId, {
                                 courts: courts,
                                 players: players
@@ -64,6 +67,7 @@ const Configuration:React.FC<IProps> = ({ sessionId, isHost }) => {
                 ]
             });
         } else {
+            dispatch(setIsLoading(true));
             generateRound(sessionId, {
                 courts: courts,
                 players: players

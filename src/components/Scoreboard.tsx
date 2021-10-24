@@ -1,5 +1,4 @@
 import { Card, CardContent, Typography } from "@material-ui/core";
-import React from "react";
 import { IState as Props } from "./Main";
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -8,6 +7,8 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Progress from "./Progress";
+import { RootState } from "../redux/Store";
+import { useSelector } from "react-redux";
 
 interface IPlayerStats {
     [id: string]: {
@@ -16,15 +17,12 @@ interface IPlayerStats {
     }
 }
 
-interface IProps {
-    config: Props["config"],
-    gameState: Props["gameState"]
-}
+const Scoreboard = () => {
 
-const Scoreboard:React.FC<IProps> = ({ config, gameState }) => {
-
-    const players: string[] = [];
-    const processedGameData: Props["gameState"] = JSON.parse(JSON.stringify(gameState));
+    const playerList: string[] = [];
+    const { players } = useSelector((state: RootState) => state.config);
+    const { rounds } = useSelector((state: RootState) => state.gameState);
+    const processedGameData: Props["gameState"] = JSON.parse(JSON.stringify(rounds));
 
     const cleanPlayerName = (player: string): string => {
         const indexOfAsterisk = player.indexOf("*");
@@ -51,20 +49,20 @@ const Scoreboard:React.FC<IProps> = ({ config, gameState }) => {
         // Get all the unique players in the game data
         for (const round of processedGameData) {
             for (const match of round.matches) {
-                if (players.indexOf(match.team1.player1.userId) < 0) {
-                    players.push(match.team1.player1.userId);
+                if (playerList.indexOf(match.team1.player1.userId) < 0) {
+                    playerList.push(match.team1.player1.userId);
                 }
 
-                if (players.indexOf(match.team1.player2.userId) < 0) {
-                    players.push(match.team1.player2.userId);
+                if (playerList.indexOf(match.team1.player2.userId) < 0) {
+                    playerList.push(match.team1.player2.userId);
                 }
 
-                if (players.indexOf(match.team2.player3.userId) < 0) {
-                    players.push(match.team2.player3.userId);
+                if (playerList.indexOf(match.team2.player3.userId) < 0) {
+                    playerList.push(match.team2.player3.userId);
                 }
 
-                if (players.indexOf(match.team2.player4.userId) < 0) {
-                    players.push(match.team2.player4.userId);
+                if (playerList.indexOf(match.team2.player4.userId) < 0) {
+                    playerList.push(match.team2.player4.userId);
                 }
             }
         }
@@ -76,7 +74,7 @@ const Scoreboard:React.FC<IProps> = ({ config, gameState }) => {
         preprocessGameData();
         initPlayers();
 
-        for (const player of players) {
+        for (const player of playerList) {
             result[player] = {
                 win: 0,
                 loss: 0
@@ -113,7 +111,7 @@ const Scoreboard:React.FC<IProps> = ({ config, gameState }) => {
                             hover
                             key={key}
                         >
-                            <TableCell>{getPlayerAlias(playerStat.name)} {displayEmoji(key, players.length)}</TableCell>
+                            <TableCell>{getPlayerAlias(playerStat.name)} {displayEmoji(key, playerList.length)}</TableCell>
                             <TableCell align="right">{playerStat.win}</TableCell>
                             <TableCell align="right">{playerStat.loss}</TableCell>
                             <TableCell align="right">{calculateWinRate(playerStat.win, playerStat.loss)}%</TableCell>
@@ -125,7 +123,7 @@ const Scoreboard:React.FC<IProps> = ({ config, gameState }) => {
     }
 
     const getPlayerAlias = (userId: string) => {
-        for (const player of config.players) {
+        for (const player of players) {
             if (player.userId.toLowerCase() === userId.toLowerCase()) {
                 return player.alias;
             }
@@ -372,7 +370,7 @@ const Scoreboard:React.FC<IProps> = ({ config, gameState }) => {
     return (
         <>
             {
-                gameState.length === 0
+                rounds.length === 0
                 ? <Progress />
                 : renderScoreboard()
             }

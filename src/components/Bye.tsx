@@ -1,18 +1,18 @@
 import { Box, TextField, Typography } from "@material-ui/core";
 import React, { useState, KeyboardEvent } from "react";
+import { useSelector } from "react-redux";
 import { updateBye } from "../helpers/Socket";
+import { RootState } from "../redux/Store";
 
 interface IProps {
     byeKey: number,
     player: string,
     roundKey: number,
-    sessionId: string,
-    isHost: boolean,
-    isConnected: boolean
+    sessionId: string
 }
 
-const Bye: React.FC<IProps> = ({ byeKey, player, roundKey, sessionId, isHost, isConnected }) => {
-
+const Bye: React.FC<IProps> = ({ byeKey, player, roundKey, sessionId }) => {
+    const { isHost, isConnected } = useSelector((state: RootState) => state.general);
     const [input, setInput] = useState({
         previousValue: "",
         value: "",

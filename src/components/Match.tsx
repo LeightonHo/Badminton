@@ -9,11 +9,9 @@ interface IProps {
     roundKey: number,
     matchKey: number,
     sessionId: string,
-    isHost: boolean,
-    isConnected: boolean
 }
 
-const Match: React.FC<IProps> = ({ match, roundKey, matchKey, sessionId, isHost, isConnected }) => {
+const Match: React.FC<IProps> = ({ match, roundKey, matchKey, sessionId }) => {
 
     return (
         <Grid
@@ -44,8 +42,6 @@ const Match: React.FC<IProps> = ({ match, roundKey, matchKey, sessionId, isHost,
                     roundKey={roundKey} 
                     matchKey={matchKey}
                     sessionId={sessionId}
-                    isHost={isHost}
-                    isConnected={isConnected}
                 />
                 <Player 
                     playerKey={2}
@@ -53,8 +49,6 @@ const Match: React.FC<IProps> = ({ match, roundKey, matchKey, sessionId, isHost,
                     roundKey={roundKey}
                     matchKey={matchKey}
                     sessionId={sessionId}
-                    isHost={isHost}
-                    isConnected={isConnected}
                 />
                 <Score 
                     team={1} 
@@ -62,7 +56,6 @@ const Match: React.FC<IProps> = ({ match, roundKey, matchKey, sessionId, isHost,
                     roundKey={roundKey} 
                     matchKey={matchKey}
                     sessionId={sessionId} 
-                    isConnected={isConnected}
                 />
             </Grid>
             <Grid
@@ -82,8 +75,6 @@ const Match: React.FC<IProps> = ({ match, roundKey, matchKey, sessionId, isHost,
                     roundKey={roundKey} 
                     matchKey={matchKey}
                     sessionId={sessionId}
-                    isHost={isHost}
-                    isConnected={isConnected}
                 />
                 <Player 
                     playerKey={4}
@@ -91,8 +82,6 @@ const Match: React.FC<IProps> = ({ match, roundKey, matchKey, sessionId, isHost,
                     roundKey={roundKey} 
                     matchKey={matchKey}
                     sessionId={sessionId}
-                    isHost={isHost}
-                    isConnected={isConnected}
                 />
                 <Score 
                     team={2} 
@@ -100,7 +89,6 @@ const Match: React.FC<IProps> = ({ match, roundKey, matchKey, sessionId, isHost,
                     roundKey={roundKey}
                     matchKey={matchKey} 
                     sessionId={sessionId} 
-                    isConnected={isConnected}
                 />
             </Grid>
         </Grid>
