@@ -10,11 +10,7 @@ import RoundRobin from "./RoundRobin";
 import Scoreboard from "./Scoreboard";
 import { IConfig, IUser, IRound } from "../types";
 import Lobby from "./Lobby";
-import {
-	getSocket,
-	initSocket,
-	setCallback_SetSessionId
-} from "../helpers/Socket";
+import { initSocket, setCallback_SetSessionId } from "../helpers/Socket";
 import Profile from "./Profile";
 import { Avatar, BottomNavigation, BottomNavigationAction, Paper } from "@material-ui/core";
 import SettingsIcon from "@mui/icons-material/Settings";
@@ -54,7 +50,8 @@ const Main: React.FC<Prop> = ({ user }) => {
 	const { rounds } = useSelector((state: RootState) => state.gameState);
 	const history = useHistory();
 	const handleNavigation = (path: string) => {
-		history.push(path);
+		history.replace(path);
+		window.scrollTo({ top: 0, behavior: 'smooth' });
 	}
 	const [navigation, setNavigation] = useState<string>();
 	const [sessionId, setSessionId] = useStickyState("", "badminton-session-code");
@@ -90,12 +87,13 @@ const Main: React.FC<Prop> = ({ user }) => {
 		const classes = useStyles();
 
 		const handleNavigation = (path: string) => {
-			history.push(path);
+			history.replace(path);
+			window.scrollTo({ top: 0, behavior: "smooth" });
 		}
 
 		return (
 			<div className={classes.grow}>
-				<AppBar position="sticky">
+				<AppBar position="fixed" >
 					<Toolbar>
 						<Typography className={classes.title} variant="h5" noWrap>
 							Sunday Badminton

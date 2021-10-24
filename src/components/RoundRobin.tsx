@@ -13,7 +13,7 @@ const RoundRobin: React.FC<IProps> = ({ sessionId }) => {
 
     const renderRoundRobin = () => {
         return (
-            <>
+            <Box className="main-content">
                 {[...rounds].reverse().map((round, roundKey) => {
                     return (
                         <Card 
@@ -72,7 +72,7 @@ const RoundRobin: React.FC<IProps> = ({ sessionId }) => {
                         </Card>
                     );
                 })}
-            </>
+            </Box>
         );
     }
 

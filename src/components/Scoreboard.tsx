@@ -1,4 +1,4 @@
-import { Card, CardContent, Typography } from "@material-ui/core";
+import { Box, Card, CardContent, Typography } from "@material-ui/core";
 import { IState as Props } from "./Main";
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -67,7 +67,7 @@ const Scoreboard = () => {
             }
         }
     }
-    
+
     const generateTableBody = () => {
         let result: IPlayerStats = {}
 
@@ -105,7 +105,7 @@ const Scoreboard = () => {
 
         return (
             <TableBody>
-                { sortedResults.map((playerStat, key) => {
+                {sortedResults.map((playerStat, key) => {
                     return (
                         <TableRow
                             hover
@@ -117,7 +117,7 @@ const Scoreboard = () => {
                             <TableCell align="right">{calculateWinRate(playerStat.win, playerStat.loss)}%</TableCell>
                         </TableRow>
                     );
-                }) }
+                })}
             </TableBody>
         );
     }
@@ -167,7 +167,7 @@ const Scoreboard = () => {
                     if (a.name < b.name) {
                         return -1;
                     }
-                    
+
                     return a.name > b.name ? 1 : 0;
                 }
 
@@ -185,13 +185,13 @@ const Scoreboard = () => {
 
         return Math.round(win / (win + loss) * 100);
     }
-    
+
     // const generateStatistics = () => {
     //     let playerCourtDictionary: { [name: string]: { [name: string]: number } };
     //     let partnerDictionary: { [name: string]: { [name: string]: number } } = { };
     //     let opponentDictionary: { [name: string]: { [name: string]: number } } = { };
     //     let gamesPlayedDictionary: { [name: string]: number} = { };
-        
+
     //     console.log(config)
 
     //     if (config.players.length === 0 ) {
@@ -273,7 +273,7 @@ const Scoreboard = () => {
 
     //             partnerStatisticsMessage += `${player2} (${gamesPlayedWith}), `;
     //         }
-            
+
     //         partnerStatisticsMessageList.push(partnerStatisticsMessage);
     //     }
 
@@ -341,29 +341,31 @@ const Scoreboard = () => {
 
     const renderScoreboard = () => {
         return (
-            <Card className="card">
-                <CardContent>
-                    <Typography 
-                        variant="h5"
-                        gutterBottom
-                    >
-                        Scoreboard
-                    </Typography>
-                    <TableContainer>
-                        <Table padding="none" className="scoreboard-table">
-                            <TableHead className="scoreboard-header">
-                                <TableRow>
-                                    <TableCell>Name</TableCell>
-                                    <TableCell align="right">Win</TableCell>
-                                    <TableCell align="right">Loss</TableCell>
-                                    <TableCell align="right">Win Rate</TableCell>
-                                </TableRow>
-                            </TableHead>
-                            {generateTableBody()}
-                        </Table>
-                    </TableContainer>
-                </CardContent>
-            </Card>
+            <Box className="main-content">
+                <Card className="card">
+                    <CardContent>
+                        <Typography
+                            variant="h5"
+                            gutterBottom
+                        >
+                            Scoreboard
+                        </Typography>
+                        <TableContainer>
+                            <Table padding="none" className="scoreboard-table">
+                                <TableHead className="scoreboard-header">
+                                    <TableRow>
+                                        <TableCell>Name</TableCell>
+                                        <TableCell align="right">Win</TableCell>
+                                        <TableCell align="right">Loss</TableCell>
+                                        <TableCell align="right">Win Rate</TableCell>
+                                    </TableRow>
+                                </TableHead>
+                                {generateTableBody()}
+                            </Table>
+                        </TableContainer>
+                    </CardContent>
+                </Card>
+            </Box>
         );
     }
 
@@ -371,8 +373,8 @@ const Scoreboard = () => {
         <>
             {
                 rounds.length === 0
-                ? <Progress />
-                : renderScoreboard()
+                    ? <Progress />
+                    : renderScoreboard()
             }
 
             {/* {generateStatistics()} */}

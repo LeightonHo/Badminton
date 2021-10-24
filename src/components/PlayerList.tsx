@@ -1,4 +1,3 @@
-import React, { useEffect, useState } from "react";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { Avatar, ListItemAvatar, ListItemText, Switch, IconButton, List, ListItem, ListItemSecondaryAction } from "@material-ui/core";
 import { removePlayer } from "../helpers/Socket";
@@ -10,19 +9,13 @@ import { RootState } from "../redux/Store";
 import { updatePlayer } from "../redux/Config";
 
 interface IProps {
-    sessionId: string,
-    isHost: boolean
+    sessionId: string
 }
 
-const PlayerList: React.FC<IProps> = ({ sessionId, isHost }) => {
-
-    const [loading, setLoading] = useState(true);
+const PlayerList: React.FC<IProps> = ({ sessionId }) => {
+    const { isHost } = useSelector((state: RootState) => state.general);
     const { players } = useSelector((state: RootState) => state.config);
     const dispatch = useDispatch();
-
-    useEffect(() => {
-        setLoading(false);
-    }, [players])
 
     const handleDelete = (player: IPlayer): void => {
         confirmAlert({

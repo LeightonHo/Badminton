@@ -4,7 +4,10 @@ const Progress = () => {
     return (
         <>
             <Backdrop
-                style={{ color: '#fff', zIndex: 99 }}
+                style={{ 
+                    opacity: "30%",
+                    color: '#fff', 
+                    zIndex: 99 }}
                 open={true}
             />
             <LinearProgress 

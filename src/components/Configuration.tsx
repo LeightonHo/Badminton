@@ -149,10 +149,7 @@ const Configuration:React.FC<IProps> = ({ sessionId }) => {
                             ? <PlayerForm sessionId={sessionId} />
                             : ""
                         }
-                        <PlayerList 
-                            sessionId={sessionId}
-                            isHost={isHost} 
-                        />
+                        <PlayerList sessionId={sessionId} />
                     </CardContent>
                 </Card>
 

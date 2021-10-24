@@ -1,6 +1,5 @@
 import { Box, Button, Card, CardContent, TextField, Typography } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
-import { useHistory } from "react-router";
 import { createSession, joinSession, leaveSession } from "../helpers/Socket";
 import Configuration from "./Configuration";
 import Progress from "./Progress";
@@ -16,10 +15,8 @@ interface IProps {
 }
 
 const Lobby: React.FunctionComponent<IProps> = ({ sessionId, setSessionId }) => {
-
     const dispatch = useDispatch();
     const { isLoading, joinedSession } = useSelector((state: RootState) => state.general);
-    const history = useHistory();
     const [error, setError] = useState<string>("");
     const [loading, setLoading] = useState<boolean>(false);
     const handleSessionChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
@@ -27,8 +24,6 @@ const Lobby: React.FunctionComponent<IProps> = ({ sessionId, setSessionId }) => 
     }
 
     useEffect(() => {
-        console.log(isLoading);
-
         // Scenario where the session join was successful.
         if (joinedSession) {
             setError("");
@@ -78,7 +73,7 @@ const Lobby: React.FunctionComponent<IProps> = ({ sessionId, setSessionId }) => 
     }
 
     return (
-        <Box>
+        <Box className="main-content">
             {
                 isLoading
                 ? <Progress />
