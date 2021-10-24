@@ -9,12 +9,11 @@ interface IProps {
     playerKey: number,
     player: IPlayer,
     roundKey: number,
-    matchKey: number,
-    sessionId: string
+    matchKey: number
 }
 
-const Player: React.FC<IProps> = ({ playerKey, player, roundKey, matchKey, sessionId }) => {
-    const { isHost, isConnected } = useSelector((state: RootState) => state.general);
+const Player: React.FC<IProps> = ({ playerKey, player, roundKey, matchKey }) => {
+    const { sessionId, isHost, isConnected } = useSelector((state: RootState) => state.general);
     const [input, setInput] = useState({
         value: "",
         editing: false,

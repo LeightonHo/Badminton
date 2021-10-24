@@ -4,11 +4,7 @@ import { Box, Card, CardContent, Divider, Grid, Typography } from "@material-ui/
 import { useSelector } from "react-redux";
 import { RootState } from "../redux/Store";
 
-export interface IProps {
-    sessionId: string
-}
-
-const RoundRobin: React.FC<IProps> = ({ sessionId }) => {
+const RoundRobin = () => {
     const { rounds } = useSelector((state: RootState) => state.gameState);
 
     const renderRoundRobin = () => {
@@ -50,7 +46,6 @@ const RoundRobin: React.FC<IProps> = ({ sessionId }) => {
                                                         match={match} 
                                                         roundKey={round.round - 1} 
                                                         matchKey={matchKey} 
-                                                        sessionId={sessionId} 
                                                     />
                                                 </Grid>
                                                 {addMatchDivider(matchKey, round.matches.length)}
@@ -64,7 +59,6 @@ const RoundRobin: React.FC<IProps> = ({ sessionId }) => {
                                         <ByeContainer 
                                             players={round.byes} 
                                             roundKey={roundKey} 
-                                            sessionId={sessionId} 
                                         />
                                     </Grid>
                                 </Grid>

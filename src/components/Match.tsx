@@ -7,11 +7,10 @@ import { IMatch } from "../types";
 interface IProps {
     match: IMatch,
     roundKey: number,
-    matchKey: number,
-    sessionId: string,
+    matchKey: number
 }
 
-const Match: React.FC<IProps> = ({ match, roundKey, matchKey, sessionId }) => {
+const Match: React.FC<IProps> = ({ match, roundKey, matchKey }) => {
 
     return (
         <Grid
@@ -41,21 +40,18 @@ const Match: React.FC<IProps> = ({ match, roundKey, matchKey, sessionId }) => {
                     player={match.team1.player1}
                     roundKey={roundKey} 
                     matchKey={matchKey}
-                    sessionId={sessionId}
                 />
                 <Player 
                     playerKey={2}
                     player={match.team1.player2}
                     roundKey={roundKey}
                     matchKey={matchKey}
-                    sessionId={sessionId}
                 />
                 <Score 
                     team={1} 
                     score={match.team1.score} 
                     roundKey={roundKey} 
                     matchKey={matchKey}
-                    sessionId={sessionId} 
                 />
             </Grid>
             <Grid
@@ -74,21 +70,18 @@ const Match: React.FC<IProps> = ({ match, roundKey, matchKey, sessionId }) => {
                     player={match.team2.player3}
                     roundKey={roundKey} 
                     matchKey={matchKey}
-                    sessionId={sessionId}
                 />
                 <Player 
                     playerKey={4}
                     player={match.team2.player4}
                     roundKey={roundKey} 
                     matchKey={matchKey}
-                    sessionId={sessionId}
                 />
                 <Score 
                     team={2} 
                     score={match.team2.score} 
                     roundKey={roundKey}
                     matchKey={matchKey} 
-                    sessionId={sessionId} 
                 />
             </Grid>
         </Grid>

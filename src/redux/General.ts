@@ -1,18 +1,25 @@
 import { createSlice } from '@reduxjs/toolkit'
 
 const initialState: any = {
+    userId: "",
+    sessionId: "",
 	isHost: false,
     isConnected: false,
     isLoading: false,
     isJoiningSession: false,
-    joinedSession: false,
-    sessionId: ""
+    joinedSession: false
 }
 
 export const configSlice = createSlice({
 	name: "general",
 	initialState,
 	reducers: {
+        setUserId: (state, action) => {
+            state.userId = action.payload;
+        },
+        setSessionId: (state, action) => {
+            state.sessionId = action.payload;
+        },
 		setIsHost: (state, action) => {
 			state.isHost = action.payload;
 		},
@@ -24,19 +31,17 @@ export const configSlice = createSlice({
 		},
         setJoinedSession: (state, action) => {
 			state.joinedSession = action.payload;
-		},
-        setSessionId: (state, action) => {
-            state.sessionId = action.payload;
-        }
+		}
 	},
 })
 
 export const { 
+    setUserId,
+    setSessionId,
 	setIsHost,
     setIsConnected,
     setIsLoading,
-    setJoinedSession,
-    setSessionId
+    setJoinedSession
 } = configSlice.actions;
 
 export default configSlice.reducer;

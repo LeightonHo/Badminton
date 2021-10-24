@@ -8,12 +8,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../redux/Store";
 import { updatePlayer } from "../redux/Config";
 
-interface IProps {
-    sessionId: string
-}
-
-const PlayerList: React.FC<IProps> = ({ sessionId }) => {
-    const { isHost } = useSelector((state: RootState) => state.general);
+const PlayerList = () => {
+    const { sessionId, isHost } = useSelector((state: RootState) => state.general);
     const { players } = useSelector((state: RootState) => state.config);
     const dispatch = useDispatch();
 

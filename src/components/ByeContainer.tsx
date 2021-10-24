@@ -5,11 +5,10 @@ import { IState as Props} from "./Main";
 
 interface IProps {
     players: Props["config"]["players"]
-    roundKey: number,
-    sessionId: string
+    roundKey: number
 }
 
-const ByeContainer: React.FC<IProps> = ({ players, roundKey, sessionId }) => {
+const ByeContainer: React.FC<IProps> = ({ players, roundKey }) => {
 
     return (
         <Box className="divBye">
@@ -20,7 +19,6 @@ const ByeContainer: React.FC<IProps> = ({ players, roundKey, sessionId }) => {
                         byeKey={key}
                         player={player.alias} 
                         roundKey={roundKey}
-                        sessionId={sessionId}
                     />
                 )
             })}

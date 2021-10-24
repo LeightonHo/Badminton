@@ -7,41 +7,32 @@ import { useDispatch, useSelector } from "react-redux";
 import { syncConfig } from "../redux/Config";
 import { syncGameState } from "../redux/GameState";
 import { RootState } from "../redux/Store";
-import { setIsLoading, setJoinedSession } from "../redux/General";
+import { setIsLoading, setJoinedSession, setSessionId } from "../redux/General";
 
-interface IProps {
-    sessionId: string,
-    setSessionId: React.Dispatch<React.SetStateAction<string>>
-}
-
-const Lobby: React.FunctionComponent<IProps> = ({ sessionId, setSessionId }) => {
+const Lobby = () => {
     const dispatch = useDispatch();
-    const { isLoading, joinedSession } = useSelector((state: RootState) => state.general);
+    const { sessionId, isLoading, joinedSession } = useSelector((state: RootState) => state.general);
     const [error, setError] = useState<string>("");
-    const [loading, setLoading] = useState<boolean>(false);
     const handleSessionChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-        setSessionId(e.target.value.toUpperCase());
+        dispatch(setSessionId(e.target.value.toUpperCase()))
     }
 
     useEffect(() => {
         // Scenario where the session join was successful.
         if (joinedSession) {
             setError("");
-            setLoading(false);
+            dispatch(setIsLoading(false));
         }
 
         // Scenario where the session was unable to be joined.
-        if (!sessionId && loading) {
+        if (!sessionId && isLoading) {
             setError("Unable to join the session.");
-            setLoading(false);
+            dispatch(setIsLoading(false));
         }
-    }, [isLoading, joinedSession, sessionId]);
+    }, [joinedSession, sessionId]);
 
     const handleCreateSession = () => {
-        const sessionId = createSession();
-
-        setLoading(true);
-        setSessionId(sessionId);
+        createSession();
         setError("");
     }
 
@@ -111,7 +102,7 @@ const Lobby: React.FunctionComponent<IProps> = ({ sessionId, setSessionId }) => 
             </Card>
             {
                 joinedSession
-                ? <Configuration sessionId={sessionId} />
+                ? <Configuration />
                 : ""
             }
             <Box className="config-buttons">
@@ -121,7 +112,7 @@ const Lobby: React.FunctionComponent<IProps> = ({ sessionId, setSessionId }) => 
                         variant="contained"
                         color="primary"
                         onClick={handleJoinClick}
-                        disabled={loading}
+                        disabled={isLoading}
                     >
                         Join Session
                     </Button>
@@ -129,7 +120,7 @@ const Lobby: React.FunctionComponent<IProps> = ({ sessionId, setSessionId }) => 
                         variant="contained"
                         color="primary"
                         onClick={handleCreateSession}
-                        disabled={loading}
+                        disabled={isLoading}
                     >
                         Create Session
                     </Button>
@@ -139,7 +130,7 @@ const Lobby: React.FunctionComponent<IProps> = ({ sessionId, setSessionId }) => 
                     variant="contained"
                     color="secondary"
                     onClick={handleLeaveClick}
-                    disabled={loading}
+                    disabled={isLoading}
                 >
                     Leave Session
                 </Button>

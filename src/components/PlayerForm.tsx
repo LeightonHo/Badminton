@@ -4,14 +4,9 @@ import { addPlayer } from "../helpers/Socket";
 import { useSelector } from "react-redux";
 import { RootState } from "../redux/Store";
 
-interface IProps {
-    sessionId: string,
-}
-
-const PlayerForm: React.FC<IProps> = ({ sessionId }) => {
-
+const PlayerForm = () => {
+    const { sessionId } = useSelector((state: RootState) => state.general);
     const { players } = useSelector((state: RootState) => state.config);
-
     const [input, setInput] = useState({
         name: ""
     });

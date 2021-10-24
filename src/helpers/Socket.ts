@@ -4,7 +4,8 @@ import {
 	setIsConnected,
 	setIsHost,
 	setIsLoading,
-	setJoinedSession, 
+	setJoinedSession,
+	setSessionId, 
 } from "../redux/General";
 import { 
 	addPlayer as reduxAddPlayer, 
@@ -21,7 +22,6 @@ import {
 let userId: string;
 let sessionId: string;
 let socket: any = null;
-let setSessionIdCallback: (sessionId: string) => void;
 
 const heartbeat = () => {
 	const payload: any = {
@@ -32,16 +32,11 @@ const heartbeat = () => {
 	setTimeout(heartbeat, 30000);
 }
 
-export const initSocket = (user: string, session: string) => {
+export const initSocket = () => {
 	console.log("Initialising web socket.");
 
-	if (user) {
-		userId = user;
-	}
-
-	if (session) {
-		sessionId = session;
-	}
+	userId = store.getState().general.userId;
+	sessionId = store.getState().general.sessionId;
 
 	if (!socket || (socket.readyState !== WebSocket.CONNECTING && socket.readyState === WebSocket.CLOSED)) {
 		socket = new WebSocket("wss://op47bt7cik.execute-api.ap-southeast-2.amazonaws.com/test");
@@ -77,6 +72,8 @@ export const initSocket = (user: string, session: string) => {
 				break;
 			case "create_session":
 				console.log(data.message);
+				console.log("SessionID: ", data.sessionId);
+				store.dispatch(setSessionId(data.sessionId));
 				store.dispatch(syncConfig(JSON.parse(data.config)));
 				store.dispatch(setJoinedSession(true));
 				store.dispatch(setIsHost(data.isHost));
@@ -92,33 +89,29 @@ export const initSocket = (user: string, session: string) => {
 				store.dispatch(setIsLoading(false));
 				break;
 			case "join_failed":
-				setSessionIdCallback("");
+				store.dispatch(setSessionId(""));
 				store.dispatch(setJoinedSession(false));
 				break;
 		}
 	}
 
 	socket.onopen = () => {
-		console.log("WebSocket is connected.");
-		console.log("Joining session");
-		store.dispatch(setIsConnected(true));
-		store.dispatch(setIsLoading(true));
-		joinSession(sessionId);
 		heartbeat();
+
+		console.log("WebSocket is connected.");
+		store.dispatch(setIsConnected(true));
+
+		if (sessionId) {
+			console.log("Joining session");
+			store.dispatch(setIsLoading(true));
+			joinSession(sessionId);
+		}
 	}
 
 	socket.addEventListener("close", () => {
 		store.dispatch(setIsConnected(false));
 		console.log("WebSocket is closed.");
 	});
-}
-
-export const getSocket = () => {
-	return socket;
-}
-
-export const setCallback_SetSessionId = (cb: (sessionId: string) => void) => {
-	setSessionIdCallback = cb;
 }
 
 // setTimeout(() => {
@@ -135,9 +128,7 @@ window.addEventListener("scroll", () => {
 
 	if (!scrollEventTriggered && socket.readyState === WebSocket.CLOSED) {
 		scrollEventTriggered = true;
-
-		initSocket(userId, sessionId);
-
+		initSocket();
 		setTimeout(() => {
 			scrollEventTriggered = false;
 		}, 1000);
@@ -245,17 +236,13 @@ export const updateBye = (sessionId: string, roundKey: number, byeKey: number, n
 }
 
 export const createSession = () => {
-	const sessionId = generateSessionId(4);
-	console.log(userId);
+	store.dispatch(setIsLoading(true));
 
 	send({
 		action: "session",
 		method: "create",
-		userId: userId,
-		sessionId: sessionId
+		userId: userId
 	});
-
-	return sessionId;
 }
 
 export const joinSession = (sessionId: string) => {
@@ -276,17 +263,6 @@ export const leaveSession = (sessionId: string) => {
 		userId: userId,
 		sessionId: sessionId
 	});
-}
-
-const generateSessionId = (length: number) => {
-	const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-	let result = "";
-
-	for (let i = 0; i < length; i++) {
-		result += chars.charAt(Math.floor(Math.random() * chars.length));
-	}
-
-	return result;
 }
 
 const send = (payload: any) => {

@@ -4,13 +4,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../redux/Store";
 import { addCourt } from "../helpers/Socket";
 
-interface IProps {
-    sessionId: string
-}
-
-const CourtForm: React.FC<IProps> = ({ sessionId }) => {
-
+const CourtForm = () => {
     const dispatch = useDispatch();
+    const { sessionId } = useSelector((state: RootState) => state.general)
     const { courts } = useSelector((state: RootState) => state.config)
     const [input, setInput] = useState("");
 

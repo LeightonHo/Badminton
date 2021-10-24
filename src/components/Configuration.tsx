@@ -11,15 +11,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../redux/Store";
 import { setIsLoading } from "../redux/General";
 
-interface IProps {
-    sessionId: string
-}
-
-const Configuration:React.FC<IProps> = ({ sessionId }) => {
-    
+const Configuration = () => {
     const history = useHistory();
     const dispatch = useDispatch();
-    const { isHost } = useSelector((state: RootState) => state.general);
+    const { sessionId, isHost } = useSelector((state: RootState) => state.general);
     const { players, courts } = useSelector((state: RootState) => state.config);
     const { rounds } = useSelector((state: RootState) => state.gameState);
     const hasGameStarted: boolean = rounds.length > 0;
@@ -125,13 +120,10 @@ const Configuration:React.FC<IProps> = ({ sessionId }) => {
                         </Typography>
                         {
                             isHost
-                            ? <CourtForm sessionId={sessionId} />
+                            ? <CourtForm />
                             : ""
                         }
-                        <CourtList 
-                            sessionId={sessionId} 
-                            isHost={isHost} 
-                        />
+                        <CourtList />
                     </CardContent>
                 </Card>
 
@@ -146,10 +138,10 @@ const Configuration:React.FC<IProps> = ({ sessionId }) => {
                         </Typography>
                         {
                             isHost
-                            ? <PlayerForm sessionId={sessionId} />
+                            ? <PlayerForm />
                             : ""
                         }
-                        <PlayerList sessionId={sessionId} />
+                        <PlayerList />
                     </CardContent>
                 </Card>
 

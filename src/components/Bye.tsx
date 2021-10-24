@@ -7,12 +7,11 @@ import { RootState } from "../redux/Store";
 interface IProps {
     byeKey: number,
     player: string,
-    roundKey: number,
-    sessionId: string
+    roundKey: number
 }
 
-const Bye: React.FC<IProps> = ({ byeKey, player, roundKey, sessionId }) => {
-    const { isHost, isConnected } = useSelector((state: RootState) => state.general);
+const Bye: React.FC<IProps> = ({ byeKey, player, roundKey }) => {
+    const { sessionId, isHost, isConnected } = useSelector((state: RootState) => state.general);
     const [input, setInput] = useState({
         previousValue: "",
         value: "",
@@ -77,37 +76,38 @@ const Bye: React.FC<IProps> = ({ byeKey, player, roundKey, sessionId }) => {
 
     return (
         <>
-            {!input.editing
-            ? <Box 
-                // onMouseDown={handlePress}
-                // onTouchStart={handlePress}
-                // onMouseUp={handleRelease}
-                // onMouseMove={handleRelease}
-                // onTouchEnd={handleRelease}
-                // onTouchCancel={handleRelease}
-                // onTouchMove={handleRelease}
-            >
-                <Typography
-                    variant="overline"
-                    align="center"
-                    className="player-name"
+            {
+                !input.editing
+                ? <Box 
+                    // onMouseDown={handlePress}
+                    // onTouchStart={handlePress}
+                    // onMouseUp={handleRelease}
+                    // onMouseMove={handleRelease}
+                    // onTouchEnd={handleRelease}
+                    // onTouchCancel={handleRelease}
+                    // onTouchMove={handleRelease}
                 >
-                    {player}
-                </Typography>
-            </Box>
-            : <TextField 
-                autoFocus
-                id={`inputBye-${player}-${byeKey}`}
-                className="text-input"
-                variant="outlined" 
-                size="small"
-                type="text" 
-                placeholder={player}
-                onChange={handlePlayerChange}
-                onKeyPress={handlePlayerKeyPress}
-                onBlur={handleOnBlur}
-                name={player}
-            />
+                    <Typography
+                        variant="overline"
+                        align="center"
+                        className="player-name"
+                    >
+                        {player}
+                    </Typography>
+                </Box>
+                : <TextField 
+                    autoFocus
+                    id={`inputBye-${player}-${byeKey}`}
+                    className="text-input"
+                    variant="outlined" 
+                    size="small"
+                    type="text" 
+                    placeholder={player}
+                    onChange={handlePlayerChange}
+                    onKeyPress={handlePlayerKeyPress}
+                    onBlur={handleOnBlur}
+                    name={player}
+                />
             }
         </>
     );

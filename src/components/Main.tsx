@@ -10,15 +10,16 @@ import RoundRobin from "./RoundRobin";
 import Scoreboard from "./Scoreboard";
 import { IConfig, IUser, IRound } from "../types";
 import Lobby from "./Lobby";
-import { initSocket, setCallback_SetSessionId } from "../helpers/Socket";
+import { initSocket } from "../helpers/Socket";
 import Profile from "./Profile";
 import { Avatar, BottomNavigation, BottomNavigationAction, Paper } from "@material-ui/core";
 import SettingsIcon from "@mui/icons-material/Settings";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
 import { RootState } from "../redux/Store";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Progress from "./Progress";
+import { setUserId } from "../redux/General";
 
 interface Prop {
 	user: IUser
@@ -29,24 +30,9 @@ export interface IState {
 	gameState: IRound[]
 }
 
-const useStickyState = (defaultValue: (IRound[] | IConfig | string), key: string) => {
-	const [value, setValue] = useState(() => {
-		const stickyValue = window.localStorage.getItem(key);
-
-		return stickyValue !== null
-			? JSON.parse(stickyValue)
-			: defaultValue
-	});
-
-	React.useEffect(() => {
-		window.localStorage.setItem(key, JSON.stringify(value));
-	}, [key, value]);
-
-	return [value, setValue];
-}
-
 const Main: React.FC<Prop> = ({ user }) => {
-    const { isLoading, joinedSession, isHost, isConnected } = useSelector((state: RootState) => state.general);
+	const dispatch = useDispatch();
+    const { sessionId, isLoading, joinedSession } = useSelector((state: RootState) => state.general);
 	const { rounds } = useSelector((state: RootState) => state.gameState);
 	const history = useHistory();
 	const handleNavigation = (path: string) => {
@@ -54,15 +40,14 @@ const Main: React.FC<Prop> = ({ user }) => {
 		window.scrollTo({ top: 0, behavior: 'smooth' });
 	}
 	const [navigation, setNavigation] = useState<string>();
-	const [sessionId, setSessionId] = useStickyState("", "badminton-session-code");
 
 	useEffect(() => {
 		if (!user.userId) {
 			return;
 		}
 
-		setCallback_SetSessionId(setSessionId);
-		initSocket(user.userId, sessionId);
+		dispatch(setUserId(user.userId));
+		initSocket();
 	}, [user]);
 
 	const useStyles = makeStyles((theme) => ({
@@ -156,13 +141,10 @@ const Main: React.FC<Prop> = ({ user }) => {
 						}}
 					/>
 					<Route path="/lobby">
-						<Lobby
-							sessionId={sessionId}
-							setSessionId={setSessionId}
-						/>
+						<Lobby />
 					</Route>
 					<Route path="/round-robin">
-						<RoundRobin sessionId={sessionId} />
+						<RoundRobin />
 					</Route>
 					<Route path="/scoreboard">
 						<Scoreboard />

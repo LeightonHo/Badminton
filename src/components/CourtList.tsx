@@ -1,16 +1,11 @@
-import React from "react";
 import { List, ListItem, ListItemSecondaryAction, ListItemText, IconButton } from "@material-ui/core";
 import { removeCourt } from "../helpers/Socket";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useSelector } from "react-redux";
 import { RootState } from "../redux/Store";
 
-interface IProps {
-    sessionId: string,
-    isHost: boolean
-}
-
-const CourtList: React.FC<IProps> = ({ sessionId, isHost }) => {
+const CourtList = () => {
+    const { sessionId, isHost } = useSelector((state: RootState) => state.general);
     const { courts } = useSelector((state: RootState) => state.config);
 
     const handleDelete = (court: string): void => {

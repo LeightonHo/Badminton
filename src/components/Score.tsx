@@ -8,12 +8,11 @@ interface IProps {
     team: number,
     score: number,
     roundKey: number,
-    matchKey: number,
-    sessionId: string
+    matchKey: number
 }
 
-const Score: React.FC<IProps> = ({ team, score, roundKey, matchKey, sessionId }) => {
-    const { isConnected } = useSelector((state: RootState) => state.general);
+const Score: React.FC<IProps> = ({ team, score, roundKey, matchKey }) => {
+    const { sessionId, isConnected } = useSelector((state: RootState) => state.general);
     const [inputScore, setInputScore] = useState<number>(score);
 
     useEffect(() => {
