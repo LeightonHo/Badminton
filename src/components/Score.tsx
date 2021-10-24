@@ -30,7 +30,7 @@ const Score: React.FC<IProps> = ({ team, score, roundKey, matchKey }) => {
     }
 
     const pushScoreChange = () => {
-        if (!isConnected) {
+        if (!isConnected || !inputScore) {
             return;
         }
 

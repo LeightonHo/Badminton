@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { makeStyles } from '@material-ui/core/styles';
-import { Redirect, Route, Switch, useHistory } from "react-router-dom";
+import { Redirect, Route, Switch, useHistory, useLocation } from "react-router-dom";
 import Box from "@material-ui/core/Box";
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -34,12 +34,13 @@ const Main: React.FC<Prop> = ({ user }) => {
 	const dispatch = useDispatch();
     const { sessionId, isLoading, joinedSession } = useSelector((state: RootState) => state.general);
 	const { rounds } = useSelector((state: RootState) => state.gameState);
+	const location = useLocation();
 	const history = useHistory();
 	const handleNavigation = (path: string) => {
 		history.replace(path);
 		window.scrollTo({ top: 0, behavior: 'smooth' });
 	}
-	const [navigation, setNavigation] = useState<string>();
+	const [navigation, setNavigation] = useState<string>(location.pathname.replace("/", ""));
 
 	useEffect(() => {
 		if (!user.userId) {
