@@ -14,7 +14,7 @@ interface IProps {
     isHost: boolean
 }
 
-const PlayerList: React.FC<IProps> = ({ sessionId, config, isHost }) => {
+const PlayerList: React.FC<IProps> = ({ sessionId, config, setConfig, isHost }) => {
 
     const [loading, setLoading] = useState(true);
 
@@ -41,15 +41,15 @@ const PlayerList: React.FC<IProps> = ({ sessionId, config, isHost }) => {
         });
     }
 
-    const handleTogglePlayer = (userId: string): void => {
-        setLoading(true);
-        togglePlayer(sessionId, userId);
+    const handleTogglePlayer = (userId: string, key: number): void => {
+        // setLoading(true);
+        // togglePlayer(sessionId, userId);
 
-        // config.players[key].active = !config.players[key].active;
+        config.players[key].active = !config.players[key].active;
 
-        // setConfig({
-        //     ...config
-        // });
+        setConfig({
+            ...config
+        });
     }
 
     const sortPlayers = (a: IPlayer, b: IPlayer) => {
@@ -80,7 +80,7 @@ const PlayerList: React.FC<IProps> = ({ sessionId, config, isHost }) => {
                         <Switch
                             color="primary"
                             checked={player.active}
-                            onChange={(() => { handleTogglePlayer(player.userId); })}
+                            onChange={(() => { handleTogglePlayer(player.userId, key); })}
                             disabled={!isHost}
                         />
                         {

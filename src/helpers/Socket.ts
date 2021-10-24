@@ -1,4 +1,4 @@
-import { IConfig } from "../types";
+import { IConfig, IPlayer } from "../types";
 import { IRound } from "../components/RoundRobin";
 
 let userId: string;
@@ -10,6 +10,7 @@ let setConfigCallback: (config: IConfig) => void;
 let setSessionIdCallback: (sessionId: string) => void;
 let setIsConnectedCallback: (isConnected: boolean) => void;
 let setIsHostCallback: (isHost: boolean) => void;
+let addPlayerCallback: (player: IPlayer) => void;
 
 const heartbeat = () => {
     const payload: any = {
@@ -37,6 +38,11 @@ export const initSocket = (user: string, session: string) => {
 
     socket.onmessage = (ev: MessageEvent<any>) => {
         const data = JSON.parse(ev.data);
+
+        if (data.action === "add_player") {
+          console.log("Adding player...", data.player);
+          addPlayerCallback(JSON.parse(data.player));
+        }
         
         if (data.action === "update_config") {
           setConfigCallback(JSON.parse(data.config));
@@ -118,6 +124,10 @@ export const setCallback_SetIsConnected = (cb: (isConnected: boolean) => void) =
 
 export const setCallback_SetIsHost = (cb: (isHost: boolean) => void) => {
   setIsHostCallback = cb;
+}
+
+export const setCallback_AddPlayer = (cb: (addPlayer: IPlayer) => void) => {
+  addPlayerCallback = cb;
 }
 
 // setTimeout(() => {

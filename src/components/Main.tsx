@@ -18,13 +18,14 @@ import {
   setCallback_SetConfig, 
   setCallback_SetSessionId, 
   setCallback_SetIsConnected,
-  setCallback_SetIsHost
+  setCallback_SetIsHost,
+  setCallback_AddPlayer
 } from "../helpers/Socket";
 import Profile from "./Profile";
 import { Avatar, BottomNavigation, BottomNavigationAction, Paper } from "@material-ui/core";
 import SettingsIcon from "@mui/icons-material/Settings";
-import SportsScoreIcon from "@mui/icons-material/SportsScore";
 import FavoriteIcon from "@mui/icons-material/Favorite";
+import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
 
 interface Prop {
   user: IUser
@@ -58,6 +59,7 @@ const Main: React.FC<Prop> = ({ user }) => {
     history.push(path);
   }
   
+  const [counter, setCounter] = useState(0);
   const [navigation, setNavigation] = useState<string>();
   const [isConnected, setIsConnected] = useState<boolean>(false);
   const [isHost, setIsHost] = useState<boolean>(false);
@@ -78,12 +80,26 @@ const Main: React.FC<Prop> = ({ user }) => {
     setCallback_SetGameState(setGameState);
     setCallback_SetJoinedSession(setJoinedSession);
     setCallback_SetConfig(setConfig)
+    setCallback_AddPlayer((player) => {
+      console.log(`Adding ${player.userId} to the config.`);
+      console.log(config);
+
+      setConfig({
+        ...config,
+        players: [...config.players, player]
+      });
+    });
     setCallback_SetSessionId(setSessionId);
     setCallback_SetIsConnected(setIsConnected);
     setCallback_SetIsHost(setIsHost);
 
     initSocket(user.userId, sessionId);
   }, [user]);
+
+  useEffect(() => {
+    console.log("Force re-render")
+    setCounter(counter + 1);
+  }, [config]);
 
   const useStyles = makeStyles((theme) => ({
     grow: {
@@ -161,45 +177,46 @@ const Main: React.FC<Prop> = ({ user }) => {
     <Box className="App">
       {BuildNavBar()}
 
-      <Switch>
-        <Route
-          exact
-          path="/"
-          render={() => {
-            return (
-              !joinedSession 
-              ? <Redirect to="/lobby" />
-              : <Redirect to="/round-robin" />
-            );
-          }}
-        />
-        <Route path="/lobby">
-          <Lobby 
-            gameState={gameState}
-            setGameState={setGameState} 
-            config={config}
-            setConfig={setConfig} 
-            sessionId={sessionId} 
-            setSessionId={setSessionId} 
-            joinedSession={joinedSession} 
-            setJoinedSession={setJoinedSession} 
-            isHost={isHost}
+      <Box className={"app-body" + ` ${counter}`}>
+        <Switch>
+          <Route
+            exact
+            path="/"
+            render={() => {
+              return (
+                !joinedSession 
+                ? <Redirect to="/lobby" />
+                : <Redirect to="/round-robin" />
+              );
+            }}
           />
-        </Route>
-        <Route path="/round-robin">
-          <RoundRobin config={config} gameState={gameState} sessionId={sessionId} isHost={isHost} isConnected={isConnected} />
-        </Route>
-        <Route path="/scoreboard">
-          <Scoreboard config={config} gameState={gameState} />
-        </Route>
-        <Route path="/profile">
-          <Profile user={user} />
-        </Route>
-      </Switch>
-
+          <Route path="/lobby">
+            <Lobby 
+              gameState={gameState}
+              setGameState={setGameState} 
+              config={config}
+              setConfig={setConfig} 
+              sessionId={sessionId} 
+              setSessionId={setSessionId} 
+              joinedSession={joinedSession} 
+              setJoinedSession={setJoinedSession} 
+              isHost={isHost}
+            />
+          </Route>
+          <Route path="/round-robin">
+            <RoundRobin config={config} gameState={gameState} sessionId={sessionId} isHost={isHost} isConnected={isConnected} />
+          </Route>
+          <Route path="/scoreboard">
+            <Scoreboard config={config} gameState={gameState} />
+          </Route>
+          <Route path="/profile">
+            <Profile user={user} />
+          </Route>
+        </Switch>
+      </Box>
       {
         joinedSession && gameState.length
-        ? <Paper className="bottom-navigation" style={{ position: "fixed", bottom: 0, left: 0, right: 0}} elevation={3}>
+        ? <Paper className="bottom-navigation" style={{ position: "fixed", bottom: 0, left: 0, right: 0}} elevation={1}>
           <BottomNavigation
             showLabels
             value={navigation}
@@ -208,7 +225,7 @@ const Main: React.FC<Prop> = ({ user }) => {
             <BottomNavigationAction 
               label="Scoreboard" 
               value="scoreboard"
-              icon={<SportsScoreIcon />}
+              icon={<EmojiEventsIcon />}
             />
             <BottomNavigationAction 
               label="Games"
