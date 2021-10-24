@@ -1,15 +1,17 @@
 import { Box, TextField } from "@material-ui/core";
 import React, { useState, KeyboardEvent} from "react";
-import { IState as Props } from "./Main";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../redux/Store";
 import { addCourt } from "../helpers/Socket";
 
 interface IProps {
-    sessionId: string,
-    config: Props["config"]
+    sessionId: string
 }
 
-const CourtForm: React.FC<IProps> = ({ sessionId, config }) => {
+const CourtForm: React.FC<IProps> = ({ sessionId }) => {
 
+    const dispatch = useDispatch();
+    const { courts } = useSelector((state: RootState) => state.config)
     const [input, setInput] = useState("");
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
@@ -26,7 +28,7 @@ const CourtForm: React.FC<IProps> = ({ sessionId, config }) => {
     }
 
     const isDuplicate = (input: string): boolean => {
-        for (const court of config.courts) {
+        for (const court of courts) {
             if (court.toLowerCase() === input.toLowerCase()) {
                 return true;
             }

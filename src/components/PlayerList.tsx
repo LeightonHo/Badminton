@@ -1,26 +1,28 @@
 import React, { useEffect, useState } from "react";
-import { IState as Props } from "./Main";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { Avatar, ListItemAvatar, ListItemText, Switch, IconButton, List, ListItem, ListItemSecondaryAction } from "@material-ui/core";
-import { removePlayer, togglePlayer } from "../helpers/Socket";
+import { removePlayer } from "../helpers/Socket";
 import { IPlayer } from "../types";
 import { confirmAlert } from "react-confirm-alert";
 import "react-confirm-alert/src/react-confirm-alert.css";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../redux/Store";
+import { updatePlayer } from "../redux/Config";
 
 interface IProps {
     sessionId: string,
-    config: Props["config"],
-    setConfig: React.Dispatch<React.SetStateAction<Props["config"]>>,
     isHost: boolean
 }
 
-const PlayerList: React.FC<IProps> = ({ sessionId, config, setConfig, isHost }) => {
+const PlayerList: React.FC<IProps> = ({ sessionId, isHost }) => {
 
     const [loading, setLoading] = useState(true);
+    const { players } = useSelector((state: RootState) => state.config);
+    const dispatch = useDispatch();
 
     useEffect(() => {
         setLoading(false);
-    }, [config.players])
+    }, [players])
 
     const handleDelete = (player: IPlayer): void => {
         confirmAlert({
@@ -41,15 +43,13 @@ const PlayerList: React.FC<IProps> = ({ sessionId, config, setConfig, isHost }) 
         });
     }
 
-    const handleTogglePlayer = (userId: string, key: number): void => {
-        // setLoading(true);
-        // togglePlayer(sessionId, userId);
-
-        config.players[key].active = !config.players[key].active;
-
-        setConfig({
-            ...config
-        });
+    const handleTogglePlayer = (key: number): void => {
+        dispatch(updatePlayer({
+            userId: players[key].userId,
+            alias: players[key].alias,
+            avatarUrl: players[key].avatarUrl,
+            active: !players[key].active
+        }));
     }
 
     const sortPlayers = (a: IPlayer, b: IPlayer) => {
@@ -61,7 +61,7 @@ const PlayerList: React.FC<IProps> = ({ sessionId, config, setConfig, isHost }) 
     }
 
     const renderList = (): JSX.Element[] => {
-        return config.players.map((player, key) => {
+        return players.map((player, key) => {
             return (
                 <ListItem 
                     key={key}
@@ -80,7 +80,7 @@ const PlayerList: React.FC<IProps> = ({ sessionId, config, setConfig, isHost }) 
                         <Switch
                             color="primary"
                             checked={player.active}
-                            onChange={(() => { handleTogglePlayer(player.userId, key); })}
+                            onChange={(() => { handleTogglePlayer(key); })}
                             disabled={!isHost}
                         />
                         {

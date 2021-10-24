@@ -1,14 +1,16 @@
 import React, { useState, KeyboardEvent } from "react";
-import { IState as Props } from "./Main";
 import { Box, TextField } from "@material-ui/core";
 import { addPlayer } from "../helpers/Socket";
+import { useSelector } from "react-redux";
+import { RootState } from "../redux/Store";
 
 interface IProps {
     sessionId: string,
-    config: Props["config"]
 }
 
-const PlayerForm: React.FC<IProps> = ({ sessionId, config }) => {
+const PlayerForm: React.FC<IProps> = ({ sessionId }) => {
+
+    const { players } = useSelector((state: RootState) => state.config);
 
     const [input, setInput] = useState({
         name: ""
@@ -44,7 +46,7 @@ const PlayerForm: React.FC<IProps> = ({ sessionId, config }) => {
     }
 
     const isDuplicate = (name: string): boolean => {
-        for (const player of config.players) {
+        for (const player of players) {
             if (player.alias.toLowerCase() === name.toLowerCase()) {
                 return true;
             }

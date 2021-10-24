@@ -1,5 +1,5 @@
-import { Box, Card, CardContent, LinearProgress, Paper, Typography } from "@material-ui/core";
-import React, { useEffect, useState } from "react";
+import { Box, Card, CardContent, LinearProgress, Typography } from "@material-ui/core";
+import React, { useState } from "react";
 import { IUser } from "../types";
 import FacebookLogin, { ReactFacebookLoginInfo } from "react-facebook-login";
 import axios from "axios";
@@ -12,14 +12,7 @@ interface Props {
 
 const Login: React.FC<Props> = ({ setIsLoggedIn, setUser }) => {
 
-    const devMode = true;
     const [isLoggingIn, setIsLoggingIn] = useState<boolean>(false);
-
-    // useEffect(() => {
-    //     if (devMode) {
-    //         setIsLoggedIn(true);
-    //     }
-    // }, []);
 
     const responseFacebook = (response: ReactFacebookLoginInfo) => {
         console.log(response);

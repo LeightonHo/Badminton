@@ -1,16 +1,15 @@
-import { Backdrop, Box, Button, Card, CardContent, LinearProgress, Paper, TextField, Typography } from "@material-ui/core";
+import { Box, Button, Card, CardContent, TextField, Typography } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router";
 import { IState as Props } from "./Main";
 import { createSession, joinSession, leaveSession } from "../helpers/Socket";
 import Configuration from "./Configuration";
 import Progress from "./Progress";
+import { useDispatch } from "react-redux";
+import { syncConfig } from "../redux/Config";
+import { syncGameState } from "../redux/GameState";
 
 interface IProps {
-    gameState: Props["gameState"],
-    setGameState: React.Dispatch<React.SetStateAction<Props["gameState"]>>,
-    config: Props["config"],
-    setConfig: React.Dispatch<React.SetStateAction<Props["config"]>>,
     sessionId: string,
     setSessionId: React.Dispatch<React.SetStateAction<string>>,
     joinedSession: boolean,
@@ -18,8 +17,9 @@ interface IProps {
     isHost: boolean
 }
 
-const Lobby: React.FunctionComponent<IProps> = ({ gameState, setGameState, config, setConfig, sessionId, setSessionId, joinedSession, setJoinedSession, isHost }) => {
+const Lobby: React.FunctionComponent<IProps> = ({ sessionId, setSessionId, joinedSession, setJoinedSession, isHost }) => {
 
+    const dispatch = useDispatch();
     const history = useHistory();
     const [error, setError] = useState<string>("");
     const [loading, setLoading] = useState<boolean>(false);
@@ -62,11 +62,16 @@ const Lobby: React.FunctionComponent<IProps> = ({ gameState, setGameState, confi
 
     const handleLeaveClick = () => {
         leaveSession(sessionId);
-        setGameState([]);
-        setConfig({
+
+        dispatch(syncGameState({
+            rounds: []
+        }));
+
+        dispatch(syncConfig({
             courts: [],
             players: []
-        });
+        }));
+        
         setJoinedSession(false);
         setError("");
     }
@@ -110,7 +115,7 @@ const Lobby: React.FunctionComponent<IProps> = ({ gameState, setGameState, confi
             </Card>
             {
                 joinedSession
-                ? <Configuration config={config} setConfig={setConfig} gameState={gameState} sessionId={sessionId} isHost={isHost} />
+                ? <Configuration sessionId={sessionId} isHost={isHost} />
                 : ""
             }
             <Box className="config-buttons">

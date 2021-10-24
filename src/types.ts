@@ -16,3 +16,27 @@ export interface IUser {
     email: string,
     avatarUrl: string
 }
+
+export interface IMatch {
+    court: string,
+    team1: {
+        player1: IPlayer,
+        player2: IPlayer,
+        score: number
+    },
+    team2: {
+        player3: IPlayer,
+        player4: IPlayer,
+        score: number
+    }
+}
+
+export interface IRound {
+    round: number,
+    matches: IMatch[],
+    byes: IPlayer[]
+}
+
+export interface IGameState {
+    rounds: IRound[]
+}

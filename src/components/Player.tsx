@@ -50,7 +50,6 @@ const Player: React.FC<IProps> = ({ playerKey, player, roundKey, matchKey, sessi
                 return;
             }
 
-            updatePlayer(sessionId, roundKey, matchKey, playerKey, input.value);
             setInput({
                 ...input,
                 editing: false,

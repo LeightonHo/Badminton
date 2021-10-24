@@ -3,30 +3,29 @@ import CourtForm from "./CourtForm";
 import CourtList from "./CourtList";
 import PlayerForm from "./PlayerForm";
 import PlayerList from "./PlayerList";
-import { IState as Props } from "./Main";
 import { useHistory } from "react-router-dom";
 import { generateRound } from "../helpers/Socket";
 import { confirmAlert } from "react-confirm-alert";
 import { IPlayer } from "../types";
-import { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
+import { RootState } from "../redux/Store";
 
 interface IProps {
-    config: Props["config"],
-    setConfig: React.Dispatch<React.SetStateAction<Props["config"]>>,
-    gameState: Props["gameState"],
     sessionId: string,
     isHost: boolean
 }
 
-const Configuration:React.FC<IProps> = ({ config, setConfig, gameState, sessionId, isHost }) => {
+const Configuration:React.FC<IProps> = ({ sessionId, isHost }) => {
     
     const history = useHistory();
-    const hasGameStarted: boolean = gameState.length > 0;
+    const { rounds } = useSelector((state: RootState) => state.gameState);
+    const hasGameStarted: boolean = rounds.length > 0;
+    const { players, courts } = useSelector((state: RootState) => state.config);
     
     const getInactivePlayers = (): IPlayer[] => {
         let result: IPlayer[] = [];
 
-        for (const player of config.players) {
+        for (const player of players) {
             if (!player.active) {
                 result.push(player);
             }
@@ -49,7 +48,10 @@ const Configuration:React.FC<IProps> = ({ config, setConfig, gameState, sessionI
                     {
                         label: "Yes",
                         onClick: () => {
-                            generateRound(sessionId, config);
+                            generateRound(sessionId, {
+                                courts: courts,
+                                players: players
+                            });
 
                             // TODO: Move this to the socket listener?
                             history.push("/round-robin");
@@ -62,7 +64,10 @@ const Configuration:React.FC<IProps> = ({ config, setConfig, gameState, sessionI
                 ]
             });
         } else {
-            generateRound(sessionId, config);
+            generateRound(sessionId, {
+                courts: courts,
+                players: players
+            });
 
             // TODO: Move this to the socket listener?
             history.push("/round-robin");
@@ -71,9 +76,9 @@ const Configuration:React.FC<IProps> = ({ config, setConfig, gameState, sessionI
 
     const disableGenerateRoundButton = (): boolean => {
         const inactivePlayers = getInactivePlayers();
-        const numberOfPlayers = config.players.length - inactivePlayers.length;
-        const numberOfCourts = config.courts.length;
-        const numberOfPlayersOnBye = numberOfPlayers - (config.courts.length * 4);
+        const numberOfPlayers = players.length - inactivePlayers.length;
+        const numberOfCourts = courts.length;
+        const numberOfPlayersOnBye = numberOfPlayers - (courts.length * 4);
 
         if (numberOfPlayers == 0) {
             return true;
@@ -95,7 +100,7 @@ const Configuration:React.FC<IProps> = ({ config, setConfig, gameState, sessionI
     }
 
     const handleExport = (): void => {
-        const data = `data:text/json;charsett=utf-8,${encodeURIComponent(JSON.stringify(gameState))}`;
+        const data = `data:text/json;charsett=utf-8,${encodeURIComponent(JSON.stringify(rounds))}`;
         let downloadAnchorElement = document.getElementById("downloadAnchorElement");
 
         downloadAnchorElement?.setAttribute("href", data);
@@ -112,16 +117,15 @@ const Configuration:React.FC<IProps> = ({ config, setConfig, gameState, sessionI
                             variant="h5"
                             gutterBottom
                         >
-                            Courts ({config.courts.length})
+                            Courts ({courts.length})
                         </Typography>
                         {
                             isHost
-                            ? <CourtForm sessionId={sessionId} config={config} />
+                            ? <CourtForm sessionId={sessionId} />
                             : ""
                         }
                         <CourtList 
                             sessionId={sessionId} 
-                            config={config} 
                             isHost={isHost} 
                         />
                     </CardContent>
@@ -134,18 +138,17 @@ const Configuration:React.FC<IProps> = ({ config, setConfig, gameState, sessionI
                             gutterBottom
                             className="config-card-header"
                         >
-                            Players ({config.players.length - getInactivePlayers().length})
+                            Players ({players.length - getInactivePlayers().length})
                         </Typography>
                         {
                             isHost
-                            ? <PlayerForm sessionId={sessionId} config={config} />
+                            ? <PlayerForm sessionId={sessionId} />
                             : ""
                         }
                         <PlayerList 
                             sessionId={sessionId}
-                            config={config} 
-                            setConfig={setConfig} 
-                            isHost={isHost} />
+                            isHost={isHost} 
+                        />
                     </CardContent>
                 </Card>
 

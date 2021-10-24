@@ -1,8 +1,8 @@
 import { Grid, Typography } from "@material-ui/core";
 import React from "react";
 import Player from "./Player";
-import { IMatch } from "./RoundRobin";
 import Score from "./Score";
+import { IMatch } from "../types";
 
 interface IProps {
     match: IMatch,

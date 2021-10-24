@@ -1,52 +1,27 @@
 import React, { useEffect, useState } from "react";
-import { IState as Props } from "./Main";
 import ByeContainer from "./ByeContainer";
 import Match from "./Match";
-import { Button, Box, Card, CardContent, Divider, Grid, Typography } from "@material-ui/core";
+import { Box, Card, CardContent, Divider, Grid, Typography } from "@material-ui/core";
 import Progress from "./Progress";
-import { generateRound } from "../helpers/Socket";
-import { IPlayer } from "../types";
+import { IPlayer, IRound, IMatch } from "../types";
+import { useSelector } from "react-redux";
+import { RootState } from "../redux/Store";
 
 export interface IProps {
-    config: Props["config"],
-    gameState: Props["gameState"],
     sessionId: string,
     isHost: boolean,
     isConnected: boolean
 }
 
-export interface IMatch {
-    court: string,
-    team1: {
-        player1: IPlayer,
-        player2: IPlayer,
-        score: number
-    },
-    team2: {
-        player3: IPlayer,
-        player4: IPlayer,
-        score: number
-    }
-}
+const RoundRobin: React.FC<IProps> = ({ sessionId, isHost, isConnected }) => {
 
-export interface IRound {
-    round: number,
-    matches: IMatch[],
-    byes: Props["config"]["players"]
-}
-
-const RoundRobin: React.FC<IProps> = ({ gameState, sessionId, isHost, isConnected }) => {
-
+    const { rounds } = useSelector((state: RootState) => state.gameState);
     const [loading, setLoading] = useState(false);
-
-    useEffect(() => {
-        setLoading(false);
-    }, [gameState]);
 
     const renderRoundRobin = () => {
         return (
             <>
-                {[...gameState].reverse().map((round, roundKey) => {
+                {[...rounds].reverse().map((round, roundKey) => {
                     return (
                         <Card 
                             key={roundKey}
@@ -128,7 +103,7 @@ const RoundRobin: React.FC<IProps> = ({ gameState, sessionId, isHost, isConnecte
                 : ""
             }
             {
-                gameState.length === 0
+                rounds.length === 0
                 ? <Progress />
                 : renderRoundRobin()
             }
