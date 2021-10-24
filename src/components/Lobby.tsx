@@ -48,6 +48,7 @@ const Lobby = () => {
     }
 
     const handleLeaveClick = () => {
+        window.scrollTo({ top: 0 });
         leaveSession(sessionId);
 
         dispatch(syncGameState({

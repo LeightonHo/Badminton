@@ -13,7 +13,8 @@ function App() {
     userId: "",
     name: "",
     email: "",
-    avatarUrl: ""
+    avatarUrl: "",
+    currentSessionId: ""
   });
 
   return (

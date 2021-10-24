@@ -37,7 +37,8 @@ const Login: React.FC<Props> = ({ setIsLoggedIn, setUser }) => {
                             userId: userData.UserId,
                             email: userData.Email,
                             name: userData.Name,
-                            avatarUrl: userData.AvatarUrl
+                            avatarUrl: userData.AvatarUrl,
+                            currentSessionId: userData.CurrentSessionId
                         });
                     } else {
                         setIsLoggedIn(false);
