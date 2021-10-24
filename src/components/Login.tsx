@@ -86,7 +86,7 @@ const Login: React.FC<Props> = ({ setIsLoggedIn, setUser }) => {
                         variant="subtitle1"
                         gutterBottom
                     >
-                        Welcome to Sunday Badminton
+                        Welcome to Cross Court
                     </Typography>
 
                     <Box>

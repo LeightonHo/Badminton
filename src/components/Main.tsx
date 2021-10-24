@@ -84,7 +84,7 @@ const Main: React.FC<Prop> = ({ user }) => {
 				<AppBar position="fixed" >
 					<Toolbar>
 						<Typography className={classes.title} variant="h5" noWrap>
-							Sunday Badminton
+							Cross Court
 						</Typography>
 						<div className={classes.grow} />
 						<div className={classes.sectionDesktop}>
