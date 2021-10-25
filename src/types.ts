@@ -15,7 +15,8 @@ export interface IUser {
     name: string,
     email: string,
     avatarUrl: string,
-    currentSessionId: string
+    currentSessionId: string,
+    isGuest: boolean
 }
 
 export interface IMatch {

@@ -3,6 +3,7 @@ import { createSlice } from '@reduxjs/toolkit'
 const initialState: any = {
     userId: "",
     sessionId: "",
+	isGuest: true,
 	isHost: false,
     isConnected: false,
     isLoading: false,
@@ -20,6 +21,9 @@ export const configSlice = createSlice({
         setSessionId: (state, action) => {
             state.sessionId = action.payload;
         },
+        setIsGuest: (state, action) => {
+			state.isGuest = action.payload;
+		},
 		setIsHost: (state, action) => {
 			state.isHost = action.payload;
 		},
@@ -38,6 +42,7 @@ export const configSlice = createSlice({
 export const { 
     setUserId,
     setSessionId,
+	setIsGuest,
 	setIsHost,
     setIsConnected,
     setIsLoading,

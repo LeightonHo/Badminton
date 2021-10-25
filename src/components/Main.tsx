@@ -19,7 +19,7 @@ import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
 import { RootState } from "../redux/Store";
 import { useDispatch, useSelector } from "react-redux";
 import Progress from "./Progress";
-import { setSessionId, setUserId } from "../redux/General";
+import { setIsGuest, setSessionId, setUserId } from "../redux/General";
 
 interface Prop {
 	user: IUser
@@ -51,6 +51,7 @@ const Main: React.FC<Prop> = ({ user }) => {
 	
 		dispatch(setUserId(user.userId));
 		dispatch(setSessionId(user.currentSessionId));
+		dispatch(setIsGuest(user.isGuest));
 		initSocket();
 	}, [user]);
 

@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { IUser } from "../types";
 import FacebookLogin, { ReactFacebookLoginInfo } from "react-facebook-login";
 import axios from "axios";
+import crypto from "crypto";
 
 interface Props {
     setIsLoggedIn: React.Dispatch<React.SetStateAction<boolean>>,
@@ -11,7 +12,7 @@ interface Props {
 
 const Login: React.FC<Props> = ({ setIsLoggedIn, setUser }) => {
 
-    const [isLoggingIn, setIsLoggingIn] = useState<boolean>(true);
+    const [isLoggingIn, setIsLoggingIn] = useState<boolean>(false);
 
     const responseFacebook = (response: ReactFacebookLoginInfo) => {
         console.log(response);
@@ -38,7 +39,8 @@ const Login: React.FC<Props> = ({ setIsLoggedIn, setUser }) => {
                             email: userData.Email,
                             name: userData.Name,
                             avatarUrl: userData.AvatarUrl,
-                            currentSessionId: userData.CurrentSessionId
+                            currentSessionId: userData.CurrentSessionId,
+                            isGuest: false
                         });
                     } else {
                         setIsLoggedIn(false);
@@ -50,6 +52,19 @@ const Login: React.FC<Props> = ({ setIsLoggedIn, setUser }) => {
 
     const handleFacebookClick = () => {
         setIsLoggingIn(true);
+    }
+
+    const handleGuestClick = () => {
+        setIsLoggingIn(true);
+        setUser({
+            userId: crypto.randomBytes(16).toString("hex"),
+            email: "",
+            name: "Guest ",
+            avatarUrl: "",
+            currentSessionId: "",
+            isGuest: true
+        });
+        setIsLoggedIn(true);
     }
 
     // const useStyles = makeStyles({
@@ -114,7 +129,7 @@ const Login: React.FC<Props> = ({ setIsLoggedIn, setUser }) => {
                     />
                 </Box>
 
-                <Box className="login-footer">
+                <Box className="login-footer" onClick={handleGuestClick}>
                     <Typography 
                         className="login-guest-button"
                         variant="overline"

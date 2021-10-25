@@ -11,7 +11,7 @@ import { setIsLoading, setJoinedSession, setSessionId } from "../redux/General";
 
 const Lobby = () => {
     const dispatch = useDispatch();
-    const { sessionId, isLoading, joinedSession } = useSelector((state: RootState) => state.general);
+    const { sessionId, isGuest, isLoading, joinedSession } = useSelector((state: RootState) => state.general);
     const [error, setError] = useState<string>("");
     const handleSessionChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
         dispatch(setSessionId(e.target.value.toUpperCase()))
@@ -64,6 +64,14 @@ const Lobby = () => {
         setError("");
     }
 
+    const getDescription = () => {
+        if (isGuest) {
+            return `Guests can only join sessions.  Log in with Facebook to create sessions.`;
+        }
+
+        return `If you have a session code, enter it below and click "Join".  Otherwise click "Create" to start a new session.`;
+    }
+
     return (
         <>
             {
@@ -80,7 +88,9 @@ const Lobby = () => {
                     </Typography>
                     {
                         !joinedSession
-                        ? <Typography variant="subtitle2">If you have a session code, enter it below and click "Join".  Otherwise click "Create" to start a new session.</Typography>
+                        ? <Typography variant="subtitle2">
+                            {getDescription()}
+                        </Typography>
                         : ""
                     }
                     
@@ -107,34 +117,38 @@ const Lobby = () => {
                 : ""
             }
             <Box className="config-buttons">
-                {!joinedSession 
-                ? <>
-                    <Button
+                {
+                    !joinedSession
+                    ? <>
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            onClick={handleJoinClick}
+                            disabled={isLoading}
+                        >
+                            Join Session
+                        </Button>
+                        {
+                            !isGuest
+                            ? <Button
+                                variant="contained"
+                                color="primary"
+                                onClick={handleCreateSession}
+                                disabled={isLoading}
+                            >
+                                Create Session
+                            </Button>
+                            : ""
+                        }
+                    </>
+                    : <Button
                         variant="contained"
-                        color="primary"
-                        onClick={handleJoinClick}
+                        color="secondary"
+                        onClick={handleLeaveClick}
                         disabled={isLoading}
                     >
-                        Join Session
+                        Leave Session
                     </Button>
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={handleCreateSession}
-                        disabled={isLoading}
-                    >
-                        Create Session
-                    </Button>
-                </>
-                :
-                <Button
-                    variant="contained"
-                    color="secondary"
-                    onClick={handleLeaveClick}
-                    disabled={isLoading}
-                >
-                    Leave Session
-                </Button>
                 }
             </Box>
         </>

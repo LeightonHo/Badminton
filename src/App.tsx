@@ -14,7 +14,8 @@ function App() {
     name: "",
     email: "",
     avatarUrl: "",
-    currentSessionId: ""
+    currentSessionId: "",
+    isGuest: true
   });
 
   return (

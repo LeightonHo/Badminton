@@ -91,10 +91,6 @@
   right: 0px;
 }
 
-.app-progress {
-	top: 4px;
-}
-
 .card {
   margin-top: 15px;
   margin-bottom: 10px;
@@ -117,6 +113,10 @@
     top: 52px;
     bottom: 52px;
   }
+
+  .app-progress {
+	top: 4px;
+	}
   
   .bottom-navigation {
     display: block;
@@ -150,6 +150,10 @@
     top: 64px;
 	bottom: 0px;
   }
+
+	.app-progress {
+		top: 0;
+	}
 
   .bottom-navigation { 
     display: none;
