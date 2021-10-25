@@ -341,31 +341,29 @@ const Scoreboard = () => {
 
     const renderScoreboard = () => {
         return (
-            <Box className="main-content">
-                <Card className="card">
-                    <CardContent>
-                        <Typography
-                            variant="h5"
-                            gutterBottom
-                        >
-                            Scoreboard
-                        </Typography>
-                        <TableContainer>
-                            <Table padding="none" className="scoreboard-table">
-                                <TableHead className="scoreboard-header">
-                                    <TableRow>
-                                        <TableCell>Name</TableCell>
-                                        <TableCell align="right">Win</TableCell>
-                                        <TableCell align="right">Loss</TableCell>
-                                        <TableCell align="right">Win Rate</TableCell>
-                                    </TableRow>
-                                </TableHead>
-                                {generateTableBody()}
-                            </Table>
-                        </TableContainer>
-                    </CardContent>
-                </Card>
-            </Box>
+            <Card className="card">
+                <CardContent>
+                    <Typography
+                        variant="h5"
+                        gutterBottom
+                    >
+                        Scoreboard
+                    </Typography>
+                    <TableContainer>
+                        <Table padding="none" className="scoreboard-table">
+                            <TableHead className="scoreboard-header">
+                                <TableRow>
+                                    <TableCell>Name</TableCell>
+                                    <TableCell align="right">Win</TableCell>
+                                    <TableCell align="right">Loss</TableCell>
+                                    <TableCell align="right">Win Rate</TableCell>
+                                </TableRow>
+                            </TableHead>
+                            {generateTableBody()}
+                        </Table>
+                    </TableContainer>
+                </CardContent>
+            </Card>
         );
     }
 

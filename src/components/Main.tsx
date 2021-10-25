@@ -32,7 +32,7 @@ export interface IState {
 
 const Main: React.FC<Prop> = ({ user }) => {
 	const dispatch = useDispatch();
-    const { sessionId, isLoading, joinedSession } = useSelector((state: RootState) => state.general);
+    const { isLoading, joinedSession } = useSelector((state: RootState) => state.general);
 	const { rounds } = useSelector((state: RootState) => state.gameState);
 	const location = useLocation();
 	const history = useHistory();
@@ -132,31 +132,33 @@ const Main: React.FC<Prop> = ({ user }) => {
 			}
 
 			<Box className="app-body">
-				<Switch>
-					<Route
-						exact
-						path="/"
-						render={() => {
-							return (
-								!joinedSession
-									? <Redirect to="/lobby" />
-									: <Redirect to="/round-robin" />
-							);
-						}}
-					/>
-					<Route path="/lobby">
-						<Lobby />
-					</Route>
-					<Route path="/round-robin">
-						<RoundRobin />
-					</Route>
-					<Route path="/scoreboard">
-						<Scoreboard />
-					</Route>
-					<Route path="/profile">
-						<Profile user={user} />
-					</Route>
-				</Switch>
+				<Box style={{ position: "relative" }}>
+					<Switch>
+						<Route
+							exact
+							path="/"
+							render={() => {
+								return (
+									!joinedSession
+										? <Redirect to="/lobby" />
+										: <Redirect to="/round-robin" />
+								);
+							}}
+						/>
+						<Route path="/lobby">
+							<Lobby />
+						</Route>
+						<Route path="/round-robin">
+							<RoundRobin />
+						</Route>
+						<Route path="/scoreboard">
+							<Scoreboard />
+						</Route>
+						<Route path="/profile">
+							<Profile user={user} />
+						</Route>
+					</Switch>
+				</Box>
 			</Box>
 
 			{

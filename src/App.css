@@ -12,10 +12,69 @@
 }
 
 /* LOGIN */
-.login {
-  margin: 0;
-  position: absolute;
-  top: 30%;
+.login-screen {
+	height: 100vh;
+	background: #00264c;
+}
+
+.login-card {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	width: 300px;
+	height: 220px;
+	position: absolute;
+    top: 50%;
+    left: 50%;
+    -moz-transform: translateX(-50%) translateY(-50%);
+    -webkit-transform: translateX(-50%) translateY(-50%);
+    transform: translateX(-50%) translateY(-50%);
+}
+
+.login-header {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	height: 75px;
+	width: 100%;
+	color: rgb(248, 248, 248);
+	background-color: #215A94;
+}
+
+.login-body {
+	display: flex;
+	flex: 1 1 auto;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	background-color: #ffffff;
+}
+
+.login-body > span > button {
+	border-radius: 5px !important;
+	height: 50px !important;
+	width: 275px !important;
+    font-size: 14px !important;
+}
+
+.login-footer {
+	width: 100%;
+	display: flex;
+	justify-content: center;
+	flex: 0 1 30px;
+	background-color: #215A94;
+	color: rgb(248, 248, 248);
+}
+
+.login-progress {
+	width: 100%;
+}
+
+.login-guest-button {
+	cursor: pointer;
+	font-style: italic;
+    font-size: 11px !important;
 }
 
 .facebook-button {
@@ -25,13 +84,15 @@
 /* LOBBY */
 
 /* GENERAL */
-.main-content {
-  padding-top: 5px;
+.app-body {
+  position: absolute;
+  overflow: auto;
+  left: 0px;
+  right: 0px;
 }
 
-.app-body {
-  margin-top: 52px;
-  margin-bottom: 52px;
+.app-progress {
+	top: 4px;
 }
 
 .card {
@@ -52,6 +113,11 @@
 }
 
 @media (min-width: 0px) {
+  .app-body {
+    top: 52px;
+    bottom: 52px;
+  }
+  
   .bottom-navigation {
     display: block;
   }
@@ -80,6 +146,11 @@
 }
 
 @media (min-width: 600px) {
+  .app-body {
+    top: 64px;
+	bottom: 0px;
+  }
+
   .bottom-navigation { 
     display: none;
   }

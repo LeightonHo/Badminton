@@ -11,6 +11,7 @@ const Progress = () => {
                 open={true}
             />
             <LinearProgress 
+                className="app-progress"
                 color="primary"
             />
         </>

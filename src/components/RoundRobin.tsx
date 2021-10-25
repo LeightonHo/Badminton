@@ -9,7 +9,7 @@ const RoundRobin = () => {
 
     const renderRoundRobin = () => {
         return (
-            <Box className="main-content">
+            <>
                 {[...rounds].reverse().map((round, roundKey) => {
                     return (
                         <Card 
@@ -66,7 +66,7 @@ const RoundRobin = () => {
                         </Card>
                     );
                 })}
-            </Box>
+            </>
         );
     }
 

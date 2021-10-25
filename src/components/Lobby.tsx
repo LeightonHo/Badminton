@@ -65,7 +65,7 @@ const Lobby = () => {
     }
 
     return (
-        <Box className="main-content">
+        <>
             {
                 isLoading
                 ? <Progress />
@@ -137,7 +137,7 @@ const Lobby = () => {
                 </Button>
                 }
             </Box>
-        </Box>
+        </>
     );
 }
 

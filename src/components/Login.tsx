@@ -1,9 +1,8 @@
-import { Box, Card, CardContent, LinearProgress, Typography } from "@material-ui/core";
+import { Box, LinearProgress, Paper, Typography } from "@material-ui/core";
 import React, { useState } from "react";
 import { IUser } from "../types";
 import FacebookLogin, { ReactFacebookLoginInfo } from "react-facebook-login";
 import axios from "axios";
-import Image from "../static/login_background.jpg";
 
 interface Props {
     setIsLoggedIn: React.Dispatch<React.SetStateAction<boolean>>,
@@ -12,7 +11,7 @@ interface Props {
 
 const Login: React.FC<Props> = ({ setIsLoggedIn, setUser }) => {
 
-    const [isLoggingIn, setIsLoggingIn] = useState<boolean>(false);
+    const [isLoggingIn, setIsLoggingIn] = useState<boolean>(true);
 
     const responseFacebook = (response: ReactFacebookLoginInfo) => {
         console.log(response);
@@ -28,6 +27,7 @@ const Login: React.FC<Props> = ({ setIsLoggedIn, setUser }) => {
 
             axios.post<any>("https://n4x7vjzngg.execute-api.ap-southeast-2.amazonaws.com/production", payload).then(
                 ({ data }) => {
+                    setIsLoggingIn(false);
                     const userData = JSON.parse(data.body);
 
                     if (data.statusCode === 200) {
@@ -52,13 +52,25 @@ const Login: React.FC<Props> = ({ setIsLoggedIn, setUser }) => {
         setIsLoggingIn(true);
     }
 
+    // const useStyles = makeStyles({
+    //     colorPrimary: {
+    //         backgroundColor: "#E9E9E9"
+    //     },
+    //     bar: {
+    //         borderRadius: 5,
+    //         backgroundColor: "#ff8427"
+    //     }
+    // });
+
+    // const classes = useStyles();
+
     const styles = {
         paperContainer: {
             height: "100vh",
             width: "100%",
             backgroundImage: `url(${Image})`,
             backgroundSize: "contain",
-            filter: "brightness(85%)"
+            filter: "brightness(50%)"
         },
         subtitle: {
             "margin-bottom": "20px"
@@ -66,43 +78,51 @@ const Login: React.FC<Props> = ({ setIsLoggedIn, setUser }) => {
     }
 
     return (
-        <Box>
-            <Box style={styles.paperContainer} />
-            <Card className="card login">
+        <Box className="login-screen">
+            {/* <Box style={styles.paperContainer} /> */}
+            <Paper className="login-card">
+                <Box className="login-header">
+                    <Typography variant="h5">
+                        Cross Court
+                    </Typography>
+                    <Typography variant="subtitle2">
+                        Welcome! Please sign in.
+                    </Typography>
+                </Box>
                 {
                     isLoggingIn
-                    ? <LinearProgress color="primary" />
-                    : ""
-                }
-                <CardContent>
-                    <Typography
-                        variant="h4"
-                        gutterBottom
-                    >
-                        Login
-                    </Typography>
-
-                    <Typography
-                        variant="subtitle1"
-                        gutterBottom
-                    >
-                        Welcome to Cross Court
-                    </Typography>
-
-                    <Box>
-                        <FacebookLogin
-                            appId="190285126563993"
-                            autoLoad={true}
-                            fields="name,email,picture"
-                            scope="public_profile"
-                            callback={responseFacebook}
-                            icon="fa-facebook"
-                            isDisabled={isLoggingIn}
-                            onClick={handleFacebookClick}
+                        ? <LinearProgress
+                            className="login-progress"
+                            // classes={{
+                            //     colorPrimary: classes.colorPrimary,
+                            //     bar: classes.bar
+                            // }}
                         />
-                    </Box>
-                </CardContent>
-            </Card>
+                        : ""
+                }
+                <Box className="login-body">
+                    <FacebookLogin
+                        appId="190285126563993"
+                        textButton="Continue with Facebook"
+                        // autoLoad={true}
+                        fields="name,email,picture"
+                        scope="public_profile"
+                        callback={responseFacebook}
+                        icon="fa-facebook"
+                        isDisabled={isLoggingIn}
+                        onClick={handleFacebookClick}
+                    />
+                </Box>
+
+                <Box className="login-footer">
+                    <Typography 
+                        className="login-guest-button"
+                        variant="overline"
+                    >
+                        Continue as guest
+                    </Typography>
+                </Box>
+            </Paper>
         </Box>
     );
 }
