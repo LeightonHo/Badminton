@@ -30,7 +30,15 @@ export const configSlice = createSlice({
 			}
 		},
 		addCourt: (state, action) => {
-			state.courts = [...state.courts, action.payload]
+			state.courts = [...state.courts, action.payload];
+		},
+		removeCourt: (state, action) => {
+			for (let i = 0; i < state.courts.length; i++) {
+				if (state.courts[i] === action.payload) {
+					state.courts.splice(i, 1);
+					break;
+				}
+			}
 		},
 		syncConfig: (state, action) => {
 			state.courts = action.payload.courts;
@@ -43,7 +51,8 @@ export const {
 	addPlayer, 
 	removePlayer, 
 	updatePlayer,
-	addCourt, 
+	addCourt,
+	removeCourt,
 	syncConfig
 } = configSlice.actions;
 

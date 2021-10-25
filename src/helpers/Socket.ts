@@ -10,8 +10,10 @@ import {
 import { 
 	addPlayer as reduxAddPlayer, 
 	removePlayer as reduxRemovePlayer,
-	syncConfig,
-	updatePlayer as reduxUpdatePlayer
+	updatePlayer as reduxUpdatePlayer,
+	addCourt as reduxAddCourt,
+	removeCourt as reduxRemoveCourt,
+	syncConfig
 } from "../redux/Config";
 import {
 	addRound, 
@@ -54,6 +56,12 @@ export const initSocket = () => {
 				break;
 			case "update_player":
 				store.dispatch(reduxUpdatePlayer(JSON.parse(data.player)));
+				break;
+			case "add_court":
+				store.dispatch(reduxAddCourt(data.court));
+				break;
+			case "remove_court":
+				store.dispatch(reduxRemoveCourt(data.court));
 				break;
 			case "update_config":
 				store.dispatch(syncConfig(JSON.parse(data.config)));
