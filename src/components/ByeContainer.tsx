@@ -2,11 +2,11 @@ import { Box } from "@material-ui/core";
 import React from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../redux/Store";
+import { IPlayer } from "../types";
 import Bye from "./Bye";
-import { IState as Props} from "./Main";
 
 interface IProps {
-    players: Props["config"]["players"]
+    players: IPlayer[],
     roundKey: number
 }
 
@@ -29,7 +29,7 @@ const ByeContainer: React.FC<IProps> = ({ players, roundKey }) => {
     return (
         <Box style={{
             display: "flex",
-            flexDirection: isMobileView ? "column" : "row",
+            flexDirection: "column",
             justifyContent: "space-evenly"
         }}>
             {renderByes()}

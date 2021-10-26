@@ -9,7 +9,7 @@ import { confirmAlert } from "react-confirm-alert";
 import { IPlayer } from "../types";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../redux/Store";
-import { setIsLoading } from "../redux/General";
+import { setIsLoading, setNavigation } from "../redux/General";
 
 const Configuration = () => {
     const history = useHistory();
@@ -54,6 +54,7 @@ const Configuration = () => {
                             // TODO: Move this to the socket listener?
                             window.scrollTo({ top: 0 });
                             history.push("/round-robin");
+                            dispatch(setNavigation("round-robin"))
                         }
                     },
                     {
@@ -72,6 +73,7 @@ const Configuration = () => {
             // TODO: Move this to the socket listener?
             window.scrollTo({ top: 0 });
             history.push("/round-robin");
+            dispatch(setNavigation("round-robin"))
         }
     }
 

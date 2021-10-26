@@ -19,20 +19,15 @@ import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
 import { RootState } from "../redux/Store";
 import { useDispatch, useSelector } from "react-redux";
 import Progress from "./Progress";
-import { setIsGuest, setSessionId, setUserId, setIsMobileView } from "../redux/General";
+import { setIsGuest, setSessionId, setUserId, setIsMobileView, setNavigation } from "../redux/General";
 
 interface Prop {
 	user: IUser
 }
 
-export interface IState {
-	config: IConfig,
-	gameState: IRound[]
-}
-
 const Main: React.FC<Prop> = ({ user }) => {
 	const dispatch = useDispatch();
-    const { isLoading, joinedSession } = useSelector((state: RootState) => state.general);
+    const { isLoading, joinedSession, navigation } = useSelector((state: RootState) => state.general);
 	const { rounds } = useSelector((state: RootState) => state.gameState);
 	const location = useLocation();
 	const history = useHistory();
@@ -40,7 +35,6 @@ const Main: React.FC<Prop> = ({ user }) => {
 		history.replace(path);
 		window.scrollTo({ top: 0, behavior: 'smooth' });
 	}
-	const [navigation, setNavigation] = useState<string>(location.pathname.replace("/", ""));
 
 	window.addEventListener("resize", () => {
 		if (window.innerWidth <= 600) {
@@ -55,6 +49,7 @@ const Main: React.FC<Prop> = ({ user }) => {
 			return;
 		}
 	
+		dispatch(setNavigation(location.pathname.replace("/", "")));
 		dispatch(setUserId(user.userId));
 		dispatch(setSessionId(user.currentSessionId));
 		dispatch(setIsGuest(user.isGuest));
@@ -125,7 +120,7 @@ const Main: React.FC<Prop> = ({ user }) => {
 	}
 
 	const handleNavigationChange = (event: any, newValue: any) => {
-		setNavigation(newValue);
+		dispatch(setNavigation(newValue));
 		handleNavigation(`/${newValue}`);
 	}
 

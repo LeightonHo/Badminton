@@ -1,5 +1,4 @@
 import { Avatar, Card, CardContent, Typography } from "@material-ui/core";
-import { IState as Props } from "./Main";
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -22,11 +21,10 @@ interface IPlayerStats {
 const Scoreboard = () => {
     const playerList: IPlayer[] = [];
     const { rounds } = useSelector((state: RootState) => state.gameState);
-    const processedGameData: Props["gameState"] = JSON.parse(JSON.stringify(rounds));
 
     const initPlayers = () => {
         // Get all the unique players in the game data
-        for (const round of processedGameData) {
+        for (const round of rounds) {
             for (const match of round.matches) {
                 addPlayerToList(match.team1.player1);
                 addPlayerToList(match.team1.player2);
@@ -59,7 +57,7 @@ const Scoreboard = () => {
             };
         }
 
-        for (const round of processedGameData) {
+        for (const round of rounds) {
             for (const match of round.matches) {
                 // Check if the match is finished, based on the configured winning score.
                 // Adjust player stats.

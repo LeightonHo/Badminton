@@ -12,7 +12,7 @@ interface Props {
 
 const Login: React.FC<Props> = ({ setIsLoggedIn, setUser }) => {
 
-    const [isLoggingIn, setIsLoggingIn] = useState<boolean>(false);
+    const [isLoggingIn, setIsLoggingIn] = useState<boolean>(true);
 
     const responseFacebook = (response: ReactFacebookLoginInfo) => {
         console.log(response);

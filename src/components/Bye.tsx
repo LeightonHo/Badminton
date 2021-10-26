@@ -84,7 +84,9 @@ const Bye: React.FC<IProps> = ({ byeKey, player, roundKey }) => {
                     flexDirection: "row",
                     justifyContent: "center",
                     alignItems: "center",
-                    minWidth: "200px"
+                    minWidth: "200px",
+                    paddingTop: "2px",
+                    paddingBottom: "2px"
                 }}
                     // onMouseDown={handlePress}
                     // onTouchStart={handlePress}
