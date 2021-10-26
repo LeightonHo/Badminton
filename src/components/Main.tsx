@@ -19,7 +19,7 @@ import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
 import { RootState } from "../redux/Store";
 import { useDispatch, useSelector } from "react-redux";
 import Progress from "./Progress";
-import { setIsGuest, setSessionId, setUserId } from "../redux/General";
+import { setIsGuest, setSessionId, setUserId, setIsMobileView } from "../redux/General";
 
 interface Prop {
 	user: IUser
@@ -42,16 +42,23 @@ const Main: React.FC<Prop> = ({ user }) => {
 	}
 	const [navigation, setNavigation] = useState<string>(location.pathname.replace("/", ""));
 
+	window.addEventListener("resize", () => {
+		if (window.innerWidth <= 600) {
+			dispatch(setIsMobileView(true));
+		} else {
+			dispatch(setIsMobileView(false));
+		}
+	});
+
 	useEffect(() => {
 		if (!user.userId) {
 			return;
 		}
-
-		console.log(user);
 	
 		dispatch(setUserId(user.userId));
 		dispatch(setSessionId(user.currentSessionId));
 		dispatch(setIsGuest(user.isGuest));
+		dispatch(setIsMobileView(window.innerWidth <= 600 ? true : false));
 		initSocket();
 	}, [user]);
 

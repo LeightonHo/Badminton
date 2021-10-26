@@ -119,7 +119,7 @@ const Login: React.FC<Props> = ({ setIsLoggedIn, setUser }) => {
                     <FacebookLogin
                         appId="190285126563993"
                         textButton="Continue with Facebook"
-                        // autoLoad={true}
+                        autoLoad={true}
                         fields="name,email,picture"
                         scope="public_profile"
                         callback={responseFacebook}

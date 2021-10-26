@@ -61,7 +61,7 @@ const PlayerList = () => {
                                 border: player.active ? "3px solid #55b300" : "3px solid red"
                             }}
                         >
-                            <img src={player.avatarUrl} />
+                            <img src={player.avatarUrl} alt="avatar image" height="50px" width="50px" />
                         </Avatar>
                     </ListItemAvatar>
                     <ListItemText>{player.alias}</ListItemText>

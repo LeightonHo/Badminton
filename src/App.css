@@ -299,7 +299,6 @@
 .player-name {
   font-size: 15px !important;
   cursor: pointer;
-  /* font-weight: 400 !important; */
 }
 
 .games {
@@ -318,6 +317,12 @@
 
 .scoreboard-table > tbody > tr > td {
   font-size: 16px;
+}
+
+.scoreboard-avatar {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
 }
 
 .statistics-box {

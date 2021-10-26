@@ -1,12 +1,13 @@
-import { Box, TextField, Typography } from "@material-ui/core";
+import { Avatar, Box, TextField, Typography } from "@material-ui/core";
 import React, { useState, KeyboardEvent } from "react";
 import { useSelector } from "react-redux";
 import { updateBye } from "../helpers/Socket";
 import { RootState } from "../redux/Store";
+import { IPlayer } from "../types";
 
 interface IProps {
     byeKey: number,
-    player: string,
+    player: IPlayer,
     roundKey: number
 }
 
@@ -78,7 +79,13 @@ const Bye: React.FC<IProps> = ({ byeKey, player, roundKey }) => {
         <>
             {
                 !input.editing
-                ? <Box 
+                ? <Box style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    minWidth: "200px"
+                }}
                     // onMouseDown={handlePress}
                     // onTouchStart={handlePress}
                     // onMouseUp={handleRelease}
@@ -87,12 +94,19 @@ const Bye: React.FC<IProps> = ({ byeKey, player, roundKey }) => {
                     // onTouchCancel={handleRelease}
                     // onTouchMove={handleRelease}
                 >
+                    <Avatar style={{ 
+                        height: "25px",
+                        width: "25px",
+                        marginRight: "5px"
+                    }}>
+                        <img src={player.avatarUrl} alt="avatar" height="25px" width="25px" />
+                    </Avatar>
                     <Typography
                         variant="overline"
                         align="center"
                         className="player-name"
                     >
-                        {player}
+                        {player.alias}
                     </Typography>
                 </Box>
                 : <TextField 
@@ -102,11 +116,11 @@ const Bye: React.FC<IProps> = ({ byeKey, player, roundKey }) => {
                     variant="outlined" 
                     size="small"
                     type="text" 
-                    placeholder={player}
+                    placeholder={player.alias}
                     onChange={handlePlayerChange}
                     onKeyPress={handlePlayerKeyPress}
                     onBlur={handleOnBlur}
-                    name={player}
+                    name={player.alias}
                 />
             }
         </>

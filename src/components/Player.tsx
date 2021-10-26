@@ -90,9 +90,11 @@ const Player: React.FC<IProps> = ({ playerKey, player, roundKey, matchKey }) => 
                     // onTouchMove={handleRelease}
                     className="player-box"
                 >
-                    {/* <Avatar style={{ margin: "auto", height: "30px", width: "30px" }}> */}
-                    <Avatar style={{ margin: "auto" }}>
-                        <img src={player.avatarUrl} />
+                    <Avatar style={{ 
+                        margin: "auto",
+                        border: "2px solid #d1d1d1"
+                    }}>
+                        <img src={player.avatarUrl} alt="avatar image" height="50px" width="50px" />
                     </Avatar>
                     <Typography 
                         variant="overline"

@@ -1,4 +1,4 @@
-import { Box, Card, CardContent, Typography } from "@material-ui/core";
+import { Avatar, Card, CardContent, Typography } from "@material-ui/core";
 import { IState as Props } from "./Main";
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -9,73 +9,51 @@ import TableRow from '@material-ui/core/TableRow';
 import Progress from "./Progress";
 import { RootState } from "../redux/Store";
 import { useSelector } from "react-redux";
+import { IPlayer } from "../types";
 
 interface IPlayerStats {
     [id: string]: {
+        player: IPlayer,
         win: number,
         loss: number
     }
 }
 
 const Scoreboard = () => {
-
-    const playerList: string[] = [];
-    const { players } = useSelector((state: RootState) => state.config);
+    const playerList: IPlayer[] = [];
     const { rounds } = useSelector((state: RootState) => state.gameState);
     const processedGameData: Props["gameState"] = JSON.parse(JSON.stringify(rounds));
-
-    const cleanPlayerName = (player: string): string => {
-        const indexOfAsterisk = player.indexOf("*");
-
-        if (indexOfAsterisk > 0) {
-            return player.substring(0, player.indexOf("*")).toUpperCase();
-        }
-
-        return player.toUpperCase();
-    }
-
-    const preprocessGameData = (): void => {
-        for (const round of processedGameData) {
-            for (const match of round.matches) {
-                match.team1.player1.userId = cleanPlayerName(match.team1.player1.userId);
-                match.team1.player2.userId = cleanPlayerName(match.team1.player2.userId);
-                match.team2.player3.userId = cleanPlayerName(match.team2.player3.userId);
-                match.team2.player4.userId = cleanPlayerName(match.team2.player4.userId);
-            }
-        }
-    }
 
     const initPlayers = () => {
         // Get all the unique players in the game data
         for (const round of processedGameData) {
             for (const match of round.matches) {
-                if (playerList.indexOf(match.team1.player1.userId) < 0) {
-                    playerList.push(match.team1.player1.userId);
-                }
-
-                if (playerList.indexOf(match.team1.player2.userId) < 0) {
-                    playerList.push(match.team1.player2.userId);
-                }
-
-                if (playerList.indexOf(match.team2.player3.userId) < 0) {
-                    playerList.push(match.team2.player3.userId);
-                }
-
-                if (playerList.indexOf(match.team2.player4.userId) < 0) {
-                    playerList.push(match.team2.player4.userId);
-                }
+                addPlayerToList(match.team1.player1);
+                addPlayerToList(match.team1.player2);
+                addPlayerToList(match.team2.player3);
+                addPlayerToList(match.team2.player4);
             }
         }
+    }
+
+    const addPlayerToList = (playerToAdd: IPlayer): void => {
+        for (const player of playerList) {
+            if (player.userId === playerToAdd.userId) {
+                return;
+            }
+        }
+
+        playerList.push(playerToAdd);
     }
 
     const generateTableBody = () => {
         let result: IPlayerStats = {}
 
-        preprocessGameData();
         initPlayers();
 
         for (const player of playerList) {
-            result[player] = {
+            result[player.userId] = {
+                player: player,
                 win: 0,
                 loss: 0
             };
@@ -101,33 +79,34 @@ const Scoreboard = () => {
             }
         }
 
-        const sortedResults = sortPlayerStats(result);
-
         return (
             <TableBody>
-                {sortedResults.map((playerStat, key) => {
+                {sortPlayerStats(result).map((playerStat, key) => {
                     return (
                         <TableRow
                             hover
                             key={key}
                         >
-                            <TableCell>{getPlayerAlias(playerStat.name)} {displayEmoji(key, playerList.length)}</TableCell>
+                            <TableCell style={{ 
+                                display: "flex", 
+                                flexDirection: "row",
+                                alignItems: "center"
+                            }}>
+                                <Avatar style={{ margin: "0 10px 0 0" }}>
+                                    <img src={playerStat.avatarUrl} alt="avatar image" height="50px" width="50px" />
+                                </Avatar>
+                                <Typography>
+                                    {playerStat.alias} {displayEmoji(key, playerList.length)}
+                                </Typography>
+                            </TableCell>
                             <TableCell align="right">{playerStat.win}</TableCell>
                             <TableCell align="right">{playerStat.loss}</TableCell>
-                            <TableCell align="right">{calculateWinRate(playerStat.win, playerStat.loss)}%</TableCell>
+                            <TableCell align="right">{playerStat.winrate}%</TableCell>
                         </TableRow>
                     );
                 })}
             </TableBody>
         );
-    }
-
-    const getPlayerAlias = (userId: string) => {
-        for (const player of players) {
-            if (player.userId.toLowerCase() === userId.toLowerCase()) {
-                return player.alias;
-            }
-        }
     }
 
     const displayEmoji = (key: number, players: number): string => {
@@ -155,20 +134,23 @@ const Scoreboard = () => {
 
         for (const [key, value] of Object.entries(playerStats)) {
             result.push({
-                name: key,
+                userId: value.player.userId,
+                alias: value.player.alias,
+                avatarUrl: value.player.avatarUrl,
                 win: value.win,
-                loss: value.loss
+                loss: value.loss,
+                winrate: calculateWinRate(value.win, value.loss)
             });
         }
 
         return result.sort((a, b) => {
             if (a.win === b.win) {
                 if (a.loss === b.loss) {
-                    if (a.name < b.name) {
+                    if (a.alias < b.alias) {
                         return -1;
                     }
 
-                    return a.name > b.name ? 1 : 0;
+                    return a.alias > b.alias ? 1 : 0;
                 }
 
                 return a.loss - b.loss;
@@ -353,7 +335,7 @@ const Scoreboard = () => {
                         <Table padding="none" className="scoreboard-table">
                             <TableHead className="scoreboard-header">
                                 <TableRow>
-                                    <TableCell>Name</TableCell>
+                                    <TableCell>Player</TableCell>
                                     <TableCell align="right">Win</TableCell>
                                     <TableCell align="right">Loss</TableCell>
                                     <TableCell align="right">Win Rate</TableCell>
