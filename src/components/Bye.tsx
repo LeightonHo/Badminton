@@ -106,7 +106,10 @@ const Bye: React.FC<IProps> = ({ byeKey, player, roundKey }) => {
                     <Typography
                         variant="overline"
                         align="center"
-                        className="player-name"
+                        style={{
+                            fontSize: "15px",
+                            cursor: "pointer"
+                        }}
                     >
                         {player.alias}
                     </Typography>

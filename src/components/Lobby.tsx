@@ -13,8 +13,10 @@ const Lobby = () => {
     const dispatch = useDispatch();
     const { sessionId, isGuest, isLoading, joinedSession } = useSelector((state: RootState) => state.general);
     const [error, setError] = useState<string>("");
+    const [sessionCode, setSessionCode] = useState("");
+
     const handleSessionChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-        dispatch(setSessionId(e.target.value.toUpperCase()))
+        setSessionCode(e.target.value.toUpperCase());
     }
 
     useEffect(() => {
@@ -37,14 +39,14 @@ const Lobby = () => {
     }
 
     const handleJoinClick = () => {
-        if (!sessionId) {
+        if (!sessionCode) {
             setError("Session code cannot be blank.");
             return;
         }
 
         dispatch(setIsLoading(true));
         setError("");
-        joinSession(sessionId);
+        joinSession(sessionCode);
     }
 
     const handleLeaveClick = () => {
@@ -54,12 +56,11 @@ const Lobby = () => {
         dispatch(syncGameState({
             rounds: []
         }));
-
         dispatch(syncConfig({
             courts: [],
             players: []
         }));
-        
+        dispatch(setSessionId(""));
         dispatch(setJoinedSession(false));
         setError("");
     }
@@ -103,7 +104,7 @@ const Lobby = () => {
                         onChange={handleSessionChange}
                         name="session"
                         className="general-input"
-                        value={sessionId}
+                        value={sessionCode}
                         fullWidth
                         disabled={joinedSession}
                         error={error != "" ? true : false}

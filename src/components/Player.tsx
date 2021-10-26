@@ -98,7 +98,10 @@ const Player: React.FC<IProps> = ({ playerKey, player, roundKey, matchKey }) => 
                     </Avatar>
                     <Typography 
                         variant="overline"
-                        className="player-name"
+                        style={{
+                            fontSize: "15px",
+                            cursor: "pointer"
+                        }}
                     >
                         {player.alias}
                     </Typography>

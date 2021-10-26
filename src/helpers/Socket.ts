@@ -78,7 +78,7 @@ export const initSocket = () => {
 				store.dispatch(syncGameState(JSON.parse(data.gameState)));
 				store.dispatch(syncConfig(JSON.parse(data.config)));
 				break;
-			case "create_session":
+			case "created_session":
 				console.log(data.message);
 				console.log("SessionID: ", data.sessionId);
 				store.dispatch(setSessionId(data.sessionId));
@@ -88,6 +88,7 @@ export const initSocket = () => {
 				break;
 			case "joined_session":
 				console.log(data.message);
+				store.dispatch(setSessionId(data.sessionId));
 				store.dispatch(setJoinedSession(true));
 				store.dispatch(setIsHost(data.isHost));
 

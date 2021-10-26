@@ -26,8 +26,12 @@ const RoundRobin = () => {
                                     <Grid item>
                                         <Typography 
                                             variant="h6"
-                                            className="spnGameLabel"
                                             gutterBottom
+                                            style={{
+                                                textAlign: "center",
+                                                fontSize: "16px",
+                                                fontWeight: "bold"
+                                            }}
                                         >
                                             ROUND {round.round}
                                         </Typography>
@@ -40,7 +44,10 @@ const RoundRobin = () => {
                                             <Box key={matchKey} className="match-box">
                                                 <Grid 
                                                     item xs
-                                                    className="match"
+                                                    style={{
+                                                        paddingBottom: "15px",
+                                                        marginBottom: "10px"
+                                                    }}
                                                 >
                                                     <Match 
                                                         match={match} 

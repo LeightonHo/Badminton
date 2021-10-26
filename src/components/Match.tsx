@@ -23,10 +23,17 @@ const Match: React.FC<IProps> = ({ match, roundKey, matchKey }) => {
         >
             <Grid
                 item xs={1}
-                className="vertical-align-center"
+                style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "center"
+                }}
             >
                 <Typography
                     variant="h6"
+                    style={{
+                        fontSize: "16px"
+                    }}
                     className="court-number"
                 >
                     {match.court}
@@ -67,10 +74,20 @@ const Match: React.FC<IProps> = ({ match, roundKey, matchKey }) => {
             </Grid>
             <Grid
                 item xs={1}
-                className="vertical-align-center"
-                
+                style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "center"
+                }}
             >
-                <Typography variant="overline">vs</Typography>
+                <Typography 
+                    variant="overline"
+                    style={{
+                        fontSize: "16px"
+                    }}
+                >
+                    VS
+                </Typography>
             </Grid>
             <Grid 
                 container

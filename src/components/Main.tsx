@@ -27,7 +27,7 @@ interface Prop {
 
 const Main: React.FC<Prop> = ({ user }) => {
 	const dispatch = useDispatch();
-    const { isLoading, joinedSession, navigation } = useSelector((state: RootState) => state.general);
+	const { isLoading, joinedSession, navigation, sessionId } = useSelector((state: RootState) => state.general);
 	const { rounds } = useSelector((state: RootState) => state.gameState);
 	const location = useLocation();
 	const history = useHistory();
@@ -48,7 +48,7 @@ const Main: React.FC<Prop> = ({ user }) => {
 		if (!user.userId) {
 			return;
 		}
-	
+
 		dispatch(setNavigation(location.pathname.replace("/", "")));
 		dispatch(setUserId(user.userId));
 		dispatch(setSessionId(user.currentSessionId));
@@ -72,6 +72,12 @@ const Main: React.FC<Prop> = ({ user }) => {
 			[theme.breakpoints.up('sm')]: {
 				display: 'flex',
 			},
+		},
+		sectionMobile: {
+			display: 'flex',
+			[theme.breakpoints.up('md')]: {
+				display: 'none',
+			},
 		}
 	}));
 
@@ -94,25 +100,51 @@ const Main: React.FC<Prop> = ({ user }) => {
 						<div className={classes.sectionDesktop}>
 							{
 								joinedSession && rounds.length > 0
-								? <>
-									<IconButton color="inherit" onClick={(() => { handleNavigation("/round-robin") })}>
-										<Typography>Games</Typography>
-									</IconButton>
-									<IconButton color="inherit" onClick={(() => { handleNavigation("/scoreboard") })}>
-										<Typography>Scoreboard</Typography>
-									</IconButton>
-								</>
-								: ""
+									? <>
+										<IconButton color="inherit" onClick={(() => { handleNavigation("/round-robin") })}>
+											<Typography>Games</Typography>
+										</IconButton>
+										<IconButton color="inherit" onClick={(() => { handleNavigation("/scoreboard") })}>
+											<Typography>Scoreboard</Typography>
+										</IconButton>
+									</>
+									: ""
 							}
 							<IconButton color="inherit" onClick={(() => { handleNavigation("/lobby") })}>
 								<Typography>Lobby</Typography>
 							</IconButton>
 							<IconButton color="inherit" onClick={(() => { handleNavigation("/profile") })}>
 								<Avatar>
-									<img src={user.avatarUrl} />
+									<img src={user.avatarUrl} alt="avatar image" />
 								</Avatar>
 							</IconButton>
 						</div>
+						<Box 
+							className={classes.sectionMobile}
+							style={{
+								display: "flex",
+								flexDirection: "row",
+								alignItems: "center",
+								justifyContent: "space-between",
+								width: "100%"
+							}}
+						>
+							<Typography
+								style={{
+									padding: "12px"
+								}}
+							>
+								{sessionId}
+							</Typography>
+							<IconButton
+								onClick={() => { handleNavigation("/profile") }}
+								color="inherit"
+							>
+								<Avatar>
+									<img src={user.avatarUrl} alt="avatar image" />
+								</Avatar>
+							</IconButton>
+						</Box>
 					</Toolbar>
 				</AppBar>
 			</div>
@@ -130,8 +162,8 @@ const Main: React.FC<Prop> = ({ user }) => {
 
 			{
 				isLoading
-				? <Progress />
-				: ""
+					? <Progress />
+					: ""
 			}
 
 			<Box className="app-body">
@@ -164,33 +196,31 @@ const Main: React.FC<Prop> = ({ user }) => {
 				</Box>
 			</Box>
 
-			{
-				joinedSession && rounds.length
-					? <Paper className="bottom-navigation" style={{ position: "fixed", bottom: 0, left: 0, right: 0 }} elevation={1}>
-						<BottomNavigation
-							showLabels
-							value={navigation}
-							onChange={handleNavigationChange}
-						>
-							<BottomNavigationAction
-								label="Scoreboard"
-								value="scoreboard"
-								icon={<EmojiEventsIcon />}
-							/>
-							<BottomNavigationAction
-								label="Games"
-								value="round-robin"
-								icon={<FavoriteIcon />}
-							/>
-							<BottomNavigationAction
-								label="Lobby"
-								value="lobby"
-								icon={<SettingsIcon />}
-							/>
-						</BottomNavigation>
-					</Paper>
-					: ""
-			}
+			<Paper className="bottom-navigation" style={{ position: "fixed", bottom: 0, left: 0, right: 0 }} elevation={1}>
+				<BottomNavigation
+					showLabels
+					value={navigation}
+					onChange={handleNavigationChange}
+				>
+					<BottomNavigationAction
+						label="Scoreboard"
+						value="scoreboard"
+						icon={<EmojiEventsIcon />}
+						disabled={!joinedSession || !rounds.length}
+					/>
+					<BottomNavigationAction
+						label="Games"
+						value="round-robin"
+						icon={<FavoriteIcon />}
+						disabled={!joinedSession || !rounds.length}
+					/>
+					<BottomNavigationAction
+						label="Lobby"
+						value="lobby"
+						icon={<SettingsIcon />}
+					/>
+				</BottomNavigation>
+			</Paper>
 		</Box>
 	);
 }
