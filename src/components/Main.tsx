@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from "react";
-import { makeStyles } from '@material-ui/core/styles';
+import React, { useEffect } from "react";
 import { Redirect, Route, Switch, useHistory, useLocation } from "react-router-dom";
 import Box from "@material-ui/core/Box";
 import AppBar from '@material-ui/core/AppBar';
@@ -8,7 +7,7 @@ import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import RoundRobin from "./RoundRobin";
 import Scoreboard from "./Scoreboard";
-import { IConfig, IUser, IRound } from "../types";
+import { IUser } from "../types";
 import Lobby from "./Lobby";
 import { initSocket } from "../helpers/Socket";
 import Profile from "./Profile";
@@ -19,7 +18,7 @@ import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
 import { RootState } from "../redux/Store";
 import { useDispatch, useSelector } from "react-redux";
 import Progress from "./Progress";
-import { setIsGuest, setSessionId, setUserId, setIsMobileView, setNavigation } from "../redux/General";
+import { setIsGuest, setSessionId, setUserId, setIsMobile, setNavigation } from "../redux/General";
 
 interface Prop {
 	user: IUser
@@ -27,10 +26,11 @@ interface Prop {
 
 const Main: React.FC<Prop> = ({ user }) => {
 	const dispatch = useDispatch();
-	const { isLoading, joinedSession, navigation, sessionId } = useSelector((state: RootState) => state.general);
-	const { rounds } = useSelector((state: RootState) => state.gameState);
 	const location = useLocation();
 	const history = useHistory();
+	const { isLoading, joinedSession, navigation, sessionId, isMobile } = useSelector((state: RootState) => state.general);
+	const { rounds } = useSelector((state: RootState) => state.gameState);
+
 	const handleNavigation = (path: string) => {
 		history.replace(path);
 		window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -38,9 +38,9 @@ const Main: React.FC<Prop> = ({ user }) => {
 
 	window.addEventListener("resize", () => {
 		if (window.innerWidth <= 600) {
-			dispatch(setIsMobileView(true));
+			dispatch(setIsMobile(true));
 		} else {
-			dispatch(setIsMobileView(false));
+			dispatch(setIsMobile(false));
 		}
 	});
 
@@ -53,74 +53,17 @@ const Main: React.FC<Prop> = ({ user }) => {
 		dispatch(setUserId(user.userId));
 		dispatch(setSessionId(user.currentSessionId));
 		dispatch(setIsGuest(user.isGuest));
-		dispatch(setIsMobileView(window.innerWidth <= 600 ? true : false));
+		dispatch(setIsMobile(window.innerWidth <= 600 ? true : false));
 		initSocket();
 	}, [user]);
 
-	const useStyles = makeStyles((theme) => ({
-		grow: {
-			flexGrow: 1,
-		},
-		title: {
-			display: 'none',
-			[theme.breakpoints.up('sm')]: {
-				display: 'block',
-			},
-		},
-		sectionDesktop: {
-			display: 'none',
-			[theme.breakpoints.up('sm')]: {
-				display: 'flex',
-			},
-		},
-		sectionMobile: {
-			display: 'flex',
-			[theme.breakpoints.up('md')]: {
-				display: 'none',
-			},
-		}
-	}));
-
-	const BuildNavBar = () => {
-		const classes = useStyles();
-
-		const handleNavigation = (path: string) => {
-			history.replace(path);
-			window.scrollTo({ top: 0, behavior: "smooth" });
-		}
-
+	const renderNavBar = () => {
 		return (
-			<div className={classes.grow}>
-				<AppBar position="fixed" >
-					<Toolbar>
-						<Typography className={classes.title} variant="h5" noWrap>
-							Cross Court
-						</Typography>
-						<div className={classes.grow} />
-						<div className={classes.sectionDesktop}>
-							{
-								joinedSession && rounds.length > 0
-									? <>
-										<IconButton color="inherit" onClick={(() => { handleNavigation("/round-robin") })}>
-											<Typography>Games</Typography>
-										</IconButton>
-										<IconButton color="inherit" onClick={(() => { handleNavigation("/scoreboard") })}>
-											<Typography>Scoreboard</Typography>
-										</IconButton>
-									</>
-									: ""
-							}
-							<IconButton color="inherit" onClick={(() => { handleNavigation("/lobby") })}>
-								<Typography>Lobby</Typography>
-							</IconButton>
-							<IconButton color="inherit" onClick={(() => { handleNavigation("/profile") })}>
-								<Avatar>
-									<img src={user.avatarUrl} alt="avatar image" />
-								</Avatar>
-							</IconButton>
-						</div>
-						<Box 
-							className={classes.sectionMobile}
+			<AppBar position="fixed" >
+				<Toolbar>
+					{
+						isMobile
+						? <Box 
 							style={{
 								display: "flex",
 								flexDirection: "row",
@@ -145,9 +88,40 @@ const Main: React.FC<Prop> = ({ user }) => {
 								</Avatar>
 							</IconButton>
 						</Box>
-					</Toolbar>
-				</AppBar>
-			</div>
+						: <>
+							<Typography variant="h5" noWrap>
+								Cross Court
+							</Typography>
+							<Box style={{
+								display: "flex",
+								justifyContent: "flex-end",
+								flexGrow: 1
+							}}>
+								{
+									joinedSession && rounds.length > 0
+										? <>
+											<IconButton color="inherit" onClick={(() => { handleNavigation("/round-robin") })}>
+												<Typography>Games</Typography>
+											</IconButton>
+											<IconButton color="inherit" onClick={(() => { handleNavigation("/scoreboard") })}>
+												<Typography>Scoreboard</Typography>
+											</IconButton>
+										</>
+										: ""
+								}
+								<IconButton color="inherit" onClick={(() => { handleNavigation("/lobby") })}>
+									<Typography>Lobby</Typography>
+								</IconButton>
+								<IconButton color="inherit" onClick={(() => { handleNavigation("/profile") })}>
+									<Avatar>
+										<img src={user.avatarUrl} alt="avatar image" />
+									</Avatar>
+								</IconButton>
+							</Box>
+						</>
+					}
+				</Toolbar>
+			</AppBar>
 		);
 	}
 
@@ -158,7 +132,7 @@ const Main: React.FC<Prop> = ({ user }) => {
 
 	return (
 		<Box className="App">
-			{BuildNavBar()}
+			{renderNavBar()}
 
 			{
 				isLoading
