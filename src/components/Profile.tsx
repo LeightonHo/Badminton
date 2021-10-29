@@ -12,6 +12,10 @@ const Profile: React.FC<Prop> = ({ user }) => {
         // TODO: Create new endpoint for fetching match history by userId.
     }
 
+    const logOut = () => {
+
+    }
+
     return (
         <>
             <Card className="card">
@@ -57,7 +61,7 @@ const Profile: React.FC<Prop> = ({ user }) => {
                     variant="contained"
                     color="secondary"
                 >
-                    Logout
+                    Log Out
                 </Button>
             </Box>
         </>

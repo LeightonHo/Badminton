@@ -11,7 +11,7 @@ import { IUser } from "../types";
 import Lobby from "./Lobby";
 import { initSocket } from "../helpers/Socket";
 import Profile from "./Profile";
-import { Avatar, BottomNavigation, BottomNavigationAction, Paper } from "@material-ui/core";
+import { Avatar, Backdrop, BottomNavigation, BottomNavigationAction, Paper } from "@material-ui/core";
 import SettingsIcon from "@mui/icons-material/Settings";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
@@ -19,6 +19,7 @@ import { RootState } from "../redux/Store";
 import { useDispatch, useSelector } from "react-redux";
 import Progress from "./Progress";
 import { setIsGuest, setSessionId, setUserId, setIsMobile, setNavigation } from "../redux/General";
+import Disconnected from "./Disconnected";
 
 interface Prop {
 	user: IUser
@@ -28,7 +29,7 @@ const Main: React.FC<Prop> = ({ user }) => {
 	const dispatch = useDispatch();
 	const location = useLocation();
 	const history = useHistory();
-	const { isLoading, joinedSession, navigation, sessionId, isMobile } = useSelector((state: RootState) => state.general);
+	const { isConnected, isLoading, joinedSession, navigation, sessionId, isMobile } = useSelector((state: RootState) => state.general);
 	const { rounds } = useSelector((state: RootState) => state.gameState);
 
 	const handleNavigation = (path: string) => {
@@ -136,8 +137,14 @@ const Main: React.FC<Prop> = ({ user }) => {
 
 			{
 				isLoading
-					? <Progress />
-					: ""
+				? <Progress />
+				: ""
+			}
+
+			{
+				!(isConnected && joinedSession)
+				? <Disconnected />
+				: ""
 			}
 
 			<Box className="app-body">

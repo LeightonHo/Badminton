@@ -67,18 +67,6 @@ const Login: React.FC<Props> = ({ setIsLoggedIn, setUser }) => {
         setIsLoggedIn(true);
     }
 
-    // const useStyles = makeStyles({
-    //     colorPrimary: {
-    //         backgroundColor: "#E9E9E9"
-    //     },
-    //     bar: {
-    //         borderRadius: 5,
-    //         backgroundColor: "#ff8427"
-    //     }
-    // });
-
-    // const classes = useStyles();
-
     const styles = {
         paperContainer: {
             height: "100vh",

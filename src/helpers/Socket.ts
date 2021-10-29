@@ -24,14 +24,17 @@ import {
 let userId: string;
 let sessionId: string;
 let socket: any = null;
+let keepAlive: boolean = true;
 
 const heartbeat = () => {
-	const payload: any = {
-		action: "ping"
+	if (keepAlive) {
+		const payload: any = {
+			action: "ping"
+		}
+	
+		send(payload);
+		setTimeout(heartbeat, 30000);
 	}
-
-	send(payload);
-	setTimeout(heartbeat, 30000);
 }
 
 export const initSocket = () => {
@@ -105,6 +108,11 @@ export const initSocket = () => {
 	}
 
 	socket.onopen = () => {
+		setTimeout(() => {
+			console.log("Manually closing the socket");
+			  socket.close();
+		}, 5000);
+
 		heartbeat();
 
 		console.log("WebSocket is connected.");
@@ -117,15 +125,12 @@ export const initSocket = () => {
 		}
 	}
 
-	socket.addEventListener("close", () => {
-		store.dispatch(setIsConnected(false));
+	socket.onclose = () => {
 		console.log("WebSocket is closed.");
-	});
+		keepAlive = false;
+		store.dispatch(setIsConnected(false));
+	}
 }
-
-// setTimeout(() => {
-//   socket.close();
-// }, 5000);
 
 // Mechanism for re-connecting automatically.
 let scrollEventTriggered: boolean = false;
