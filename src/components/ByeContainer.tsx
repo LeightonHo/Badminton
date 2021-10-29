@@ -11,7 +11,7 @@ interface IProps {
 }
 
 const ByeContainer: React.FC<IProps> = ({ players, roundKey }) => {
-    const { isMobileView } = useSelector((state: RootState) => state.general);
+    const { isMobile } = useSelector((state: RootState) => state.general);
 
     const renderByes = () => {
         return (players.map((player, key) => {

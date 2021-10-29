@@ -33,7 +33,7 @@ const heartbeat = () => {
 		}
 	
 		send(payload);
-		setTimeout(heartbeat, 30000);
+		setTimeout(heartbeat, 5000);
 	}
 }
 
@@ -108,10 +108,10 @@ export const initSocket = () => {
 	}
 
 	socket.onopen = () => {
-		setTimeout(() => {
-			console.log("Manually closing the socket");
-			  socket.close();
-		}, 5000);
+		// setTimeout(() => {
+		// 	console.log("Manually closing the socket");
+		// 	  socket.close();
+		// }, 5000);
 
 		heartbeat();
 

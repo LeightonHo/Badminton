@@ -60,7 +60,13 @@ const Main: React.FC<Prop> = ({ user }) => {
 
 	const renderNavBar = () => {
 		return (
-			<AppBar position="fixed" >
+			<AppBar 
+				position="fixed" 
+				style={{
+					height: isMobile ? "50px" :  "64px",
+					zIndex: 1
+				}}
+			>
 				<Toolbar>
 					{
 						isMobile
@@ -84,8 +90,16 @@ const Main: React.FC<Prop> = ({ user }) => {
 								onClick={() => { handleNavigation("/profile") }}
 								color="inherit"
 							>
-								<Avatar>
-									<img src={user.avatarUrl} alt="avatar image" />
+								<Avatar style={{
+									height: "30px",
+									width: "30px"
+								}}>
+									<img 
+										src={user.avatarUrl} 
+										alt="avatar image" 
+										height="30px"
+										width="30px"
+									/>
 								</Avatar>
 							</IconButton>
 						</Box>
@@ -115,7 +129,10 @@ const Main: React.FC<Prop> = ({ user }) => {
 								</IconButton>
 								<IconButton color="inherit" onClick={(() => { handleNavigation("/profile") })}>
 									<Avatar>
-										<img src={user.avatarUrl} alt="avatar image" />
+										<img 
+											src={user.avatarUrl} 
+											alt="avatar image"
+										/>
 									</Avatar>
 								</IconButton>
 							</Box>
@@ -132,77 +149,79 @@ const Main: React.FC<Prop> = ({ user }) => {
 	}
 
 	return (
-		<Box className="App">
-			{renderNavBar()}
-
+		<>
 			{
-				isLoading
-				? <Progress />
-				: ""
-			}
-
-			{
-				!(isConnected && joinedSession)
+				!isConnected || !joinedSession
 				? <Disconnected />
 				: ""
 			}
 
-			<Box className="app-body">
-				<Box style={{ position: "relative" }}>
-					<Switch>
-						<Route
-							exact
-							path="/"
-							render={() => {
-								return (
-									!joinedSession
-										? <Redirect to="/lobby" />
-										: <Redirect to="/round-robin" />
-								);
-							}}
-						/>
-						<Route path="/lobby">
-							<Lobby />
-						</Route>
-						<Route path="/round-robin">
-							<RoundRobin />
-						</Route>
-						<Route path="/scoreboard">
-							<Scoreboard />
-						</Route>
-						<Route path="/profile">
-							<Profile user={user} />
-						</Route>
-					</Switch>
-				</Box>
-			</Box>
+			<Box className="App">
+				{renderNavBar()}
 
-			<Paper className="bottom-navigation" style={{ position: "fixed", bottom: 0, left: 0, right: 0 }} elevation={1}>
-				<BottomNavigation
-					showLabels
-					value={navigation}
-					onChange={handleNavigationChange}
-				>
-					<BottomNavigationAction
-						label="Scoreboard"
-						value="scoreboard"
-						icon={<EmojiEventsIcon />}
-						disabled={!joinedSession || !rounds.length}
-					/>
-					<BottomNavigationAction
-						label="Games"
-						value="round-robin"
-						icon={<FavoriteIcon />}
-						disabled={!joinedSession || !rounds.length}
-					/>
-					<BottomNavigationAction
-						label="Lobby"
-						value="lobby"
-						icon={<SettingsIcon />}
-					/>
-				</BottomNavigation>
-			</Paper>
-		</Box>
+				{
+					isLoading
+					? <Progress />
+					: ""
+				}
+
+				<Box className="app-body">
+					<Box style={{ position: "relative" }}>
+						<Switch>
+							<Route
+								exact
+								path="/"
+								render={() => {
+									return (
+										!joinedSession
+											? <Redirect to="/lobby" />
+											: <Redirect to="/round-robin" />
+									);
+								}}
+							/>
+							<Route path="/lobby">
+								<Lobby />
+							</Route>
+							<Route path="/round-robin">
+								<RoundRobin />
+							</Route>
+							<Route path="/scoreboard">
+								<Scoreboard />
+							</Route>
+							<Route path="/profile">
+								<Profile user={user} />
+							</Route>
+						</Switch>
+					</Box>
+				</Box>
+
+				<Paper className="bottom-navigation" style={{ position: "fixed", bottom: 0, left: 0, right: 0 }} elevation={1}>
+					<BottomNavigation
+						showLabels
+						value={navigation}
+						onChange={handleNavigationChange}
+					>
+						<BottomNavigationAction
+							label="Scoreboard"
+							value="scoreboard"
+							icon={<EmojiEventsIcon />}
+							disabled={!joinedSession || !rounds.length}
+						/>
+						<BottomNavigationAction
+							label="Games"
+							value="round-robin"
+							icon={<FavoriteIcon />}
+							disabled={!joinedSession || !rounds.length}
+						/>
+						<BottomNavigationAction
+							label="Lobby"
+							value="lobby"
+							icon={<SettingsIcon />}
+						/>
+					</BottomNavigation>
+				</Paper>
+			</Box>
+		</>
 	);
 }
 

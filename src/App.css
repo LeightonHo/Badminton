@@ -113,10 +113,6 @@
     top: 52px;
     bottom: 52px;
   }
-
-  .app-progress {
-	top: 4px;
-	}
   
   .bottom-navigation {
     display: block;
@@ -150,10 +146,6 @@
     top: 64px;
 	bottom: 0px;
   }
-
-	.app-progress {
-		top: 0;
-	}
 
   .bottom-navigation { 
     display: none;

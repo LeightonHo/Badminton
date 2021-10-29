@@ -13,7 +13,7 @@ interface IProps {
 }
 
 const Match: React.FC<IProps> = ({ match, roundKey, matchKey }) => {
-    const { isMobileView } = useSelector((state: RootState) => state.general);
+    const { isMobile } = useSelector((state: RootState) => state.general);
 
     return (
         <Grid
@@ -46,7 +46,7 @@ const Match: React.FC<IProps> = ({ match, roundKey, matchKey }) => {
                 justifyContent="center"
             >
                 <Box style={{
-                    display: isMobileView ? "" : "flex"
+                    display: isMobile ? "" : "flex"
                 }}>
                     <Player 
                         playerKey={1}
@@ -62,7 +62,7 @@ const Match: React.FC<IProps> = ({ match, roundKey, matchKey }) => {
                     />
                 </Box>
                 <Box style={{
-                    marginTop: isMobileView ? "" : "10px"
+                    marginTop: isMobile ? "" : "10px"
                 }}>
                     <Score 
                         team={1} 
@@ -95,7 +95,7 @@ const Match: React.FC<IProps> = ({ match, roundKey, matchKey }) => {
                 direction="column"
             >
                 <Box style={{
-                    display: isMobileView ? "" : "flex"
+                    display: isMobile ? "" : "flex"
                 }}>
                     <Player 
                         playerKey={3}
@@ -111,7 +111,7 @@ const Match: React.FC<IProps> = ({ match, roundKey, matchKey }) => {
                     />
                 </Box>
                 <Box style={{
-                    marginTop: isMobileView ? "" : "10px"
+                    marginTop: isMobile ? "" : "10px"
                 }}>
                     <Score 
                         team={2} 

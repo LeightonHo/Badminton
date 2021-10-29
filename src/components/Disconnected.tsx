@@ -1,4 +1,4 @@
-import { Button, Card, CardContent, Box, Typography } from "@material-ui/core";
+import { Button, Backdrop, Card, CardContent, Box, Typography } from "@material-ui/core";
 import { useState } from "react";
 import { initSocket } from "../helpers/Socket";
 
@@ -13,16 +13,14 @@ const Disconnected = () => {
 
     return (
         <>
-            <Box style={{
-                position: "absolute",
-                top: "0",
-                left: "0",
-                width: "100vw",
-                height: "100vh",
-                backgroundColor: "#2a2a2a",
-                opacity: "75%",
-                zIndex: 2
-            }} />
+            <Backdrop
+                style={{ 
+                    opacity: "50%",
+                    color: "#fff", 
+                    zIndex: 10
+                }}
+                open={true}
+            />
             <Card style={{
                 position: "absolute",
                 top: "50%",

@@ -75,11 +75,6 @@ const Lobby = () => {
 
     return (
         <>
-            {
-                isLoading
-                ? <Progress />
-                : ""
-            }
             <Card className="card">
                 <CardContent className="general-card">
                     <Typography
