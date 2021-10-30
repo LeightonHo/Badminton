@@ -4,6 +4,7 @@ import {
 	setIsConnected,
 	setIsHost,
 	setIsLoading,
+	setIsSessionActive,
 	setJoinedSession,
 	setSessionId, 
 } from "../redux/General";
@@ -13,12 +14,12 @@ import {
 	updatePlayer as reduxUpdatePlayer,
 	addCourt as reduxAddCourt,
 	removeCourt as reduxRemoveCourt,
-	syncConfig
+	setConfig
 } from "../redux/Config";
 import {
 	addRound, 
 	updateScore as reduxUpdateScore,
-	syncGameState 
+	setGameState 
 } from "../redux/GameState";
 
 let userId: string;
@@ -33,7 +34,7 @@ const heartbeat = () => {
 		}
 	
 		send(payload);
-		setTimeout(heartbeat, 5000);
+		setTimeout(heartbeat, 30000);
 	}
 }
 
@@ -67,37 +68,46 @@ export const initSocket = () => {
 				store.dispatch(reduxRemoveCourt(data.court));
 				break;
 			case "update_config":
-				store.dispatch(syncConfig(JSON.parse(data.config)));
+				store.dispatch(setConfig(JSON.parse(data.config)));
 				break;
 			case "add_round":
 				store.dispatch(addRound(JSON.parse(data.round)));
-				store.dispatch(syncConfig(JSON.parse(data.config)));
+				store.dispatch(setConfig(JSON.parse(data.config)));
 				store.dispatch(setIsLoading(false));
 				break;
 			case "update_score":
 				store.dispatch(reduxUpdateScore(JSON.parse(data.data)));
 				break;
 			case "update_gamestate":
-				store.dispatch(syncGameState(JSON.parse(data.gameState)));
-				store.dispatch(syncConfig(JSON.parse(data.config)));
+				store.dispatch(setGameState(JSON.parse(data.gameState)));
+				store.dispatch(setConfig(JSON.parse(data.config)));
 				break;
 			case "created_session":
 				console.log(data.message);
-				console.log("SessionID: ", data.sessionId);
 				store.dispatch(setSessionId(data.sessionId));
-				store.dispatch(syncConfig(JSON.parse(data.config)));
+				store.dispatch(setConfig(JSON.parse(data.config)));
 				store.dispatch(setJoinedSession(true));
 				store.dispatch(setIsHost(data.isHost));
+				store.dispatch(setIsSessionActive(data.isSessionActive));
+
+				console.log("SessionID in state: ", store.getState().general.sessionId);
 				break;
 			case "joined_session":
 				console.log(data.message);
 				store.dispatch(setSessionId(data.sessionId));
 				store.dispatch(setJoinedSession(true));
 				store.dispatch(setIsHost(data.isHost));
+				store.dispatch(setIsSessionActive(data.isSessionActive));
 
 				// If no game state is returned, then the game hasn't started yet, so show a loading screen until data is pushed.
-				store.dispatch(syncGameState(JSON.parse(data.gameState)));
-				store.dispatch(syncConfig(JSON.parse(data.config)));
+				store.dispatch(setGameState(JSON.parse(data.gameState)));
+				store.dispatch(setConfig(JSON.parse(data.config)));
+				store.dispatch(setIsLoading(false));
+
+				console.log("SessionID in state: ", store.getState().general.sessionId);
+				break;
+			case "ended_session":
+				store.dispatch(setIsSessionActive(false));
 				store.dispatch(setIsLoading(false));
 				break;
 			case "join_failed":
@@ -274,6 +284,15 @@ export const leaveSession = (sessionId: string) => {
 	send({
 		action: "session",
 		method: "leave",
+		userId: userId,
+		sessionId: sessionId
+	});
+}
+
+export const endSession = (sessionId: string) => {
+	send({
+		action: "session",
+		method: "end",
 		userId: userId,
 		sessionId: sessionId
 	});

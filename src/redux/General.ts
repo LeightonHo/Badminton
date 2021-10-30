@@ -10,6 +10,7 @@ const initialState: any = {
     isJoiningSession: false,
     joinedSession: false,
     isMobile: false,
+    isSessionActive: true,
     navigation: ""
 }
 
@@ -43,6 +44,9 @@ export const configSlice = createSlice({
 		},
         setNavigation: (state, action) => {
             state.navigation = action.payload;
+        },
+        setIsSessionActive: (state, action) => {
+            state.isSessionActive = action.payload;
         }
 	},
 })
@@ -56,7 +60,8 @@ export const {
     setIsLoading,
     setJoinedSession,
     setIsMobile,
-    setNavigation
+    setNavigation,
+    setIsSessionActive
 } = configSlice.actions;
 
 export default configSlice.reducer;

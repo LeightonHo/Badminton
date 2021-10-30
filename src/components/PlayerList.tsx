@@ -9,7 +9,7 @@ import { RootState } from "../redux/Store";
 import { updatePlayer } from "../redux/Config";
 
 const PlayerList = () => {
-    const { sessionId, isHost } = useSelector((state: RootState) => state.general);
+    const { sessionId, isHost, isSessionActive } = useSelector((state: RootState) => state.general);
     const { players } = useSelector((state: RootState) => state.config);
     const dispatch = useDispatch();
 
@@ -66,7 +66,7 @@ const PlayerList = () => {
                     </ListItemAvatar>
                     <ListItemText>{player.alias}</ListItemText>
                     {
-                        isHost
+                        isHost && isSessionActive
                         ?  <ListItemSecondaryAction>
                             <Switch
                                 color="primary"

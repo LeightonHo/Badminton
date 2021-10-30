@@ -14,11 +14,11 @@ import { setIsLoading, setNavigation } from "../redux/General";
 const Configuration = () => {
     const history = useHistory();
     const dispatch = useDispatch();
-    const { sessionId, isHost } = useSelector((state: RootState) => state.general);
+    const { sessionId, isHost, isSessionActive } = useSelector((state: RootState) => state.general);
     const { players, courts } = useSelector((state: RootState) => state.config);
     const { rounds } = useSelector((state: RootState) => state.gameState);
     const hasGameStarted: boolean = rounds.length > 0;
-    
+
     const getInactivePlayers = (): IPlayer[] => {
         let result: IPlayer[] = [];
 
@@ -111,81 +111,73 @@ const Configuration = () => {
         downloadAnchorElement?.click();
     }
 
-    const renderConfiguration = () => {
-        return (
-            <>
-                <Card className="card courts-card">
-                    <CardContent>
-                        <Typography
-                            variant="h5"
-                            gutterBottom
-                        >
-                            Courts ({courts.length})
-                        </Typography>
-                        {
-                            isHost
-                            ? <CourtForm />
-                            : ""
-                        }
-                        <CourtList />
-                    </CardContent>
-                </Card>
-
-                <Card className="card players-card">
-                    <CardContent>
-                        <Typography
-                            variant="h5"
-                            gutterBottom
-                            className="config-card-header"
-                        >
-                            Players ({players.length - getInactivePlayers().length})
-                        </Typography>
-                        {
-                            isHost
-                            ? <PlayerForm />
-                            : ""
-                        }
-                        <PlayerList />
-                    </CardContent>
-                </Card>
-
-                <Box className="config-buttons">
-                    {
-                        isHost
-                        ? <>
-                            <Button
-                                variant="contained"
-                                color="primary"
-                                onClick={handleGenerateRound}
-                                disabled={disableGenerateRoundButton()}
-                            >
-                                Generate Round
-                            </Button>
-                        </>
-                        : ""
-                    }
-                    {
-                        hasGameStarted && false
-                        ? <>
-                            <Button
-                                variant="contained"
-                                color="primary"
-                                onClick={handleExport}
-                            >
-                                Export Data
-                            </Button>
-                            <a id="downloadAnchorElement"></a>
-                        </>
-                        : ""
-                    }
-                </Box>
-            </>
-        );
-    }
-
     return (
         <>
-            {renderConfiguration()}
+            <Card className="card courts-card">
+                <CardContent>
+                    <Typography
+                        variant="h5"
+                        gutterBottom
+                    >
+                        Courts ({courts.length})
+                    </Typography>
+                    {
+                        isHost && isSessionActive
+                        ? <CourtForm />
+                        : ""
+                    }
+                    <CourtList />
+                </CardContent>
+            </Card>
+
+            <Card className="card players-card">
+                <CardContent>
+                    <Typography
+                        variant="h5"
+                        gutterBottom
+                        className="config-card-header"
+                    >
+                        Players ({players.length - getInactivePlayers().length})
+                    </Typography>
+                    {
+                        isHost && isSessionActive
+                        ? <PlayerForm />
+                        : ""
+                    }
+                    <PlayerList />
+                </CardContent>
+            </Card>
+
+            <Box className="config-buttons">
+                {
+                    isHost && isSessionActive
+                    ? <>
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            onClick={handleGenerateRound}
+                            disabled={disableGenerateRoundButton()}
+                        >
+                            Generate Round
+                        </Button>
+                    </>
+                    : ""
+                }
+                {
+                    hasGameStarted
+                    ? <>
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            onClick={handleExport}
+                        >
+                            Export Data
+                        </Button>
+                        <a id="downloadAnchorElement"></a>
+                    </>
+                    : ""
+                }
+            </Box>
         </>
     );
 }

@@ -5,7 +5,6 @@ import { RootState } from "../redux/Store";
 import { addCourt } from "../helpers/Socket";
 
 const CourtForm = () => {
-    const dispatch = useDispatch();
     const { sessionId } = useSelector((state: RootState) => state.general)
     const { courts } = useSelector((state: RootState) => state.config)
     const [input, setInput] = useState("");

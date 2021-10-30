@@ -5,7 +5,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "../redux/Store";
 
 const CourtList = () => {
-    const { sessionId, isHost } = useSelector((state: RootState) => state.general);
+    const { sessionId, isHost, isSessionActive } = useSelector((state: RootState) => state.general);
     const { courts } = useSelector((state: RootState) => state.config);
 
     const handleDelete = (court: string): void => {
@@ -19,7 +19,7 @@ const CourtList = () => {
                     <ListItemText>{court}</ListItemText>
                     <ListItemSecondaryAction>
                         {
-                            isHost
+                            isHost && isSessionActive
                             ? <IconButton 
                                 edge="end" 
                                 aria-label="delete"

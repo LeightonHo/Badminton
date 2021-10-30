@@ -11,14 +11,14 @@ import { IUser } from "../types";
 import Lobby from "./Lobby";
 import { initSocket } from "../helpers/Socket";
 import Profile from "./Profile";
-import { Avatar, Backdrop, BottomNavigation, BottomNavigationAction, Paper } from "@material-ui/core";
+import { Avatar, BottomNavigation, BottomNavigationAction, Paper } from "@material-ui/core";
 import SettingsIcon from "@mui/icons-material/Settings";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
 import { RootState } from "../redux/Store";
 import { useDispatch, useSelector } from "react-redux";
 import Progress from "./Progress";
-import { setIsGuest, setSessionId, setUserId, setIsMobile, setNavigation } from "../redux/General";
+import { setIsGuest, setSessionId, setUserId, setIsMobile, setNavigation, setIsLoading } from "../redux/General";
 import Disconnected from "./Disconnected";
 
 interface Prop {
@@ -87,7 +87,9 @@ const Main: React.FC<Prop> = ({ user }) => {
 								{sessionId}
 							</Typography>
 							<IconButton
-								onClick={() => { handleNavigation("/profile") }}
+								onClick={() => { 
+									handleNavigation("/profile");
+								}}
 								color="inherit"
 							>
 								<Avatar style={{
@@ -151,7 +153,7 @@ const Main: React.FC<Prop> = ({ user }) => {
 	return (
 		<>
 			{
-				!isConnected || !joinedSession
+				!isConnected
 				? <Disconnected />
 				: ""
 			}

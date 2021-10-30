@@ -40,7 +40,7 @@ export const configSlice = createSlice({
 				}
 			}
 		},
-		syncConfig: (state, action) => {
+		setConfig: (state, action) => {
 			state.courts = action.payload.courts;
 			state.players = action.payload.players;
 		}
@@ -53,7 +53,7 @@ export const {
 	updatePlayer,
 	addCourt,
 	removeCourt,
-	syncConfig
+	setConfig
 } = configSlice.actions;
 
 export default configSlice.reducer;

@@ -5,9 +5,8 @@ import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import Progress from "./Progress";
 import { RootState } from "../redux/Store";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { IPlayer } from "../types";
 
 interface IPlayerStats {
@@ -349,11 +348,7 @@ const Scoreboard = () => {
 
     return (
         <>
-            {
-                rounds.length === 0
-                    ? <Progress />
-                    : renderScoreboard()
-            }
+            {renderScoreboard()}
 
             {/* {generateStatistics()} */}
 

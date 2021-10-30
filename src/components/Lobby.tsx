@@ -1,19 +1,19 @@
 import { Box, Button, Card, CardContent, TextField, Typography } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
-import { createSession, joinSession, leaveSession } from "../helpers/Socket";
+import { createSession, joinSession, leaveSession, endSession } from "../helpers/Socket";
 import Configuration from "./Configuration";
-import Progress from "./Progress";
 import { useDispatch, useSelector } from "react-redux";
-import { syncConfig } from "../redux/Config";
-import { syncGameState } from "../redux/GameState";
+import { setConfig } from "../redux/Config";
+import { setGameState } from "../redux/GameState";
 import { RootState } from "../redux/Store";
 import { setIsLoading, setJoinedSession, setSessionId } from "../redux/General";
+import { confirmAlert } from "react-confirm-alert";
 
 const Lobby = () => {
     const dispatch = useDispatch();
-    const { sessionId, isGuest, isLoading, joinedSession } = useSelector((state: RootState) => state.general);
+    const { sessionId, isHost, isGuest, isLoading, joinedSession, isSessionActive } = useSelector((state: RootState) => state.general);
     const [error, setError] = useState<string>("");
-    const [sessionCode, setSessionCode] = useState("");
+    const [sessionCode, setSessionCode] = useState(sessionId);
 
     const handleSessionChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
         setSessionCode(e.target.value.toUpperCase());
@@ -33,36 +33,56 @@ const Lobby = () => {
         }
     }, [joinedSession, sessionId]);
 
-    const handleCreateSession = () => {
+    const handleCreateSessionClick = () => {
         createSession();
         setError("");
     }
 
-    const handleJoinClick = () => {
+    const handleJoinSessionClick = () => {
         if (!sessionCode) {
             setError("Session code cannot be blank.");
             return;
         }
 
-        dispatch(setIsLoading(true));
         setError("");
+        dispatch(setIsLoading(true));
         joinSession(sessionCode);
     }
 
-    const handleLeaveClick = () => {
+    const handleLeaveSessionClick = () => {
         window.scrollTo({ top: 0 });
         leaveSession(sessionId);
 
-        dispatch(syncGameState({
+        dispatch(setGameState({
             rounds: []
         }));
-        dispatch(syncConfig({
+        dispatch(setConfig({
             courts: [],
             players: []
         }));
         dispatch(setSessionId(""));
         dispatch(setJoinedSession(false));
         setError("");
+    }
+
+    const handleEndSessionClick = () => { 
+        confirmAlert({
+            title: "Confirm",
+            message: "Are you sure you want to end the session?  Scores will be locked and you won't be able to generate any more rounds.",
+            buttons: [
+                {
+                    label: "Yes",
+                    onClick: () => {
+                        dispatch(setIsLoading(true));
+                        endSession(sessionId);
+                    }
+                },
+                {
+                    label: "No",
+                    onClick: () => { }
+                }
+            ]
+        });
     }
 
     const getDescription = () => {
@@ -119,7 +139,7 @@ const Lobby = () => {
                         <Button
                             variant="contained"
                             color="primary"
-                            onClick={handleJoinClick}
+                            onClick={handleJoinSessionClick}
                             disabled={isLoading}
                         >
                             Join Session
@@ -129,7 +149,7 @@ const Lobby = () => {
                             ? <Button
                                 variant="contained"
                                 color="primary"
-                                onClick={handleCreateSession}
+                                onClick={handleCreateSessionClick}
                                 disabled={isLoading}
                             >
                                 Create Session
@@ -137,14 +157,33 @@ const Lobby = () => {
                             : ""
                         }
                     </>
-                    : <Button
+                    : ""
+                }
+
+                {
+                    joinedSession && isHost && isSessionActive
+                    ?  <Button
                         variant="contained"
                         color="secondary"
-                        onClick={handleLeaveClick}
+                        onClick={handleEndSessionClick}
+                        disabled={isLoading}
+                    >
+                        End Session
+                    </Button>
+                    : ""
+                }
+
+                {
+                    joinedSession && (!isHost || isHost && !isSessionActive)
+                    ? <Button
+                        variant="contained"
+                        color="secondary"
+                        onClick={handleLeaveSessionClick}
                         disabled={isLoading}
                     >
                         Leave Session
                     </Button>
+                    : ""
                 }
             </Box>
         </>

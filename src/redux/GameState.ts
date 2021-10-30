@@ -21,7 +21,7 @@ export const configSlice = createSlice({
                 state.rounds[payload.roundKey].matches[payload.matchKey].team2.score = payload.score;
             }
         },
-        syncGameState: (state, action) => {
+        setGameState: (state, action) => {
             state.rounds = action.payload;
         }
 	},
@@ -30,7 +30,7 @@ export const configSlice = createSlice({
 export const { 
 	addRound,
     updateScore,
-    syncGameState
+    setGameState
 } = configSlice.actions;
 
 export default configSlice.reducer;

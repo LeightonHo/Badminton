@@ -12,7 +12,7 @@ interface IProps {
 }
 
 const Score: React.FC<IProps> = ({ team, score, roundKey, matchKey }) => {
-    const { sessionId, isConnected } = useSelector((state: RootState) => state.general);
+    const { sessionId, isConnected, isSessionActive } = useSelector((state: RootState) => state.general);
     const [inputScore, setInputScore] = useState<number>(score);
 
     useEffect(() => {
@@ -56,7 +56,7 @@ const Score: React.FC<IProps> = ({ team, score, roundKey, matchKey }) => {
                 value={showScore(inputScore)}
                 size="small"
                 className="score-input"
-                disabled={!isConnected}
+                disabled={!isConnected || !isSessionActive}
             />
         </Grid>
     );
