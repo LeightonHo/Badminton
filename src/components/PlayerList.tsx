@@ -16,16 +16,16 @@ const PlayerList = () => {
     const handleDelete = (player: IPlayer): void => {
         confirmAlert({
             title: "Confirm",
-            message: `Are you sure you want to remove ${player.alias} from the session?`,
+            message: `Remove ${player.alias} from the session?`,
             buttons: [
                 {
-                    label: "Yes",
+                    label: "Ok",
                     onClick: () => {
                         removePlayer(sessionId, player.userId);
                     }
                 },
                 {
-                    label: "No",
+                    label: "Cancel",
                     onClick: () => { }
                 }
             ]

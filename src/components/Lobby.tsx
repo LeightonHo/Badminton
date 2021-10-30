@@ -63,17 +63,17 @@ const Lobby = () => {
     const handleEndSessionClick = () => { 
         confirmAlert({
             title: "Confirm",
-            message: "Are you sure you want to end the session?  Scores will be locked and you won't be able to generate any more rounds.",
+            message: "Scores will be locked and you won't be able to generate any more rounds.",
             buttons: [
                 {
-                    label: "Yes",
+                    label: "Ok",
                     onClick: () => {
                         dispatch(setIsLoading(true));
                         endSession(sessionId);
                     }
                 },
                 {
-                    label: "No",
+                    label: "Cancel",
                     onClick: () => { }
                 }
             ]

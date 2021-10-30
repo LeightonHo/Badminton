@@ -40,10 +40,10 @@ const Configuration = () => {
 
             confirmAlert({
                 title: "Confirm",
-                message: `Are you sure you want to generate a round without the following players? ${inactivePlayerAliases.join(", ")}`,
+                message: `The following players will be on bye: ${inactivePlayerAliases.join(", ")}`,
                 buttons: [
                     {
-                        label: "Yes",
+                        label: "Ok",
                         onClick: () => {
                             dispatch(setIsLoading(true));
                             generateRound(sessionId, {
@@ -58,7 +58,7 @@ const Configuration = () => {
                         }
                     },
                     {
-                        label: "No",
+                        label: "Cancel",
                         onClick: () => { }
                     }
                 ]

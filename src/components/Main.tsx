@@ -26,7 +26,7 @@ interface Prop {
 }
 
 const Main: React.FC<Prop> = ({ user }) => {
-	const MOBILE_TOP_NAVBAR_HEIGHT = 54;
+	const MOBILE_TOP_NAVBAR_HEIGHT = 50;
 	const MOBILE_BOTTOM_NAVBAR_HEIGHT = 56;
 	const DESKTOP_TOP_NAVBAR_HEIGHT = 64;
 	const DESKTOP_BOTTOM_NAVBAR_HEIGHT = 15;
@@ -49,9 +49,9 @@ const Main: React.FC<Prop> = ({ user }) => {
 		}
 	});
 
-	useEffect(() => {
-		history.replace("/");
-	}, joinedSession);
+	// useEffect(() => {
+	// 	history.replace("/");
+	// }, joinedSession);
 
 	useEffect(() => {
 		if (!user.userId) {
@@ -179,10 +179,10 @@ const Main: React.FC<Prop> = ({ user }) => {
 				<Box style={{
 					position: "absolute",
 					overflow: "auto",
-					top: isMobile ? "54px" : "64px",
+					top: isMobile ? "50px" : "64px",
 					left: "0px",
 					right: "0px",
-					height: isMobile ? window.innerHeight - (MOBILE_TOP_NAVBAR_HEIGHT + MOBILE_TOP_NAVBAR_HEIGHT) : window.innerHeight - (DESKTOP_TOP_NAVBAR_HEIGHT + DESKTOP_BOTTOM_NAVBAR_HEIGHT),
+					height: isMobile ? window.innerHeight - (MOBILE_TOP_NAVBAR_HEIGHT + MOBILE_BOTTOM_NAVBAR_HEIGHT) : window.innerHeight - (DESKTOP_TOP_NAVBAR_HEIGHT + DESKTOP_BOTTOM_NAVBAR_HEIGHT),
 					paddingBottom: isMobile ? "56px" : "15px",
 					backgroundColor: "#f5f5f5"
 				}}>
