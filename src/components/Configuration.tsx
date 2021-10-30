@@ -164,7 +164,7 @@ const Configuration = () => {
                     : ""
                 }
                 {
-                    hasGameStarted
+                    !isSessionActive
                     ? <>
                         <Button
                             variant="contained"

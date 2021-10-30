@@ -91,8 +91,6 @@ export const initSocket = () => {
 				store.dispatch(setIsHost(data.isHost));
 				store.dispatch(setIsSessionActive(data.isSessionActive));
 				store.dispatch(setIsLoading(false));
-
-				console.log("SessionID in state: ", store.getState().general.sessionId);
 				break;
 			case "joined_session":
 				console.log(data.message);
@@ -105,8 +103,6 @@ export const initSocket = () => {
 				store.dispatch(setGameState(JSON.parse(data.gameState)));
 				store.dispatch(setConfig(JSON.parse(data.config)));
 				store.dispatch(setIsLoading(false));
-
-				console.log("SessionID in state: ", store.getState().general.sessionId);
 				break;
 			case "ended_session":
 				store.dispatch(setIsSessionActive(false));
@@ -133,7 +129,7 @@ export const initSocket = () => {
 		store.dispatch(setIsConnected(true));
 
 		if (sessionId) {
-			console.log("Joining session");
+			console.log("Joining session.");
 			store.dispatch(setIsLoading(true));
 			joinSession(sessionId);
 		}
@@ -147,21 +143,21 @@ export const initSocket = () => {
 }
 
 // Mechanism for re-connecting automatically.
-let scrollEventTriggered: boolean = false;
+// let scrollEventTriggered: boolean = false;
 
-window.addEventListener("scroll", () => {
-	if (!socket) {
-		return;
-	}
+// window.addEventListener("scroll", () => {
+// 	if (!socket) {
+// 		return;
+// 	}
 
-	if (!scrollEventTriggered && socket.readyState === WebSocket.CLOSED) {
-		scrollEventTriggered = true;
-		initSocket();
-		setTimeout(() => {
-			scrollEventTriggered = false;
-		}, 1000);
-	}
-});
+// 	if (!scrollEventTriggered && socket.readyState === WebSocket.CLOSED) {
+// 		scrollEventTriggered = true;
+// 		initSocket();
+// 		setTimeout(() => {
+// 			scrollEventTriggered = false;
+// 		}, 1000);
+// 	}
+// });
 
 // Public Socket Helper functions
 export const generateRound = (sessionId: string, config: IConfig) => {
