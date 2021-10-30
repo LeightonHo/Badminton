@@ -1,91 +1,109 @@
-import { Box, Button, Card, CardContent, TextField, Typography } from "@material-ui/core";
+import { Box, Button, Card, CardContent, Typography } from "@material-ui/core";
 import CourtForm from "./CourtForm";
 import CourtList from "./CourtList";
 import PlayerForm from "./PlayerForm";
 import PlayerList from "./PlayerList";
-import { IState as Props } from "./Main";
-import { confirmAlert } from "react-confirm-alert";
-import "react-confirm-alert/src/react-confirm-alert.css";
 import { useHistory } from "react-router-dom";
-import { generateRoundRobin } from "../helpers/RoundRobinGenerator";
-import { pushGameState } from "../helpers/SocketHelper";
-import { getSocket } from "../helpers/Socket";
+import { generateRound } from "../helpers/Socket";
+import { confirmAlert } from "react-confirm-alert";
+import { IPlayer } from "../types";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../redux/Store";
+import { setIsLoading, setNavigation } from "../redux/General";
 
-export interface IConfig {
-    rounds: number,
-    winningScore: number,
-    courts: string[],
-    players: string[]
-}
-
-interface IProps {
-    config: Props["config"],
-    setConfig: React.Dispatch<React.SetStateAction<Props["config"]>>,
-    gameState: Props["gameState"],
-    sessionId: string
-}
-
-const Configuration:React.FC<IProps> = ({ config, setConfig, gameState, sessionId }) => {
+const Configuration = () => {
     const history = useHistory();
-    const socket = getSocket();
-    const hasGameStarted: boolean = gameState.length > 0;
+    const dispatch = useDispatch();
+    const { sessionId, isHost, isSessionActive } = useSelector((state: RootState) => state.general);
+    const { players, courts } = useSelector((state: RootState) => state.config);
+    const { rounds } = useSelector((state: RootState) => state.gameState);
+    const hasGameStarted: boolean = rounds.length > 0;
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-        if (!isNaN(parseInt(e.target.value))) {
-            setConfig({
-                ...config,
-                rounds: parseInt(e.target.value)
+    const getInactivePlayers = (): IPlayer[] => {
+        let result: IPlayer[] = [];
+
+        for (const player of players) {
+            if (!player.active) {
+                result.push(player);
+            }
+        }
+
+        return result;
+    }
+
+    const handleGenerateRound = () => {
+        // If there are inactive players, ask for confirmation
+        const inactivePlayers = getInactivePlayers();
+
+        if (inactivePlayers.length > 0) {
+            const inactivePlayerAliases = inactivePlayers.map(element => element.alias);
+
+            confirmAlert({
+                title: "Confirm",
+                message: `Are you sure you want to generate a round without the following players? ${inactivePlayerAliases.join(", ")}`,
+                buttons: [
+                    {
+                        label: "Yes",
+                        onClick: () => {
+                            dispatch(setIsLoading(true));
+                            generateRound(sessionId, {
+                                courts: courts,
+                                players: players
+                            });
+
+                            // TODO: Move this to the socket listener?
+                            window.scrollTo({ top: 0 });
+                            history.push("/round-robin");
+                            dispatch(setNavigation("round-robin"))
+                        }
+                    },
+                    {
+                        label: "No",
+                        onClick: () => { }
+                    }
+                ]
             });
+        } else {
+            dispatch(setIsLoading(true));
+            generateRound(sessionId, {
+                courts: courts,
+                players: players
+            });
+
+            // TODO: Move this to the socket listener?
+            window.scrollTo({ top: 0 });
+            history.push("/round-robin");
+            dispatch(setNavigation("round-robin"))
         }
     }
 
-    const clearConfigData = () => {
-        confirmAlert({
-            title: "Confirm",
-            message: "Are you sure you want to clear the local settings?",
-            buttons: [
-                {
-                    label: "Yes",
-                    onClick: () => {
-                        setConfig({
-                            rounds: 15,
-                            winningScore: 21,
-                            courts: [],
-                            players: []
-                        });
-                    }
-                },
-                {
-                    label: "No",
-                    onClick: () => { }
-                }
-            ]
-        });
+    const disableGenerateRoundButton = (): boolean => {
+        const inactivePlayers = getInactivePlayers();
+        const numberOfPlayers = players.length - inactivePlayers.length;
+        const numberOfCourts = courts.length;
+        const numberOfPlayersOnBye = numberOfPlayers - (courts.length * 4);
+
+        if (numberOfPlayers == 0) {
+            return true;
+        }
+
+        if (numberOfCourts == 0) {
+            return true;
+        }
+
+        if (numberOfPlayers - (numberOfCourts * 4) < 0) {
+            return true;
+        }
+
+        if (numberOfPlayersOnBye > 3) {
+            return true;
+        }
+
+        return false;
     }
 
-    const clearGameData = () => {
-        confirmAlert({
-            title: "Confirm",
-            message: "Generating a new round robin will clear existing game data.  Are you sure you want to continue?",
-            buttons: [
-                {
-                    label: "Yes",
-                    onClick: () => {
-                        const roundRobin = generateRoundRobin(config);
-                        pushGameState(socket, sessionId, config, roundRobin);
-                        history.push("/round-robin");
-                    }
-                },
-                {
-                    label: "No",
-                    onClick: () => { }
-                }
-            ]
-        });
-    }
-
-    const handleExport = () => {
-        const data = `data:text/json;charsett=utf-8,${encodeURIComponent(JSON.stringify(gameState))}`;
+    const handleExport = (): void => {
+        const data = `data:text/json;charsett=utf-8,${encodeURIComponent(JSON.stringify(rounds))}`;
         let downloadAnchorElement = document.getElementById("downloadAnchorElement");
 
         downloadAnchorElement?.setAttribute("href", data);
@@ -93,122 +111,73 @@ const Configuration:React.FC<IProps> = ({ config, setConfig, gameState, sessionI
         downloadAnchorElement?.click();
     }
 
-    const renderConfiguration = () => {
-        return (
-            <Box>
-                <Card className="card">
-                    <CardContent className="general-card">
-                        <Typography
-                            variant="h5"
-                        >
-                            General
-                        </Typography>
-                        <Typography
-                            variant="subtitle2"
-                        >
-                            The session code is <b>{sessionId}</b>
-                        </Typography>
-                        <TextField
-                            id="inputMatches"
-                            label={`Rounds (${config.rounds.toString()})`}
-                            type="number"
-                            variant="outlined"
-                            size="small"
-                            fullWidth
-                            onChange={handleChange}
-                            placeholder={config.rounds.toString()}
-                            name="name"
-                            className="general-input"
-                        />
-                        <TextField
-                            id="inputWinningScore"
-                            label={`Winning Score (${config.winningScore.toString()})`}
-                            type="number"
-                            variant="outlined"
-                            size="small"
-                            fullWidth
-                            onChange={handleChange}
-                            placeholder={config.winningScore.toString()}
-                            name="name"
-                            className="general-input"
-                        />
-                    </CardContent>
-                </Card>
-
-                <Card className="card courts-card">
-                    <CardContent>
-                        <Typography
-                            variant="h5"
-                            gutterBottom
-                        >
-                            Courts ({config.courts.length})
-                        </Typography>
-                        {
-                            !hasGameStarted
-                            ? <CourtForm config={config} setConfig={setConfig} />
-                            : ""
-                        }
-                        <CourtList config={config} setConfig={setConfig} hasGameStarted={hasGameStarted} />
-                    </CardContent>
-                </Card>
-
-                <Card className="card players-card">
-                    <CardContent>
-                        <Typography
-                            variant="h5"
-                            gutterBottom
-                            className="config-card-header"
-                        >
-                            Players ({config.players.length})
-                        </Typography>
-                        {
-                            !hasGameStarted
-                            ? <PlayerForm config={config} setConfig={setConfig} />
-                            : ""
-                        }
-                        <PlayerList config={config} setConfig={setConfig} hasGameStarted={hasGameStarted} />
-                    </CardContent>
-                </Card>
-
-                <Box className="config-buttons">
-                    {
-                        !hasGameStarted
-                        ? <>
-                            <Button
-                                variant="contained"
-                                color="primary"
-                                onClick={clearGameData}
-                                disabled={hasGameStarted}
-                            >
-                                Generate round robin
-                            </Button>
-                            <Button
-                                variant="contained"
-                                color="secondary"
-                                onClick={clearConfigData}
-                            >
-                                Reset config
-                            </Button>
-                        </>
-                        : <>
-                            <Button
-                                variant="contained"
-                                color="primary"
-                                onClick={handleExport}
-                            >
-                                Export data
-                            </Button>
-                            <a id="downloadAnchorElement"></a>
-                        </>
-                    }
-                </Box>
-            </Box>
-        );
-    }
-
     return (
         <>
-            {renderConfiguration()}
+            <Card className="card courts-card">
+                <CardContent>
+                    <Typography
+                        variant="h5"
+                        gutterBottom
+                    >
+                        Courts ({courts.length})
+                    </Typography>
+                    {
+                        isHost && isSessionActive
+                        ? <CourtForm />
+                        : ""
+                    }
+                    <CourtList />
+                </CardContent>
+            </Card>
+
+            <Card className="card players-card">
+                <CardContent>
+                    <Typography
+                        variant="h5"
+                        gutterBottom
+                        className="config-card-header"
+                    >
+                        Players ({players.length - getInactivePlayers().length})
+                    </Typography>
+                    {
+                        isHost && isSessionActive
+                        ? <PlayerForm />
+                        : ""
+                    }
+                    <PlayerList />
+                </CardContent>
+            </Card>
+
+            <Box className="config-buttons">
+                {
+                    isHost && isSessionActive
+                    ? <>
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            onClick={handleGenerateRound}
+                            disabled={disableGenerateRoundButton()}
+                        >
+                            Generate Round
+                        </Button>
+                    </>
+                    : ""
+                }
+                {
+                    hasGameStarted
+                    ? <>
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            onClick={handleExport}
+                        >
+                            Export Data
+                        </Button>
+                        <a id="downloadAnchorElement"></a>
+                    </>
+                    : ""
+                }
+            </Box>
         </>
     );
 }

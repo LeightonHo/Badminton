@@ -1,19 +1,19 @@
-import { Grid, Typography } from "@material-ui/core";
-import React from "react";
+import { Box, Grid, Typography } from "@material-ui/core";
+import React, { useEffect } from "react";
 import Player from "./Player";
-import { IMatch } from "./RoundRobin";
 import Score from "./Score";
+import { IMatch } from "../types";
+import { useSelector } from "react-redux";
+import { RootState } from "../redux/Store";
 
 interface IProps {
     match: IMatch,
     roundKey: number,
-    matchKey: number,
-    sessionId: string,
-    isHost: boolean,
-    isConnected: boolean
+    matchKey: number
 }
 
-const Match: React.FC<IProps> = ({ match, roundKey, matchKey, sessionId, isHost, isConnected }) => {
+const Match: React.FC<IProps> = ({ match, roundKey, matchKey }) => {
+    const { isMobile } = useSelector((state: RootState) => state.general);
 
     return (
         <Grid
@@ -23,10 +23,17 @@ const Match: React.FC<IProps> = ({ match, roundKey, matchKey, sessionId, isHost,
         >
             <Grid
                 item xs={1}
-                className="vertical-align-center"
+                style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "center"
+                }}
             >
                 <Typography
                     variant="h6"
+                    style={{
+                        fontSize: "16px"
+                    }}
                     className="court-number"
                 >
                     {match.court}
@@ -38,70 +45,81 @@ const Match: React.FC<IProps> = ({ match, roundKey, matchKey, sessionId, isHost,
                 direction="column"
                 justifyContent="center"
             >
-                <Player 
-                    player={1}
-                    name={match.team1.player1}
-                    roundKey={roundKey} 
-                    matchKey={matchKey}
-                    sessionId={sessionId}
-                    isHost={isHost}
-                    isConnected={isConnected}
-                />
-                <Player 
-                    player={2}
-                    name={match.team1.player2}
-                    roundKey={roundKey}
-                    matchKey={matchKey}
-                    sessionId={sessionId}
-                    isHost={isHost}
-                    isConnected={isConnected}
-                />
-                <Score 
-                    team={1} 
-                    score={match.team1.score} 
-                    roundKey={roundKey} 
-                    matchKey={matchKey}
-                    sessionId={sessionId} 
-                    isConnected={isConnected}
-                />
+                <Box style={{
+                    display: isMobile ? "" : "flex"
+                }}>
+                    <Player 
+                        playerKey={1}
+                        player={match.team1.player1}
+                        roundKey={roundKey} 
+                        matchKey={matchKey}
+                    />
+                    <Player 
+                        playerKey={2}
+                        player={match.team1.player2}
+                        roundKey={roundKey}
+                        matchKey={matchKey}
+                    />
+                </Box>
+                <Box style={{
+                    marginTop: isMobile ? "" : "10px"
+                }}>
+                    <Score 
+                        team={1} 
+                        score={match.team1.score} 
+                        roundKey={roundKey} 
+                        matchKey={matchKey}
+                    />
+                </Box>
             </Grid>
             <Grid
                 item xs={1}
-                className="vertical-align-center"
+                style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "center"
+                }}
             >
-                <Typography variant="overline">vs</Typography>
+                <Typography 
+                    variant="overline"
+                    style={{
+                        fontSize: "16px"
+                    }}
+                >
+                    VS
+                </Typography>
             </Grid>
             <Grid 
                 container
                 item xs
                 direction="column"
             >
-                <Player 
-                    player={3}
-                    name={match.team2.player3}
-                    roundKey={roundKey} 
-                    matchKey={matchKey}
-                    sessionId={sessionId}
-                    isHost={isHost}
-                    isConnected={isConnected}
-                />
-                <Player 
-                    player={4}
-                    name={match.team2.player4}
-                    roundKey={roundKey} 
-                    matchKey={matchKey}
-                    sessionId={sessionId}
-                    isHost={isHost}
-                    isConnected={isConnected}
-                />
-                <Score 
-                    team={2} 
-                    score={match.team2.score} 
-                    roundKey={roundKey}
-                    matchKey={matchKey} 
-                    sessionId={sessionId} 
-                    isConnected={isConnected}
-                />
+                <Box style={{
+                    display: isMobile ? "" : "flex"
+                }}>
+                    <Player 
+                        playerKey={3}
+                        player={match.team2.player3}
+                        roundKey={roundKey} 
+                        matchKey={matchKey}
+                    />
+                    <Player 
+                        playerKey={4}
+                        player={match.team2.player4}
+                        roundKey={roundKey} 
+                        matchKey={matchKey}
+                    />
+                </Box>
+                <Box style={{
+                    marginTop: isMobile ? "" : "10px"
+                }}>
+                    <Score 
+                        team={2} 
+                        score={match.team2.score} 
+                        roundKey={roundKey}
+                        matchKey={matchKey} 
+                    />
+                </Box>
             </Grid>
         </Grid>
     );

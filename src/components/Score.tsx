@@ -1,20 +1,18 @@
 import { Grid, TextField } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
-import { pushMatchScore } from "../helpers/SocketHelper";
-import { getSocket } from "../helpers/Socket";
+import { useSelector } from "react-redux";
+import { updateScore } from "../helpers/Socket";
+import { RootState } from "../redux/Store";
 
 interface IProps {
     team: number,
     score: number,
     roundKey: number,
-    matchKey: number,
-    sessionId: string,
-    isConnected: boolean
+    matchKey: number
 }
 
-const Score: React.FC<IProps> = ({ team, score, roundKey, matchKey, sessionId, isConnected }) => {
-    
-    const socket = getSocket();
+const Score: React.FC<IProps> = ({ team, score, roundKey, matchKey }) => {
+    const { sessionId, isConnected, isSessionActive } = useSelector((state: RootState) => state.general);
     const [inputScore, setInputScore] = useState<number>(score);
 
     useEffect(() => {
@@ -32,11 +30,11 @@ const Score: React.FC<IProps> = ({ team, score, roundKey, matchKey, sessionId, i
     }
 
     const pushScoreChange = () => {
-        if (!isConnected) {
+        if (!isConnected || !inputScore) {
             return;
         }
 
-        pushMatchScore(socket, sessionId, roundKey, matchKey, team, inputScore);
+        updateScore(sessionId, roundKey, matchKey, team, inputScore);
     }
         
     const showScore = (score: number): string => {
@@ -58,7 +56,7 @@ const Score: React.FC<IProps> = ({ team, score, roundKey, matchKey, sessionId, i
                 value={showScore(inputScore)}
                 size="small"
                 className="score-input"
-                disabled={!isConnected}
+                disabled={!isConnected || !isSessionActive}
             />
         </Grid>
     );

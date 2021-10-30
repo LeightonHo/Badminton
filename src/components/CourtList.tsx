@@ -1,49 +1,35 @@
-import React from "react";
-import { IState as Props } from "./Main";
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
-import IconButton from '@material-ui/core/IconButton';
-import DeleteIcon from '@material-ui/icons/Delete';
-import { ListItemText } from "@material-ui/core";
+import { List, ListItem, ListItemSecondaryAction, ListItemText, IconButton } from "@material-ui/core";
+import { removeCourt } from "../helpers/Socket";
+import DeleteIcon from "@mui/icons-material/Delete";
+import { useSelector } from "react-redux";
+import { RootState } from "../redux/Store";
 
-interface IProps {
-    config: Props["config"],
-    setConfig: React.Dispatch<React.SetStateAction<Props["config"]>>,
-    hasGameStarted: boolean
-}
+const CourtList = () => {
+    const { sessionId, isHost, isSessionActive } = useSelector((state: RootState) => state.general);
+    const { courts } = useSelector((state: RootState) => state.config);
 
-const CourtList: React.FC<IProps> = ({ config, setConfig, hasGameStarted }) => {
-
-    const handleDelete = (index: number): void => {
-        config.courts.splice(index, 1);
-
-        setConfig({
-            ...config,
-            courts: [
-                ...config.courts
-            ]
-        });
+    const handleDelete = (court: string): void => {
+        removeCourt(sessionId, court);
     }
 
     const renderList = (): JSX.Element[] => {
-        return config.courts.map((court, i) => {
+        return courts.map((court, i) => {
             return (
                 <ListItem key={i}>
                     <ListItemText>{court}</ListItemText>
-                    {
-                        !hasGameStarted
-                        ? <ListItemSecondaryAction>
-                            <IconButton 
+                    <ListItemSecondaryAction>
+                        {
+                            isHost && isSessionActive
+                            ? <IconButton 
                                 edge="end" 
                                 aria-label="delete"
-                                onClick={() => { handleDelete(i); }}
+                                onClick={() => { handleDelete(court); }}
                             >
                                 <DeleteIcon /> 
                             </IconButton>
-                        </ListItemSecondaryAction>
-                        : ""
-                    }
+                            : ""
+                        }
+                    </ListItemSecondaryAction>
                 </ListItem>
             )
         });

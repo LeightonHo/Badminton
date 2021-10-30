@@ -1,31 +1,38 @@
 import { Box } from "@material-ui/core";
 import React from "react";
+import { useSelector } from "react-redux";
+import { RootState } from "../redux/Store";
+import { IPlayer } from "../types";
 import Bye from "./Bye";
-import { IState as Props} from "./Main";
 
 interface IProps {
-    players: Props["config"]["players"]
-    roundKey: number,
-    sessionId: string,
-    isConnected: boolean
+    players: IPlayer[],
+    roundKey: number
 }
 
-const ByeContainer: React.FC<IProps> = ({ players, roundKey, sessionId, isConnected }) => {
+const ByeContainer: React.FC<IProps> = ({ players, roundKey }) => {
+    const { isMobile } = useSelector((state: RootState) => state.general);
+
+    const renderByes = () => {
+        return (players.map((player, key) => {
+            return (
+                <Bye 
+                    key={key}
+                    byeKey={key}
+                    player={player} 
+                    roundKey={roundKey}
+                />
+            )
+        }));
+    }
 
     return (
-        <Box className="divBye">
-            {players.map((player, key) => {
-                return (
-                    <Bye 
-                        key={key}
-                        byeKey={key}
-                        player={player} 
-                        roundKey={roundKey}
-                        sessionId={sessionId}
-                        isConnected={isConnected}
-                    />
-                )
-            })}
+        <Box style={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "space-evenly"
+        }}>
+            {renderByes()}
         </Box>
     );
 }

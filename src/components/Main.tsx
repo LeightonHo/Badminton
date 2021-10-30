@@ -1,247 +1,231 @@
-import React, { useEffect, useState } from "react";
-import { makeStyles } from '@material-ui/core/styles';
-import { Redirect, Route, Switch, useHistory } from "react-router-dom";
+import React, { useEffect } from "react";
+import { Redirect, Route, Switch, useHistory, useLocation } from "react-router-dom";
 import Box from "@material-ui/core/Box";
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
-import Configuration from "./Configuration";
-import RoundRobin, { IRound } from "./RoundRobin";
+import RoundRobin from "./RoundRobin";
 import Scoreboard from "./Scoreboard";
-import { IConfig } from "./Configuration";
-import MenuItem from '@material-ui/core/MenuItem';
-import Menu from '@material-ui/core/Menu';
-import MoreIcon from '@material-ui/icons/MoreVert';
+import { IUser } from "../types";
 import Lobby from "./Lobby";
-import { getSocket, initSocket, setCallback_GameState, setCallback_JoinedSession, setCallback_SetConfig, setCallback_SetSessionId, setCallback_SetIsConnected } from "../helpers/Socket";
+import { initSocket } from "../helpers/Socket";
+import Profile from "./Profile";
+import { Avatar, BottomNavigation, BottomNavigationAction, Paper } from "@material-ui/core";
+import SettingsIcon from "@mui/icons-material/Settings";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
+import { RootState } from "../redux/Store";
+import { useDispatch, useSelector } from "react-redux";
+import Progress from "./Progress";
+import { setIsGuest, setSessionId, setUserId, setIsMobile, setNavigation, setIsLoading } from "../redux/General";
+import Disconnected from "./Disconnected";
 
-export interface IState {
-  config: IConfig,
-  gameState: IRound[],
-  socket: WebSocket
+interface Prop {
+	user: IUser
 }
 
-const useStickyState = (defaultValue: (IRound[] | IConfig | string), key: string) => {
-  const [value, setValue] = useState(() => {
-    const stickyValue = window.localStorage.getItem(key);
+const Main: React.FC<Prop> = ({ user }) => {
+	const dispatch = useDispatch();
+	const location = useLocation();
+	const history = useHistory();
+	const { isConnected, isLoading, joinedSession, navigation, sessionId, isMobile } = useSelector((state: RootState) => state.general);
+	const { rounds } = useSelector((state: RootState) => state.gameState);
 
-    return stickyValue !== null
-      ? JSON.parse(stickyValue)
-      : defaultValue
-  });
+	const handleNavigation = (path: string) => {
+		history.replace(path);
+		window.scrollTo({ top: 0, behavior: 'smooth' });
+	}
 
-  React.useEffect(() => {
-    window.localStorage.setItem(key, JSON.stringify(value));
-  }, [key, value]);
+	window.addEventListener("resize", () => {
+		if (window.innerWidth <= 600) {
+			dispatch(setIsMobile(true));
+		} else {
+			dispatch(setIsMobile(false));
+		}
+	});
 
-  return [value, setValue];
-}
+	useEffect(() => {
+		if (!user.userId) {
+			return;
+		}
 
-const Main = () => {
-  
-  const history = useHistory();
-  const handleNavigation = (path: string) => {
-    history.push(path);
-  }
-  
-  const [isConnected, setIsConnected] = useState<boolean>(false);
-  const [isHost, setIsHost] = useState<boolean>(false);
-  const [sessionId, setSessionId] = useStickyState("", "badminton-session-code");
-  const [joinedSession, setJoinedSession] = useState<boolean>(false);
-  const [gameState, setGameState] = useState<IState["gameState"]>([]);
-  const [config, setConfig] = useState<IConfig>({
-    rounds: 15,
-    winningScore: 21,
-    courts: [],
-    players: []
-  });
-  const socket: WebSocket = getSocket();
+		dispatch(setNavigation(location.pathname.replace("/", "")));
+		dispatch(setUserId(user.userId));
+		dispatch(setSessionId(user.currentSessionId));
+		dispatch(setIsGuest(user.isGuest));
+		dispatch(setIsMobile(window.innerWidth <= 600 ? true : false));
+		initSocket();
+	}, [user]);
 
-  useEffect(() => {
-    setCallback_GameState(setGameState);
-    setCallback_JoinedSession(setJoinedSession);
-    setCallback_SetConfig(setConfig)
-    setCallback_SetSessionId(setSessionId);
-    setCallback_SetIsConnected(setIsConnected);
-  
-    initSocket(sessionId);
-  }, []);
+	const renderNavBar = () => {
+		return (
+			<AppBar 
+				position="fixed" 
+				style={{
+					height: isMobile ? "50px" :  "64px",
+					zIndex: 1
+				}}
+			>
+				<Toolbar>
+					{
+						isMobile
+						? <Box 
+							style={{
+								display: "flex",
+								flexDirection: "row",
+								alignItems: "center",
+								justifyContent: "space-between",
+								width: "100%"
+							}}
+						>
+							<Typography
+								style={{
+									padding: "12px"
+								}}
+							>
+								{sessionId}
+							</Typography>
+							<IconButton
+								color="inherit"
+								// onClick={() => { handleNavigation("/profile"); }}
+							>
+								<Avatar style={{
+									height: "30px",
+									width: "30px"
+								}}>
+									<img 
+										src={user.avatarUrl} 
+										alt="avatar image" 
+										height="30px"
+										width="30px"
+									/>
+								</Avatar>
+							</IconButton>
+						</Box>
+						: <>
+							<Typography variant="h5" noWrap>
+								Cross Court
+							</Typography>
+							<Box style={{
+								display: "flex",
+								justifyContent: "flex-end",
+								flexGrow: 1
+							}}>
+								{
+									joinedSession && rounds.length > 0
+										? <>
+											<IconButton color="inherit" onClick={(() => { handleNavigation("/round-robin") })}>
+												<Typography>Games</Typography>
+											</IconButton>
+											<IconButton color="inherit" onClick={(() => { handleNavigation("/scoreboard") })}>
+												<Typography>Scoreboard</Typography>
+											</IconButton>
+										</>
+										: ""
+								}
+								<IconButton color="inherit" onClick={(() => { handleNavigation("/lobby") })}>
+									<Typography>Lobby</Typography>
+								</IconButton>
+								<IconButton 
+									color="inherit" 
+									// onClick={(() => { handleNavigation("/profile") })}
+								>
+									<Avatar>
+										<img 
+											src={user.avatarUrl} 
+											alt="avatar image"
+										/>
+									</Avatar>
+								</IconButton>
+							</Box>
+						</>
+					}
+				</Toolbar>
+			</AppBar>
+		);
+	}
 
-  const useStyles = makeStyles((theme) => ({
-    grow: {
-      flexGrow: 1,
-    },
-    menuButton: {
-      marginRight: theme.spacing(2),
-    },
-    title: {
-      display: 'none',
-      [theme.breakpoints.up('sm')]: {
-        display: 'block',
-      },
-    },
-    sectionDesktop: {
-      display: 'none',
-      [theme.breakpoints.up('md')]: {
-        display: 'flex',
-      },
-    },
-    sectionMobile: {
-      display: 'flex',
-      [theme.breakpoints.up('md')]: {
-        display: 'none',
-      },
-    },
-  }));
+	const handleNavigationChange = (event: any, newValue: any) => {
+		dispatch(setNavigation(newValue));
+		handleNavigation(`/${newValue}`);
+	}
 
-  const BuildNavBar = () => {
-    const classes = useStyles();
-    const [anchorEl, setAnchorEl] = React.useState(null);
-    const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
-    const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+	return (
+		<>
+			{
+				!isConnected
+				? <Disconnected />
+				: ""
+			}
 
-    const handleMobileMenuClose = () => {
-      setMobileMoreAnchorEl(null);
-    };
+			<Box className="App">
+				{renderNavBar()}
 
-    const handleMobileMenuOpen = (event: any) => {
-      setMobileMoreAnchorEl(event.currentTarget);
-    };
+				{
+					isLoading
+					? <Progress />
+					: ""
+				}
 
-    const handleNavigation = (path: string) => {
-      handleMobileMenuClose();
-      history.push(path);
-    }
+				<Box className="app-body">
+					<Box style={{ position: "relative" }}>
+						<Switch>
+							<Route
+								exact
+								path="/"
+								render={() => {
+									return (
+										!joinedSession
+											? <Redirect to="/lobby" />
+											: <Redirect to="/round-robin" />
+									);
+								}}
+							/>
+							<Route path="/lobby">
+								<Lobby />
+							</Route>
+							<Route path="/round-robin">
+								<RoundRobin />
+							</Route>
+							<Route path="/scoreboard">
+								<Scoreboard />
+							</Route>
+							<Route path="/profile">
+								<Profile user={user} />
+							</Route>
+						</Switch>
+					</Box>
+				</Box>
 
-    const mobileMenuId = 'primary-search-account-menu-mobile';
-    const renderMobileMenu = (
-      <Menu
-        anchorEl={mobileMoreAnchorEl}
-        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-        id={mobileMenuId}
-        keepMounted
-        transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-        open={isMobileMenuOpen}
-        onClose={handleMobileMenuClose}
-      >
-        <MenuItem>
-          <IconButton color="inherit" onClick={(() => { handleNavigation("/lobby") })}>
-            <Typography>Lobby</Typography>
-          </IconButton>
-        </MenuItem>
-        {
-          joinedSession 
-          ? <>
-            {gameState.length > 0
-            ? <>
-              <MenuItem>
-                <IconButton color="inherit" onClick={(() => { handleNavigation("/round-robin") })}>
-                  <Typography>Games</Typography>
-                </IconButton>
-              </MenuItem>
-              <MenuItem>
-                <IconButton color="inherit" onClick={(() => { handleNavigation("/scoreboard") })}>
-                  <Typography>Scoreboard</Typography>
-                </IconButton>
-              </MenuItem>
-            </>
-            : ""
-            }
-            <MenuItem>
-              <IconButton color="inherit" onClick={(() => { handleNavigation("/configuration") })}>
-                <Typography>Config</Typography>
-              </IconButton>
-            </MenuItem>
-          </>
-          : ""
-        }
-      </Menu>
-    );
-
-    return (
-      <div className={classes.grow}>
-        <AppBar position="sticky">
-          <Toolbar>
-            <Typography className={classes.title} variant="h5" noWrap>
-              Sunday Badminton
-            </Typography>
-            <div className={classes.grow} />
-            <div className={classes.sectionDesktop}>
-              <IconButton color="inherit" onClick={(() => { handleNavigation("/lobby") })}>
-                <Typography>Lobby</Typography>
-              </IconButton>
-              {
-                joinedSession
-                ? <>
-                  {
-                    gameState.length > 0
-                    ? <>
-                      <IconButton color="inherit" onClick={(() => { handleNavigation("/round-robin") })}>
-                        <Typography>Games</Typography>
-                      </IconButton>
-                      <IconButton color="inherit" onClick={(() => { handleNavigation("/scoreboard") })}>
-                        <Typography>Scoreboard</Typography>
-                      </IconButton>
-                    </>
-                    : ""
-                  }
-                  <IconButton color="inherit" onClick={(() => { handleNavigation("/configuration") })}>
-                    <Typography>Config</Typography>
-                  </IconButton>
-                </>
-                : ""
-              }
-            </div>
-            <div className={classes.sectionMobile}>
-              <IconButton
-                aria-label="show more"
-                aria-controls={mobileMenuId}
-                aria-haspopup="true"
-                onClick={handleMobileMenuOpen}
-                color="inherit"
-              >
-                <MoreIcon />
-              </IconButton>
-            </div>
-          </Toolbar>
-        </AppBar>
-        {renderMobileMenu}
-      </div>
-    );
-  }
-
-  return (
-    <Box className="App">
-      {BuildNavBar()}
-
-      <Switch>
-        <Route
-          exact
-          path="/"
-          render={() => {
-            return (
-              !joinedSession 
-              ? <Redirect to="/lobby" />
-              : <Redirect to="/round-robin" />
-            );
-          }}
-        />
-        <Route path="/lobby">
-          <Lobby setGameState={setGameState} setConfig={setConfig} sessionId={sessionId} setSessionId={setSessionId} joinedSession={joinedSession} setJoinedSession={setJoinedSession} setIsHost={setIsHost} />
-        </Route>
-        <Route path="/round-robin">
-          <RoundRobin config={config} gameState={gameState} sessionId={sessionId} isHost={isHost} isConnected={isConnected} />
-        </Route>
-        <Route path="/scoreboard">
-          <Scoreboard config={config} gameState={gameState} />
-        </Route>
-        <Route path="/configuration">
-          <Configuration config={config} setConfig={setConfig} gameState={gameState} sessionId={sessionId} />
-        </Route>
-      </Switch>
-    </Box>
-  );
+				<Paper className="bottom-navigation" style={{ position: "fixed", bottom: 0, left: 0, right: 0 }} elevation={1}>
+					<BottomNavigation
+						showLabels
+						value={navigation}
+						onChange={handleNavigationChange}
+					>
+						<BottomNavigationAction
+							label="Scoreboard"
+							value="scoreboard"
+							icon={<EmojiEventsIcon />}
+							disabled={!joinedSession || !rounds.length}
+						/>
+						<BottomNavigationAction
+							label="Games"
+							value="round-robin"
+							icon={<FavoriteIcon />}
+							disabled={!joinedSession || !rounds.length}
+						/>
+						<BottomNavigationAction
+							label="Lobby"
+							value="lobby"
+							icon={<SettingsIcon />}
+						/>
+					</BottomNavigation>
+				</Paper>
+			</Box>
+		</>
+	);
 }
 
 export default Main;

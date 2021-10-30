@@ -1,43 +1,16 @@
-import React from "react";
-import { IState as Props } from "./Main";
 import ByeContainer from "./ByeContainer";
 import Match from "./Match";
-import { Backdrop, Box, Card, CardContent, Divider, Grid, LinearProgress, Typography } from "@material-ui/core";
+import { Box, Card, CardContent, Divider, Grid, Typography } from "@material-ui/core";
+import { useSelector } from "react-redux";
+import { RootState } from "../redux/Store";
 
-export interface IProps {
-    config: Props["config"],
-    gameState: Props["gameState"],
-    sessionId: string,
-    isHost: boolean,
-    isConnected: boolean
-}
-
-export interface IMatch {
-    court: string,
-    team1: {
-        player1: string,
-        player2: string,
-        score: number
-    },
-    team2: {
-        player3: string,
-        player4: string,
-        score: number
-    }
-}
-
-export interface IRound {
-    number: number,
-    matches: IMatch[],
-    byes: Props["config"]["players"]
-}
-
-const RoundRobin: React.FC<IProps> = ({ gameState, sessionId, isHost, isConnected }) => {
+const RoundRobin = () => {
+    const { rounds } = useSelector((state: RootState) => state.gameState);
 
     const renderRoundRobin = () => {
         return (
             <>
-                {gameState.map((round, roundKey) => {
+                {[...rounds].reverse().map((round, roundKey) => {
                     return (
                         <Card 
                             key={roundKey}
@@ -53,10 +26,14 @@ const RoundRobin: React.FC<IProps> = ({ gameState, sessionId, isHost, isConnecte
                                     <Grid item>
                                         <Typography 
                                             variant="h6"
-                                            className="spnGameLabel"
                                             gutterBottom
+                                            style={{
+                                                textAlign: "center",
+                                                fontSize: "16px",
+                                                fontWeight: "bold"
+                                            }}
                                         >
-                                            ROUND {round.number}
+                                            ROUND {round.round}
                                         </Typography>
                                     </Grid>
 
@@ -67,15 +44,15 @@ const RoundRobin: React.FC<IProps> = ({ gameState, sessionId, isHost, isConnecte
                                             <Box key={matchKey} className="match-box">
                                                 <Grid 
                                                     item xs
-                                                    className="match"
+                                                    style={{
+                                                        paddingBottom: "15px",
+                                                        marginBottom: "10px"
+                                                    }}
                                                 >
                                                     <Match 
                                                         match={match} 
-                                                        roundKey={roundKey} 
+                                                        roundKey={round.round - 1} 
                                                         matchKey={matchKey} 
-                                                        sessionId={sessionId} 
-                                                        isHost={isHost}
-                                                        isConnected={isConnected}
                                                     />
                                                 </Grid>
                                                 {addMatchDivider(matchKey, round.matches.length)}
@@ -89,8 +66,6 @@ const RoundRobin: React.FC<IProps> = ({ gameState, sessionId, isHost, isConnecte
                                         <ByeContainer 
                                             players={round.byes} 
                                             roundKey={roundKey} 
-                                            sessionId={sessionId} 
-                                            isConnected={isConnected}
                                         />
                                     </Grid>
                                 </Grid>
@@ -110,26 +85,9 @@ const RoundRobin: React.FC<IProps> = ({ gameState, sessionId, isHost, isConnecte
         }
     }
 
-    const showSpinner = () => {
-        return (
-            <>
-                <Backdrop
-                    style={{ color: '#fff', zIndex: 99 }}
-                    open={true}
-                />
-                <LinearProgress 
-                    color="primary"
-                />
-            </>
-        );
-    }
-
     return (
         <>
-            {gameState.length === 0
-            ? showSpinner()
-            : renderRoundRobin()
-            }
+            {renderRoundRobin()}
         </>
     );
 }

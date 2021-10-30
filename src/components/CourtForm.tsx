@@ -1,46 +1,30 @@
 import { Box, TextField } from "@material-ui/core";
 import React, { useState, KeyboardEvent} from "react";
-import { IState as Props } from "./Main";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../redux/Store";
+import { addCourt } from "../helpers/Socket";
 
-interface IProps {
-    config: Props["config"],
-    setConfig: React.Dispatch<React.SetStateAction<Props["config"]>>
-}
-
-const CourtForm: React.FC<IProps> = ({ config, setConfig }) => {
-
-    const [input, setInput] = useState({
-        court: ""
-    });
+const CourtForm = () => {
+    const { sessionId } = useSelector((state: RootState) => state.general)
+    const { courts } = useSelector((state: RootState) => state.config)
+    const [input, setInput] = useState("");
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-        setInput({
-            ...input,
-            [e.target.name]: e.target.value.trim()
-        });
+        setInput(e.target.value.trim());
     }
 
     const handleClick = (): void => {
-        if (!input.court || isDuplicate(input.court)) {
+        if (!input || isDuplicate(input)) {
             return;
         }
 
-        setConfig({
-            ...config,
-            courts: [
-                ...config.courts,
-                input.court
-            ]
-        })
-
-        setInput({
-            court: ""
-        });
+        addCourt(sessionId, input);
+        setInput("");
     }
 
-    const isDuplicate = (name: string): boolean => {
-        for (const court of config.courts) {
-            if (court.toLowerCase() === input.court.toLowerCase()) {
+    const isDuplicate = (input: string): boolean => {
+        for (const court of courts) {
+            if (court.toLowerCase() === input.toLowerCase()) {
                 return true;
             }
         }
@@ -59,13 +43,13 @@ const CourtForm: React.FC<IProps> = ({ config, setConfig }) => {
             className="box-text-input"
         >
             <TextField 
-                id="inputPlayer" 
+                id="inputCourt" 
                 className="text-input" 
                 label="Court" 
                 variant="outlined" 
                 size="small"
                 type="text" 
-                value={input.court}
+                value={input}
                 onChange={handleChange}
                 onKeyPress={handleKeyPress}
                 name="court"

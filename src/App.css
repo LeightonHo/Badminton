@@ -11,10 +11,86 @@
   text-align: center;
 }
 
+/* LOGIN */
+.login-screen {
+	height: 100vh;
+	background: #00264c;
+}
+
+.login-card {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	width: 300px;
+	height: 220px;
+	position: absolute;
+  top: 50%;
+  left: 50%;
+  -moz-transform: translateX(-50%) translateY(-50%);
+  -webkit-transform: translateX(-50%) translateY(-50%);
+  transform: translateX(-50%) translateY(-50%);
+}
+
+.login-header {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	height: 75px;
+	width: 100%;
+	color: rgb(248, 248, 248);
+	background-color: #215A94;
+}
+
+.login-body {
+	display: flex;
+	flex: 1 1 auto;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	background-color: #ffffff;
+}
+
+.login-body > span > button {
+	border-radius: 5px !important;
+	height: 50px !important;
+	width: 275px !important;
+    font-size: 14px !important;
+}
+
+.login-footer {
+	width: 100%;
+	display: flex;
+	justify-content: center;
+	flex: 0 1 30px;
+	background-color: #215A94;
+	color: rgb(248, 248, 248);
+}
+
+.login-progress {
+	width: 100%;
+}
+
+.login-guest-button {
+	cursor: pointer;
+	font-style: italic;
+    font-size: 11px !important;
+}
+
+.facebook-button {
+  width: 100%;
+}
+
 /* LOBBY */
 
-
 /* GENERAL */
+.app-body {
+  position: absolute;
+  overflow: auto;
+  left: 0px;
+  right: 0px;
+}
+
 .card {
   margin-top: 15px;
   margin-bottom: 10px;
@@ -23,37 +99,60 @@
 }
 
 .config-buttons {
-  margin-top: 15px;
-  margin-bottom: 10px;
   padding-left: 5px;
   padding-right: 5px;
 }
 
-@media (min-width:0px) {
+.config-buttons > button {
+  width: 100%;
+  margin-bottom: 8px;
+}
+
+@media (min-width: 0px) {
+  .app-body {
+    top: 52px;
+    bottom: 52px;
+  }
+  
+  .bottom-navigation {
+    display: block;
+  }
+
   .card {
     margin-left: 10px;
     margin-right: 10px;
   }
 
   .config-buttons {
-    margin-left: 10px;
-    margin-right: 10px;
+    margin-left: 5px;
+    margin-right: 5px;
   }
 }
 
-@media (min-width:500px) {
+@media (min-width: 500px) {
   .card {
     margin-left: 10%;
     margin-right: 10%;
   }
 
   .config-buttons {
-    margin-left: 10%;
-    margin-right: 10%;
+    margin-left: 5%;
+    margin-right: 5%;
   }
 }
 
-@media (min-width:1000px) {
+@media (min-width: 600px) {
+  .app-body {
+    top: 64px;
+	bottom: 0px;
+  }
+
+  .bottom-navigation { 
+    display: none;
+  }
+}
+
+@media (min-width: 1000px) {
   .card {
     margin-left: 25%;
     margin-right: 25%;
@@ -65,7 +164,7 @@
   }
 }
 
-@media (min-width:1500px) {
+@media (min-width: 1500px) {
   .card {
     margin-left: 30%;
     margin-right: 30%;
@@ -77,10 +176,9 @@
   }
 }
 
-.vertical-align-center {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+.avatar {
+  height: 30px;
+  border-radius: 50%;
 }
 
 /* CONFIGURATION SCREEN */
@@ -94,7 +192,7 @@
 }
 
 .courts-card {
-  min-height: 200px;
+  min-height: 100px;
 }
 
 .players-card {
@@ -102,7 +200,6 @@
 }
 
 .player-list-grid {
-  margin-top: 20px !important;
   width: 100% !important;
   margin: auto;
 }
@@ -125,14 +222,6 @@
   width: 100%;
 }
 
-.config-buttons > button {
-  width: 100%;
-}
-
-.config-buttons > button:not(:last-child) {
-  margin-bottom: 10px;
-}
-
 @media (max-width:960px) {
   .react-confirm-alert {
     width: 100%;
@@ -144,6 +233,10 @@
 }
 
 /* ROUND ROBIN SCREEN */
+.generate-round-button {
+  margin-top: 15px;
+}
+
 .round-card {
   text-align: center;
 }
@@ -152,19 +245,12 @@
   padding: 10px 15px 10px 15px !important;
 }
 
+.match-box {
+  margin-top: 5px;
+}
+
 .match-box > div {
   padding: 5px 0 5px 0 !important;
-}
-
-.match {
-  padding-bottom: 15px !important;
-  margin-bottom: 10px !important;
-}
-
-.spnGameLabel {
-  text-align: center;
-  font-size: 16px !important;
-  font-weight: bold !important;
 }
 
 .score-input-grid-item {
@@ -179,16 +265,6 @@
 
 .match {
   padding-top: 10px;
-}
-
-.court-number {
-  font-size: 16px !important;
-}
-
-.player-name {
-  font-size: 15px !important;
-  cursor: pointer;
-  /* font-weight: 400 !important; */
 }
 
 .games {
@@ -207,6 +283,12 @@
 
 .scoreboard-table > tbody > tr > td {
   font-size: 16px;
+}
+
+.scoreboard-avatar {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
 }
 
 .statistics-box {

@@ -1,14 +1,12 @@
 import React, { useState, KeyboardEvent } from "react";
-import {IState as Props} from "./Main";
 import { Box, TextField } from "@material-ui/core";
+import { addPlayer } from "../helpers/Socket";
+import { useSelector } from "react-redux";
+import { RootState } from "../redux/Store";
 
-interface IProps {
-    config: Props["config"],
-    setConfig: React.Dispatch<React.SetStateAction<Props["config"]>>
-}
-
-const PlayerForm: React.FC<IProps> = ({ config, setConfig }) => {
-
+const PlayerForm = () => {
+    const { sessionId } = useSelector((state: RootState) => state.general);
+    const { players } = useSelector((state: RootState) => state.config);
     const [input, setInput] = useState({
         name: ""
     });
@@ -16,7 +14,7 @@ const PlayerForm: React.FC<IProps> = ({ config, setConfig }) => {
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
         setInput({
             ...input,
-            [e.target.name]: e.target.value.trim()
+            [e.target.name]: e.target.value
         });
     }
 
@@ -25,13 +23,11 @@ const PlayerForm: React.FC<IProps> = ({ config, setConfig }) => {
             return;
         }
 
-        setConfig({
-            ...config,
-            players: [
-                ...config.players,
-                input.name
-            ]
-        });
+        const playerId = input.name.trim();
+        const alias = input.name.trim();
+        const avatarUrl = ""; // TODO: Get some default avatar URL
+
+        addPlayer(sessionId, input.name.trim(), input.name.trim(), "");
 
         setInput({
             name: ""
@@ -45,8 +41,8 @@ const PlayerForm: React.FC<IProps> = ({ config, setConfig }) => {
     }
 
     const isDuplicate = (name: string): boolean => {
-        for (const player of config.players) {
-            if (player.toLowerCase() === input.name.toLowerCase()) {
+        for (const player of players) {
+            if (player.alias.toLowerCase() === name.toLowerCase()) {
                 return true;
             }
         }

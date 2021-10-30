@@ -1,157 +1,183 @@
 import { Box, Button, Card, CardContent, TextField, Typography } from "@material-ui/core";
-import React, { useEffect, useState } from "react";
-import { useHistory } from "react-router";
-import { IState as Props } from "./Main";
-import { joinSession, leaveSession } from "../helpers/SocketHelper";
-import { getSocket } from "../helpers/Socket";
+import React, { useState } from "react";
+import { createSession, joinSession, leaveSession, endSession } from "../helpers/Socket";
+import Configuration from "./Configuration";
+import { useDispatch, useSelector } from "react-redux";
+import { setConfig } from "../redux/Config";
+import { setGameState } from "../redux/GameState";
+import { RootState } from "../redux/Store";
+import { setIsLoading, setJoinedSession, setSessionId } from "../redux/General";
+import { confirmAlert } from "react-confirm-alert";
+import { setError } from "../redux/Lobby";
 
-interface IProps {
-    setGameState: React.Dispatch<React.SetStateAction<Props["gameState"]>>,
-    setConfig: React.Dispatch<React.SetStateAction<Props["config"]>>,
-    sessionId: string,
-    setSessionId: React.Dispatch<React.SetStateAction<string>>,
-    joinedSession: boolean,
-    setJoinedSession: React.Dispatch<React.SetStateAction<boolean>>
-    setIsHost: React.Dispatch<React.SetStateAction<boolean>>
-}
+const Lobby = () => {
+    const dispatch = useDispatch();
+    const { sessionId, isHost, isGuest, isLoading, joinedSession, isSessionActive } = useSelector((state: RootState) => state.general);
+    const { error } = useSelector((state: RootState) => state.lobby);
+    const [sessionCode, setSessionCode] = useState(sessionId);
 
-const Lobby: React.FunctionComponent<IProps> = ({ setGameState, setConfig, sessionId, setSessionId, joinedSession, setJoinedSession, setIsHost }) => {
-
-    const socket = getSocket();
-    const history = useHistory();
-    const [error, setError] = useState<string>("");
-    const [disableInputs, setDisableInputs] = useState<boolean>(false);
     const handleSessionChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-        setSessionId(e.target.value);
-    }
-
-    useEffect(() => {
-        // Scenario where the session join was successful.
-        if (joinedSession) {
-            setError("");
-            setDisableInputs(false);
+        if (error) {
+            dispatch(setError(""));
         }
 
-        // Scenario where the session was unable to be joined.
-        if (!sessionId && disableInputs) {
-            setError("Unable to join the session.");
-            setDisableInputs(false);
+        setSessionCode(e.target.value.toUpperCase());
+    }
+
+    const handleCreateSessionClick = () => {
+        createSession();
+        dispatch(setError(""));
+    }
+
+    const handleJoinSessionClick = () => {
+        if (!sessionCode) {
+            dispatch(setError("Session code cannot be blank."));
+            return;
         }
-    }, [joinedSession, sessionId]);
 
-    const createSession = () => {
-        // TODO: session ID should be generated on the server.
-        const sessionId = generateSessionId(4);
-        const payload: any = {
-            action: "session",
-            method: "create",
-            sessionId: sessionId
-        };
-
-        socket.send(JSON.stringify(payload));
-        setDisableInputs(true);
-        setJoinedSession(true);
-        setSessionId(sessionId);
-        setIsHost(true);
-        setError("");
+        dispatch(setError(""));
+        dispatch(setIsLoading(true));
+        joinSession(sessionCode);
     }
 
-    const handleJoinClick = () => {
-        setDisableInputs(true);
-        setError("");
-        joinSession(socket, sessionId);
-        setIsHost(false);
-    }
+    const handleLeaveSessionClick = () => {
+        window.scrollTo({ top: 0 });
+        leaveSession(sessionId);
 
-    const handleLeaveClick = () => {
-        leaveSession(socket, sessionId);
-        setGameState([]);
-        setConfig({
-            rounds: 15,
-            winningScore: 21,
+        dispatch(setGameState({
+            rounds: []
+        }));
+        dispatch(setConfig({
             courts: [],
             players: []
-        });
-        setJoinedSession(false);
-        setSessionId("");
-        setIsHost(false);
-        setError("");
+        }));
+        dispatch(setSessionId(""));
+        dispatch(setJoinedSession(false));
+        dispatch(setError(""));
     }
 
-    const generateSessionId = (length: number) => {
-        const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        let result = "";
+    const handleEndSessionClick = () => { 
+        confirmAlert({
+            title: "Confirm",
+            message: "Are you sure you want to end the session?  Scores will be locked and you won't be able to generate any more rounds.",
+            buttons: [
+                {
+                    label: "Yes",
+                    onClick: () => {
+                        dispatch(setIsLoading(true));
+                        endSession(sessionId);
+                    }
+                },
+                {
+                    label: "No",
+                    onClick: () => { }
+                }
+            ]
+        });
+    }
 
-        for (let i = 0; i < length; i++) {
-            result += chars.charAt(Math.floor(Math.random() * chars.length));
+    const getDescription = () => {
+        if (isGuest) {
+            return `Guests can only join sessions.  Log in with Facebook to create sessions.`;
         }
 
-        return result;
+        return `If you have a session code, enter it below and click "Join".  Otherwise click "Create" to start a new session.`;
     }
 
     return (
-        <Box>
+        <>
             <Card className="card">
                 <CardContent className="general-card">
                     <Typography
                         variant="h5"
                     >
-                        Lobby
+                        Session
                     </Typography>
-                    <Typography
-                        variant="subtitle2"
-                    >
-                        If you have a session code, enter it below and click "Join".  Otherwise click "Create" to start a new session.
-                    </Typography>
+                    {
+                        !joinedSession
+                        ? <Typography variant="subtitle2">
+                            {getDescription()}
+                        </Typography>
+                        : ""
+                    }
+                    
                     <TextField
                         id="inputSession"
-                        label="Session Code"
+                        label="Code"
                         type="text"
                         variant="outlined"
                         size="small"
                         onChange={handleSessionChange}
                         name="session"
                         className="general-input"
-                        value={sessionId}
+                        value={sessionCode}
                         fullWidth
                         disabled={joinedSession}
-                        error={error != "" ? true : false}
+                        error={error ? true : false}
                         helperText={error}
                     />
                 </CardContent>
             </Card>
+            {
+                joinedSession
+                ? <Configuration />
+                : ""
+            }
             <Box className="config-buttons">
-                {!joinedSession 
-                ? <>
-                    <Button
+                {
+                    !joinedSession
+                    ? <>
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            onClick={handleJoinSessionClick}
+                            disabled={isLoading}
+                        >
+                            Join Session
+                        </Button>
+                        {
+                            !isGuest
+                            ? <Button
+                                variant="contained"
+                                color="primary"
+                                onClick={handleCreateSessionClick}
+                                disabled={isLoading}
+                            >
+                                Create Session
+                            </Button>
+                            : ""
+                        }
+                    </>
+                    : ""
+                }
+
+                {
+                    joinedSession && isHost && isSessionActive
+                    ?  <Button
                         variant="contained"
-                        color="primary"
-                        onClick={handleJoinClick}
-                        disabled={disableInputs}
+                        color="secondary"
+                        onClick={handleEndSessionClick}
+                        disabled={isLoading}
                     >
-                        Join Session
+                        End Session
                     </Button>
-                    <Button
+                    : ""
+                }
+
+                {
+                    joinedSession && (!isHost || isHost && !isSessionActive)
+                    ? <Button
                         variant="contained"
-                        color="primary"
-                        onClick={createSession}
-                        disabled={disableInputs}
+                        color="secondary"
+                        onClick={handleLeaveSessionClick}
+                        disabled={isLoading}
                     >
-                        Create Session
+                        Leave Session
                     </Button>
-                </>
-                :
-                <Button
-                    variant="contained"
-                    color="secondary"
-                    onClick={handleLeaveClick}
-                    disabled={disableInputs}
-                >
-                    Leave Session
-                </Button>
+                    : ""
                 }
             </Box>
-        </Box>
+        </>
     );
 }
 
