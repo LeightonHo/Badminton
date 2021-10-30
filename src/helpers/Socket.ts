@@ -21,6 +21,7 @@ import {
 	updateScore as reduxUpdateScore,
 	setGameState 
 } from "../redux/GameState";
+import { setError } from "../redux/Lobby";
 
 let userId: string;
 let sessionId: string;
@@ -111,8 +112,10 @@ export const initSocket = () => {
 				store.dispatch(setIsLoading(false));
 				break;
 			case "join_failed":
+				store.dispatch(setError(data.message));
 				store.dispatch(setSessionId(""));
 				store.dispatch(setJoinedSession(false));
+				store.dispatch(setIsLoading(false));
 				break;
 		}
 	}

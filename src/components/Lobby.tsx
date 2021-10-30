@@ -8,43 +8,48 @@ import { setGameState } from "../redux/GameState";
 import { RootState } from "../redux/Store";
 import { setIsLoading, setJoinedSession, setSessionId } from "../redux/General";
 import { confirmAlert } from "react-confirm-alert";
+import { setError } from "../redux/Lobby";
 
 const Lobby = () => {
     const dispatch = useDispatch();
     const { sessionId, isHost, isGuest, isLoading, joinedSession, isSessionActive } = useSelector((state: RootState) => state.general);
-    const [error, setError] = useState<string>("");
+    const { error } = useSelector((state: RootState) => state.lobby);
     const [sessionCode, setSessionCode] = useState(sessionId);
 
     const handleSessionChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+        if (error) {
+            dispatch(setError(""));
+        }
+
         setSessionCode(e.target.value.toUpperCase());
     }
 
-    useEffect(() => {
-        // Scenario where the session join was successful.
-        if (joinedSession) {
-            setError("");
-            dispatch(setIsLoading(false));
-        }
+    // useEffect(() => {
+    //     // Scenario where the session join was successful.
+    //     if (joinedSession) {
+    //         dispatch(setError(""));
+    //         dispatch(setIsLoading(false));
+    //     }
 
-        // Scenario where the session was unable to be joined.
-        if (!sessionId && isLoading) {
-            setError("Unable to join the session.");
-            dispatch(setIsLoading(false));
-        }
-    }, [joinedSession, sessionId]);
+    //     // Scenario where the session was unable to be joined.
+    //     if (!sessionId && isLoading) {
+    //         dispatch(setError());
+    //         dispatch(setIsLoading(false));
+    //     }
+    // }, [joinedSession, sessionId]);
 
     const handleCreateSessionClick = () => {
         createSession();
-        setError("");
+        dispatch(setError(""));
     }
 
     const handleJoinSessionClick = () => {
         if (!sessionCode) {
-            setError("Session code cannot be blank.");
+            dispatch(setError("Session code cannot be blank."));
             return;
         }
 
-        setError("");
+        dispatch(setError(""));
         dispatch(setIsLoading(true));
         joinSession(sessionCode);
     }
@@ -62,7 +67,7 @@ const Lobby = () => {
         }));
         dispatch(setSessionId(""));
         dispatch(setJoinedSession(false));
-        setError("");
+        dispatch(setError(""));
     }
 
     const handleEndSessionClick = () => { 
@@ -122,7 +127,7 @@ const Lobby = () => {
                         value={sessionCode}
                         fullWidth
                         disabled={joinedSession}
-                        error={error != "" ? true : false}
+                        error={error ? true : false}
                         helperText={error}
                     />
                 </CardContent>
