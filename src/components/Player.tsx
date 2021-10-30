@@ -1,6 +1,5 @@
 import { Avatar, Box, Grid, TextField, Typography } from "@material-ui/core";
 import React, { useState, KeyboardEvent } from "react";
-import { updatePlayer } from "../helpers/Socket";
 import { IPlayer } from "../types";
 import { useSelector } from "react-redux";
 import { RootState } from "../redux/Store";
@@ -90,12 +89,19 @@ const Player: React.FC<IProps> = ({ playerKey, player, roundKey, matchKey }) => 
                     // onTouchMove={handleRelease}
                     className="player-box"
                 >
-                    <Avatar style={{ 
-                        margin: "auto",
-                        border: "2px solid #d1d1d1"
-                    }}>
-                        <img src={player.avatarUrl} alt="avatar image" height="50px" width="50px" />
-                    </Avatar>
+                    {
+                        player.avatarUrl
+                        ? <Avatar style={{ 
+                            margin: "auto",
+                            border: "2px solid #d1d1d1"
+                        }}>
+                            <img src={player.avatarUrl} alt="avatar image" height="50px" width="50px" />
+                        </Avatar>
+                        : <Avatar style={{ 
+                            margin: "auto",
+                            border: "2px solid #d1d1d1"
+                        }} />
+                    }
                     <Typography 
                         variant="overline"
                         style={{

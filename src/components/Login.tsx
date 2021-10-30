@@ -12,10 +12,8 @@ interface Props {
 
 const Login: React.FC<Props> = ({ setIsLoggedIn, setUser }) => {
     const [isLoggingIn, setIsLoggingIn] = useState<boolean>(true);
-    
-    const responseFacebook = (response: ReactFacebookLoginInfo) => {
-        console.log(response);
 
+    const responseFacebook = (response: ReactFacebookLoginInfo) => {
         if (response.accessToken) {
             // Check or create login.
             const payload = {
@@ -25,27 +23,25 @@ const Login: React.FC<Props> = ({ setIsLoggedIn, setUser }) => {
                 avatarUrl: response.picture?.data.url,
             };
 
-            axios.post<any>("https://n4x7vjzngg.execute-api.ap-southeast-2.amazonaws.com/production", payload).then(
-                ({ data }) => {
-                    setIsLoggingIn(false);
-                    const userData = JSON.parse(data.body);
+            axios.post<any>("https://n4x7vjzngg.execute-api.ap-southeast-2.amazonaws.com/production", payload).then(({ data }) => {
+                setIsLoggingIn(false);
+                const userData = JSON.parse(data.body);
 
-                    if (data.statusCode === 200) {
-                        setIsLoggingIn(false);
-                        setIsLoggedIn(true);
-                        setUser({
-                            userId: userData.UserId,
-                            email: userData.Email,
-                            name: userData.Name,
-                            avatarUrl: userData.AvatarUrl,
-                            currentSessionId: userData.CurrentSessionId,
-                            isGuest: false
-                        });
-                    } else {
-                        setIsLoggedIn(false);
-                    }
+                if (data.statusCode === 200) {
+                    setIsLoggingIn(false);
+                    setIsLoggedIn(true);
+                    setUser({
+                        userId: userData.UserId,
+                        email: userData.Email,
+                        name: userData.Name,
+                        avatarUrl: userData.AvatarUrl,
+                        currentSessionId: userData.CurrentSessionId,
+                        isGuest: false
+                    });
+                } else {
+                    setIsLoggedIn(false);
                 }
-            );
+            });
         }
     }
 
@@ -116,13 +112,16 @@ const Login: React.FC<Props> = ({ setIsLoggedIn, setUser }) => {
                     />
                 </Box>
 
-                <Box className="login-footer" onClick={handleGuestClick}>
-                    <Typography 
+                <Box
+                    className="login-footer" 
+                    // onClick={handleGuestClick}
+                >
+                    {/* <Typography 
                         className="login-guest-button"
                         variant="overline"
                     >
                         Continue as guest
-                    </Typography>
+                    </Typography> */}
                 </Box>
             </Paper>
         </Box>

@@ -96,13 +96,21 @@ const Bye: React.FC<IProps> = ({ byeKey, player, roundKey }) => {
                     // onTouchCancel={handleRelease}
                     // onTouchMove={handleRelease}
                 >
-                    <Avatar style={{ 
-                        height: "25px",
-                        width: "25px",
-                        marginRight: "5px"
-                    }}>
-                        <img src={player.avatarUrl} alt="avatar" height="25px" width="25px" />
-                    </Avatar>
+                    {
+                        player.avatarUrl
+                        ? <Avatar style={{ 
+                            height: "25px",
+                            width: "25px",
+                            marginRight: "5px"
+                        }}>
+                            <img src={player.avatarUrl} alt="avatar" height="25px" width="25px" />
+                        </Avatar>
+                        : <Avatar style={{ 
+                            height: "25px",
+                            width: "25px",
+                            marginRight: "5px"
+                        }} />
+                    }
                     <Typography
                         variant="overline"
                         align="center"
