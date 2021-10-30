@@ -1,4 +1,4 @@
-import { Button, Backdrop, Card, CardContent, Box, Typography } from "@material-ui/core";
+import { Button, Backdrop, Card, CardContent, Typography } from "@material-ui/core";
 import { useState } from "react";
 import { initSocket } from "../helpers/Socket";
 

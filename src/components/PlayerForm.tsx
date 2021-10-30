@@ -23,12 +23,7 @@ const PlayerForm = () => {
             return;
         }
 
-        const playerId = input.name.trim();
-        const alias = input.name.trim();
-        const avatarUrl = ""; // TODO: Get some default avatar URL
-
         addPlayer(sessionId, input.name.trim(), input.name.trim(), "");
-
         setInput({
             name: ""
         });

@@ -1,5 +1,5 @@
 import { Box, Button, Card, CardContent, TextField, Typography } from "@material-ui/core";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { createSession, joinSession, leaveSession, endSession } from "../helpers/Socket";
 import Configuration from "./Configuration";
 import { useDispatch, useSelector } from "react-redux";
@@ -15,6 +15,10 @@ const Lobby = () => {
     const { sessionId, isHost, isGuest, isLoading, joinedSession, isSessionActive } = useSelector((state: RootState) => state.general);
     const { error } = useSelector((state: RootState) => state.lobby);
     const [sessionCode, setSessionCode] = useState(sessionId);
+
+    useEffect(() => {
+        setSessionCode(sessionId);
+    }, [sessionId]);
 
     const handleSessionChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
         if (error) {
@@ -165,7 +169,7 @@ const Lobby = () => {
                 }
 
                 {
-                    joinedSession && (!isHost || isHost && !isSessionActive)
+                    (joinedSession && !isHost) || (joinedSession && isHost && !isSessionActive)
                     ? <Button
                         variant="contained"
                         color="secondary"

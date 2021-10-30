@@ -1,6 +1,6 @@
 import { Box, TextField } from "@material-ui/core";
 import React, { useState, KeyboardEvent} from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { RootState } from "../redux/Store";
 import { addCourt } from "../helpers/Socket";
 

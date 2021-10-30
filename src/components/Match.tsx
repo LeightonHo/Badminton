@@ -1,5 +1,4 @@
 import { Box, Grid, Typography } from "@material-ui/core";
-import React, { useEffect } from "react";
 import Player from "./Player";
 import Score from "./Score";
 import { IMatch } from "../types";

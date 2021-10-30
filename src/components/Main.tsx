@@ -18,7 +18,7 @@ import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
 import { RootState } from "../redux/Store";
 import { useDispatch, useSelector } from "react-redux";
 import Progress from "./Progress";
-import { setIsGuest, setSessionId, setUserId, setIsMobile, setNavigation, setIsLoading } from "../redux/General";
+import { setIsGuest, setSessionId, setUserId, setIsMobile, setNavigation } from "../redux/General";
 import Disconnected from "./Disconnected";
 
 interface Prop {
@@ -34,7 +34,7 @@ const Main: React.FC<Prop> = ({ user }) => {
 
 	const handleNavigation = (path: string) => {
 		history.replace(path);
-		window.scrollTo({ top: 0, behavior: 'smooth' });
+		window.scrollTo({ top: 0, behavior: "smooth" });
 	}
 
 	window.addEventListener("resize", () => {
@@ -49,6 +49,8 @@ const Main: React.FC<Prop> = ({ user }) => {
 		if (!user.userId) {
 			return;
 		}
+
+		console.log(user);
 
 		dispatch(setNavigation(location.pathname.replace("/", "")));
 		dispatch(setUserId(user.userId));
@@ -168,7 +170,15 @@ const Main: React.FC<Prop> = ({ user }) => {
 					: ""
 				}
 
-				<Box className="app-body">
+				<Box style={{
+					position: "absolute",
+					overflow: "auto",
+					top: isMobile ? "54px" : "64px",
+					left: "0px",
+					right: "0px",
+					paddingBottom: isMobile ? "56px" : "15px",
+					backgroundColor: "#f5f5f5"
+				}}>
 					<Box style={{ position: "relative" }}>
 						<Switch>
 							<Route
@@ -176,9 +186,9 @@ const Main: React.FC<Prop> = ({ user }) => {
 								path="/"
 								render={() => {
 									return (
-										!joinedSession
-											? <Redirect to="/lobby" />
-											: <Redirect to="/round-robin" />
+										!joinedSession || (joinedSession && !rounds)
+										? <Redirect to="/lobby" />
+										: <Redirect to="/round-robin" />
 									);
 								}}
 							/>

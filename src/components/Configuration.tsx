@@ -83,11 +83,11 @@ const Configuration = () => {
         const numberOfCourts = courts.length;
         const numberOfPlayersOnBye = numberOfPlayers - (courts.length * 4);
 
-        if (numberOfPlayers == 0) {
+        if (numberOfPlayers === 0) {
             return true;
         }
 
-        if (numberOfCourts == 0) {
+        if (numberOfCourts === 0) {
             return true;
         }
 

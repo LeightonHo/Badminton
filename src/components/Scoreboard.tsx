@@ -6,7 +6,7 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import { RootState } from "../redux/Store";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { IPlayer } from "../types";
 
 interface IPlayerStats {
