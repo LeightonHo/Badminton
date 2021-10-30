@@ -56,13 +56,13 @@ const PlayerList = () => {
                     key={key}
                 >
                     <ListItemAvatar>
-                        <Avatar
-                            style={{
-                                border: player.active ? "3px solid #55b300" : "3px solid red"
-                            }}
-                        >
-                            <img src={player.avatarUrl} alt="avatar image" height="50px" width="50px" />
-                        </Avatar>
+                        {
+                            player.avatarUrl
+                            ? <Avatar style={{ border: player.active ? "3px solid #24b300" : "3px solid #ff3434" }}>
+                                <img src={player.avatarUrl} alt="avatar image" height="50px" width="50px" />
+                            </Avatar>
+                            : <Avatar style={{ border: player.active ? "3px solid #24b300" : "3px solid #ff3434" }} />
+                        }
                     </ListItemAvatar>
                     <ListItemText>{player.alias}</ListItemText>
                     {

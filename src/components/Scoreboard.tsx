@@ -89,9 +89,13 @@ const Scoreboard = () => {
                                 flexDirection: "row",
                                 alignItems: "center"
                             }}>
-                                <Avatar style={{ margin: "0 10px 0 0" }}>
-                                    <img src={playerStat.avatarUrl} alt="avatar image" height="50px" width="50px" />
-                                </Avatar>
+                                {
+                                    playerStat.avatarUrl
+                                    ? <Avatar style={{ margin: "0 10px 0 0" }}>
+                                        <img src={playerStat.avatarUrl} alt="avatar image" height="50px" width="50px" />
+                                    </Avatar>
+                                    : <Avatar style={{ margin: "0 10px 0 0" }} />
+                                }
                                 <Typography>
                                     {playerStat.alias} {displayEmoji(key, playerList.length)}
                                 </Typography>
