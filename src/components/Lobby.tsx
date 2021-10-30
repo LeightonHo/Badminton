@@ -1,5 +1,5 @@
 import { Box, Button, Card, CardContent, TextField, Typography } from "@material-ui/core";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { createSession, joinSession, leaveSession, endSession } from "../helpers/Socket";
 import Configuration from "./Configuration";
 import { useDispatch, useSelector } from "react-redux";
@@ -23,20 +23,6 @@ const Lobby = () => {
 
         setSessionCode(e.target.value.toUpperCase());
     }
-
-    // useEffect(() => {
-    //     // Scenario where the session join was successful.
-    //     if (joinedSession) {
-    //         dispatch(setError(""));
-    //         dispatch(setIsLoading(false));
-    //     }
-
-    //     // Scenario where the session was unable to be joined.
-    //     if (!sessionId && isLoading) {
-    //         dispatch(setError());
-    //         dispatch(setIsLoading(false));
-    //     }
-    // }, [joinedSession, sessionId]);
 
     const handleCreateSessionClick = () => {
         createSession();

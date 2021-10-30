@@ -87,10 +87,8 @@ const Main: React.FC<Prop> = ({ user }) => {
 								{sessionId}
 							</Typography>
 							<IconButton
-								onClick={() => { 
-									handleNavigation("/profile");
-								}}
 								color="inherit"
+								// onClick={() => { handleNavigation("/profile"); }}
 							>
 								<Avatar style={{
 									height: "30px",
@@ -129,7 +127,10 @@ const Main: React.FC<Prop> = ({ user }) => {
 								<IconButton color="inherit" onClick={(() => { handleNavigation("/lobby") })}>
 									<Typography>Lobby</Typography>
 								</IconButton>
-								<IconButton color="inherit" onClick={(() => { handleNavigation("/profile") })}>
+								<IconButton 
+									color="inherit" 
+									// onClick={(() => { handleNavigation("/profile") })}
+								>
 									<Avatar>
 										<img 
 											src={user.avatarUrl} 
