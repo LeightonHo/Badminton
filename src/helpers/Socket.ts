@@ -90,6 +90,7 @@ export const initSocket = () => {
 				store.dispatch(setJoinedSession(true));
 				store.dispatch(setIsHost(data.isHost));
 				store.dispatch(setIsSessionActive(data.isSessionActive));
+				store.dispatch(setIsLoading(false));
 
 				console.log("SessionID in state: ", store.getState().general.sessionId);
 				break;
