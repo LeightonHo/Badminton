@@ -11,6 +11,12 @@ export const configSlice = createSlice({
 	initialState,
 	reducers: {
 		addPlayer: (state, action) => {
+			for (let i = 0; i < state.players.length; i++) {
+				if (state.players[i].userId === action.payload.userId) {
+					return;
+				}
+			}
+
 			state.players = [...state.players, action.payload];
 		},
 		removePlayer: (state, action) => {

@@ -96,7 +96,7 @@ const Main: React.FC<Prop> = ({ user }) => {
 							</Typography>
 							<IconButton
 								color="inherit"
-								// onClick={() => { handleNavigation("/profile"); }}
+								onClick={() => { handleNavigation("/profile"); }}
 							>
 								<Avatar style={{
 									height: "30px",
@@ -137,7 +137,7 @@ const Main: React.FC<Prop> = ({ user }) => {
 								</IconButton>
 								<IconButton 
 									color="inherit" 
-									// onClick={(() => { handleNavigation("/profile") })}
+									onClick={(() => { handleNavigation("/profile") })}
 								>
 									<Avatar>
 										<img 

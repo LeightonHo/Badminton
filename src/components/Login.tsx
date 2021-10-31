@@ -3,15 +3,16 @@ import React, { useState } from "react";
 import { IUser } from "../types";
 import FacebookLogin, { ReactFacebookLoginInfo } from "react-facebook-login";
 import axios from "axios";
-import crypto from "crypto";
+import { useDispatch } from "react-redux";
+import { setIsLoggedIn } from "../redux/General";
 
 interface Props {
-    setIsLoggedIn: React.Dispatch<React.SetStateAction<boolean>>,
-    setUser: React.Dispatch<React.SetStateAction<IUser>>,
+    setUser: React.Dispatch<React.SetStateAction<IUser>>
 }
 
-const Login: React.FC<Props> = ({ setIsLoggedIn, setUser }) => {
-    const [isLoggingIn, setIsLoggingIn] = useState<boolean>(true);
+const Login: React.FC<Props> = ({ setUser }) => {
+    const dispatch = useDispatch();
+    const [isLoggingIn, setIsLoggingIn] = useState<boolean>(false);
 
     const responseFacebook = (response: ReactFacebookLoginInfo) => {
         if (response.accessToken) {
@@ -23,44 +24,59 @@ const Login: React.FC<Props> = ({ setIsLoggedIn, setUser }) => {
                 avatarUrl: response.picture?.data.url,
             };
 
-            axios.post<any>("https://n4x7vjzngg.execute-api.ap-southeast-2.amazonaws.com/production", payload).then(({ data }) => {
+            axios.post<any>("https://n4x7vjzngg.execute-api.ap-southeast-2.amazonaws.com/production/login", payload).then(({ data }) => {
                 setIsLoggingIn(false);
                 const userData = JSON.parse(data.body);
 
                 if (data.statusCode === 200) {
                     setIsLoggingIn(false);
-                    setIsLoggedIn(true);
-                    setUser({
+                    dispatch(setIsLoggedIn(true));
+
+                    const user = {
                         userId: userData.UserId,
                         email: userData.Email,
                         name: userData.Name,
+                        alias: getDefaultAlias(userData.Name),
                         avatarUrl: userData.AvatarUrl,
                         currentSessionId: userData.CurrentSessionId,
                         isGuest: false
-                    });
+                    }
+
+                    setUser(user);
+                    localStorage.setItem("crosscourt_user", JSON.stringify(user));
                 } else {
-                    setIsLoggedIn(false);
+                    dispatch(setIsLoggedIn(false));
                 }
             });
         }
+    }
+
+    const getDefaultAlias = (name: string): string => {
+        const indexOfSpace = name.indexOf(" ");
+
+        if (indexOfSpace === -1) {
+            return name;
+        }
+
+        return name.substring(0, indexOfSpace);
     }
 
     const handleFacebookClick = () => {
         setIsLoggingIn(true);
     }
 
-    const handleGuestClick = () => {
-        setIsLoggingIn(true);
-        setUser({
-            userId: crypto.randomBytes(16).toString("hex"),
-            email: "",
-            name: "Guest ",
-            avatarUrl: "",
-            currentSessionId: "",
-            isGuest: true
-        });
-        setIsLoggedIn(true);
-    }
+    // const handleGuestClick = () => {
+    //     setIsLoggingIn(true);
+    //     setUser({
+    //         userId: crypto.randomBytes(16).toString("hex"),
+    //         email: "",
+    //         name: "Guest ",
+    //         avatarUrl: "",
+    //         currentSessionId: "",
+    //         isGuest: true
+    //     });
+    //     setIsLoggedIn(true);
+    // }
 
     const styles = {
         paperContainer: {
@@ -102,7 +118,7 @@ const Login: React.FC<Props> = ({ setIsLoggedIn, setUser }) => {
                     <FacebookLogin
                         appId="190285126563993"
                         textButton="Continue with Facebook"
-                        autoLoad={true}
+                        autoLoad={false}
                         fields="name,email,picture"
                         scope="public_profile"
                         callback={responseFacebook}

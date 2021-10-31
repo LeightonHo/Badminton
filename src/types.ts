@@ -13,6 +13,7 @@ export interface IPlayer {
 export interface IUser {
     userId: string,
     name: string,
+    alias: string,
     email: string,
     avatarUrl: string,
     currentSessionId: string,

@@ -3,6 +3,7 @@ import { createSlice } from '@reduxjs/toolkit'
 const initialState: any = {
     userId: "",
     sessionId: "",
+    isLoggedIn: !!localStorage.getItem("crosscourt_user"),
 	isGuest: true,
 	isHost: false,
     isConnected: false,
@@ -23,6 +24,9 @@ export const configSlice = createSlice({
         },
         setSessionId: (state, action) => {
             state.sessionId = action.payload;
+        },
+        setIsLoggedIn: (state, action) => {
+            state.isLoggedIn = action.payload;
         },
         setIsGuest: (state, action) => {
 			state.isGuest = action.payload;
@@ -54,6 +58,7 @@ export const configSlice = createSlice({
 export const { 
     setUserId,
     setSessionId,
+    setIsLoggedIn,
 	setIsGuest,
 	setIsHost,
     setIsConnected,
