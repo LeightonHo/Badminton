@@ -125,6 +125,7 @@ const Login: React.FC<Props> = ({ setUser }) => {
                         icon="fa-facebook"
                         isDisabled={isLoggingIn}
                         onClick={handleFacebookClick}
+                        isMobile={false}
                     />
                 </Box>
 
