@@ -85,6 +85,7 @@ export const initSocket = () => {
 				break;
 			case "created_session":
 				console.log(data.message);
+				updateLocalSessionId(data.sessionId);
 				store.dispatch(setSessionId(data.sessionId));
 				store.dispatch(setConfig(JSON.parse(data.config)));
 				store.dispatch(setJoinedSession(true));
@@ -94,6 +95,7 @@ export const initSocket = () => {
 				break;
 			case "joined_session":
 				console.log(data.message);
+				updateLocalSessionId(data.sessionId);
 				store.dispatch(setSessionId(data.sessionId));
 				store.dispatch(setJoinedSession(true));
 				store.dispatch(setIsHost(data.isHost));
@@ -140,6 +142,15 @@ export const initSocket = () => {
 		keepAlive = false;
 		store.dispatch(setIsConnected(false));
 	}
+}
+
+const updateLocalSessionId = (sessionId: string) => {
+	const user = JSON.parse(localStorage.getItem("crosscourt_user") || "");
+
+	localStorage.setItem("crosscourt_user", JSON.stringify({
+		...user,
+		currentSessionId: sessionId
+	}));
 }
 
 // Mechanism for re-connecting automatically.
