@@ -1,4 +1,4 @@
-import { Box, Card, CardContent, Typography, Button } from "@material-ui/core";
+import { Box, Card, CardContent, Typography } from "@material-ui/core";
 import { useSelector } from "react-redux";
 import { RootState } from "../redux/Store";
 import MatchHistoryItem from "./MatchHistoryItem";
@@ -37,7 +37,10 @@ const MatchHistory:React.FC<Props> = ({ matchHistory, isLoading }) => {
                         {
                             matchHistory.map((matchHistoryItem, key) => {
                                 return (
-                                    <MatchHistoryItem data={matchHistoryItem}/>
+                                    <MatchHistoryItem 
+                                        key={key} 
+                                        data={matchHistoryItem}
+                                    />
                                 )
                             })
                         }

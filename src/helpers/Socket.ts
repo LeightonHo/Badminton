@@ -46,7 +46,7 @@ export const initSocket = () => {
 	sessionId = store.getState().general.sessionId;
 
 	if (!socket || (socket.readyState !== WebSocket.CONNECTING && socket.readyState === WebSocket.CLOSED)) {
-		socket = new WebSocket("wss://op47bt7cik.execute-api.ap-southeast-2.amazonaws.com/test");
+		socket = new WebSocket(process.env.REACT_APP_WEBSOCKET_URL || "");
 	}
 
 	socket.onmessage = (ev: MessageEvent<any>) => {

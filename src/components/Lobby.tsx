@@ -9,10 +9,11 @@ import { RootState } from "../redux/Store";
 import { setIsLoading, setJoinedSession, setSessionId } from "../redux/General";
 import { confirmAlert } from "react-confirm-alert";
 import { setError } from "../redux/Lobby";
+import axios from "axios";
 
 const Lobby = () => {
     const dispatch = useDispatch();
-    const { sessionId, isHost, isGuest, isLoading, joinedSession, isSessionActive } = useSelector((state: RootState) => state.general);
+    const { userId, sessionId, isHost, isGuest, isLoading, joinedSession, isSessionActive } = useSelector((state: RootState) => state.general);
     const { error } = useSelector((state: RootState) => state.lobby);
     const [sessionCode, setSessionCode] = useState(sessionId);
 
@@ -69,7 +70,15 @@ const Lobby = () => {
                     label: "Ok",
                     onClick: () => {
                         dispatch(setIsLoading(true));
-                        endSession(sessionId);
+                        axios.post<any>(`${process.env.REACT_APP_API_URL}/session/end`, {
+                            userId: userId,
+                            sessionId: sessionId
+                        }).then(() => {
+                            endSession(sessionId);
+                        }).catch(() => {
+                            console.log("There was a problem ending the session.");
+                        });
+                        
                     }
                 },
                 {

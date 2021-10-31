@@ -24,7 +24,7 @@ const Login: React.FC<Props> = ({ setUser }) => {
                 avatarUrl: response.picture?.data.url,
             };
 
-            axios.post<any>("https://n4x7vjzngg.execute-api.ap-southeast-2.amazonaws.com/production/login", payload).then(({ data }) => {
+            axios.post<any>(`${process.env.REACT_APP_API_URL}/login`, payload).then(({ data }) => {
                 setIsLoggingIn(false);
                 const userData = JSON.parse(data.body);
 
