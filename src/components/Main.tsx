@@ -50,10 +50,6 @@ const Main: React.FC<Prop> = ({ user }) => {
 	});
 
 	useEffect(() => {
-		history.replace("/");
-	}, joinedSession);
-
-	useEffect(() => {
 		if (!user.userId) {
 			return;
 		}
