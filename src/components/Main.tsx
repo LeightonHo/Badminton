@@ -49,9 +49,9 @@ const Main: React.FC<Prop> = ({ user }) => {
 		}
 	});
 
-	// useEffect(() => {
-	// 	history.replace("/");
-	// }, joinedSession);
+	useEffect(() => {
+		history.replace("/");
+	}, joinedSession);
 
 	useEffect(() => {
 		if (!user.userId) {
@@ -96,7 +96,10 @@ const Main: React.FC<Prop> = ({ user }) => {
 							</Typography>
 							<IconButton
 								color="inherit"
-								onClick={() => { handleNavigation("/profile"); }}
+								onClick={() => { 
+									handleNavigation("/profile");
+									dispatch(setNavigation("profile"));
+								}}
 							>
 								<Avatar style={{
 									height: "30px",
@@ -123,21 +126,21 @@ const Main: React.FC<Prop> = ({ user }) => {
 								{
 									joinedSession && rounds.length > 0
 										? <>
-											<IconButton color="inherit" onClick={(() => { handleNavigation("/round-robin") })}>
+											<IconButton color="inherit" onClick={(() => { handleNavigation("/round-robin"); })}>
 												<Typography>Games</Typography>
 											</IconButton>
-											<IconButton color="inherit" onClick={(() => { handleNavigation("/scoreboard") })}>
+											<IconButton color="inherit" onClick={(() => { handleNavigation("/scoreboard"); })}>
 												<Typography>Scoreboard</Typography>
 											</IconButton>
 										</>
 										: ""
 								}
-								<IconButton color="inherit" onClick={(() => { handleNavigation("/lobby") })}>
+								<IconButton color="inherit" onClick={(() => { handleNavigation("/lobby"); })}>
 									<Typography>Lobby</Typography>
 								</IconButton>
 								<IconButton 
 									color="inherit" 
-									onClick={(() => { handleNavigation("/profile") })}
+									onClick={(() => { handleNavigation("/profile"); })}
 								>
 									<Avatar>
 										<img 
@@ -192,14 +195,14 @@ const Main: React.FC<Prop> = ({ user }) => {
 								exact
 								path="/"
 								render={() => {
-									if (!joinedSession || (joinedSession && !rounds)) {
-										setNavigation("lobby");
+									if (!joinedSession || (joinedSession && !rounds.length)) {
+										dispatch(setNavigation("lobby"));
 
 										return (
 											<Redirect to="/lobby" />
 										);
 									} else {
-										setNavigation("round-robin");
+										dispatch(setNavigation("round-robin"));
 
 										return (
 											<Redirect to="/round-robin" />
