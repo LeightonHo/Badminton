@@ -1,29 +1,35 @@
 import { Box, Button, Card, CardContent, TextField, Typography } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setIsLoggedIn } from "../redux/General";
-import { IUser } from "../types";
 import axios from "axios";
 import MatchHistory from "./MatchHistory";
+import { RootState } from "../redux/Store";
+import { setMatchHistory } from "../redux/Profile";
 
 interface Prop {
-    user: IUser
+    userId: string
 }
 
-const Profile: React.FC<Prop> = ({ user }) => {
+const Profile: React.FC<Prop> = ({ userId }) => {
     const dispatch = useDispatch();
-    const [matchHistory, setMatchHistory] = useState();
+    const { matchHistory } = useSelector((state: RootState) => state.profile);
     const [isLoadingMatchHistory, setIsLoadingMatchHistory] = useState(false);
 
     useEffect(() => {
-        getPlayerHistory();
-    }, []);
+        // TODO: Fetch the user.
+
+        if (!matchHistory || !matchHistory.length) {
+            getPlayerHistory();
+        }
+    }, [matchHistory]);
 
     const getPlayerHistory = () => {
+        console.log("Fetching match history...");
         setIsLoadingMatchHistory(true);
 
-        axios.get<any>(`${process.env.REACT_APP_API_URL}/user/match-history?userId=${user.userId}`).then(({ data }) => {
-            setMatchHistory(JSON.parse(data.payload));
+        axios.get<any>(`${process.env.REACT_APP_API_URL}/user/match-history?userId=${userId}`).then(({ data }) => {
+            dispatch(setMatchHistory(JSON.parse(data.payload)));
             setIsLoadingMatchHistory(false);
         });
     }
@@ -51,8 +57,8 @@ const Profile: React.FC<Prop> = ({ user }) => {
                         variant="outlined" 
                         size="small"
                         type="text"
-                        value={user.name} 
-                        name="Name"
+                        // value={user.name} 
+                        name="name"
                         disabled
                         style={{
                             marginBottom: "15px",
@@ -66,8 +72,8 @@ const Profile: React.FC<Prop> = ({ user }) => {
                         variant="outlined" 
                         size="small"
                         type="text" 
-                        name="court"
-                        value={user.alias}
+                        name="alias"
+                        // value={user.alias}
                         disabled
                         style={{
                             width: "100%"
@@ -76,7 +82,7 @@ const Profile: React.FC<Prop> = ({ user }) => {
                 </CardContent>
             </Card>
 
-            {/* <MatchHistory matchHistory={matchHistory || []} isLoading={isLoadingMatchHistory} /> */}
+            <MatchHistory matchHistory={matchHistory} isLoading={isLoadingMatchHistory} />
 
             <Box className="config-buttons">
                 <Button

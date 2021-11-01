@@ -95,7 +95,7 @@ const Player: React.FC<IProps> = ({ playerKey, player, roundKey, matchKey }) => 
                             margin: "auto",
                             border: "2px solid #d1d1d1"
                         }}>
-                            <img src={player.avatarUrl} alt="avatar image" height="50px" width="50px" />
+                            <img src={player.avatarUrl} alt="avatar" height="50px" width="50px" />
                         </Avatar>
                         : <Avatar style={{ 
                             margin: "auto",

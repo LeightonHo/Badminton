@@ -92,7 +92,7 @@ const Scoreboard = () => {
                                 {
                                     playerStat.avatarUrl
                                     ? <Avatar style={{ margin: "0 10px 0 0" }}>
-                                        <img src={playerStat.avatarUrl} alt="avatar image" height="50px" width="50px" />
+                                        <img src={playerStat.avatarUrl} alt="avatar" height="50px" width="50px" />
                                     </Avatar>
                                     : <Avatar style={{ margin: "0 10px 0 0" }} />
                                 }

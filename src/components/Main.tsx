@@ -33,7 +33,7 @@ const Main: React.FC<Prop> = ({ user }) => {
 	const dispatch = useDispatch();
 	const location = useLocation();
 	const history = useHistory();
-	const { isConnected, isLoading, joinedSession, navigation, sessionId, isMobile } = useSelector((state: RootState) => state.general);
+	const { userId, isConnected, isLoading, joinedSession, navigation, sessionId, isMobile } = useSelector((state: RootState) => state.general);
 	const { rounds } = useSelector((state: RootState) => state.gameState);
 
 	const handleNavigation = (path: string) => {
@@ -103,7 +103,7 @@ const Main: React.FC<Prop> = ({ user }) => {
 								}}>
 									<img 
 										src={user.avatarUrl} 
-										alt="avatar image" 
+										alt="avatar" 
 										height="30px"
 										width="30px"
 									/>
@@ -141,7 +141,7 @@ const Main: React.FC<Prop> = ({ user }) => {
 									<Avatar>
 										<img 
 											src={user.avatarUrl} 
-											alt="avatar image"
+											alt="avatar"
 										/>
 									</Avatar>
 								</IconButton>
@@ -216,7 +216,7 @@ const Main: React.FC<Prop> = ({ user }) => {
 								<Scoreboard />
 							</Route>
 							<Route path="/profile">
-								<Profile user={user} />
+								<Profile userId={userId} />
 							</Route>
 						</Switch>
 					</Box>

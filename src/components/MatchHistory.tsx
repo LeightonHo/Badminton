@@ -4,7 +4,7 @@ import { RootState } from "../redux/Store";
 import MatchHistoryItem from "./MatchHistoryItem";
 
 interface Props {
-    matchHistory: [],
+    matchHistory: any[],
     isLoading: boolean
 }
 
@@ -24,7 +24,7 @@ const MatchHistory:React.FC<Props> = ({ matchHistory, isLoading }) => {
                     gutterBottom
                     className="config-card-header"
                 >
-                    Match History
+                    History
                 </Typography>
 
                 {
@@ -35,10 +35,11 @@ const MatchHistory:React.FC<Props> = ({ matchHistory, isLoading }) => {
                         overflowY: "scroll"
                     }}>
                         {
-                            matchHistory.map((matchHistoryItem, key) => {
+                            [...matchHistory].reverse().map((matchHistoryItem, key) => {
                                 return (
                                     <MatchHistoryItem 
-                                        key={key} 
+                                        key={key}
+                                        index={key}
                                         data={matchHistoryItem}
                                     />
                                 )
