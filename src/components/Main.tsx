@@ -37,7 +37,7 @@ const Main: React.FC<Prop> = ({ user }) => {
 	const { rounds } = useSelector((state: RootState) => state.gameState);
 
 	const handleNavigation = (path: string) => {
-		history.replace(path);
+		history.push(path);
 		window.scrollTo({ top: 0, behavior: "smooth" });
 	}
 

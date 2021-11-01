@@ -70,7 +70,7 @@ const Lobby = () => {
                     label: "Ok",
                     onClick: () => {
                         dispatch(setIsLoading(true));
-                        axios.post<any>(`/${process.env.REACT_APP_API_URL}/session/end`, {
+                        axios.post<any>(`${process.env.REACT_APP_API_URL}/session/end`, {
                             userId: userId,
                             sessionId: sessionId
                         }).then(() => {

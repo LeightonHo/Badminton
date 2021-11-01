@@ -24,7 +24,7 @@ const Login: React.FC<Props> = ({ setUser }) => {
                 avatarUrl: response.picture?.data.url,
             };
 
-            axios.post<any>(`/${process.env.REACT_APP_API_URL}/login`, payload).then(({ data }) => {
+            axios.post<any>(`${process.env.REACT_APP_API_URL}/login`, payload).then(({ data }) => {
                 setIsLoggingIn(false);
                 const userData = JSON.parse(data.body);
 
@@ -116,7 +116,7 @@ const Login: React.FC<Props> = ({ setUser }) => {
                 }
                 <Box className="login-body">
                     <FacebookLogin
-                        appId="190285126563993"
+                        appId={`${process.env.REACT_APP_FACEBOOK_APP_ID}`}
                         textButton="Continue with Facebook"
                         autoLoad={false}
                         fields="name,email,picture"

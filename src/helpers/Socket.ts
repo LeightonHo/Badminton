@@ -111,10 +111,12 @@ export const initSocket = () => {
 				store.dispatch(setIsLoading(false));
 				break;
 			case "join_failed":
+				updateLocalSessionId("");
 				store.dispatch(setError(data.message));
 				store.dispatch(setSessionId(""));
 				store.dispatch(setJoinedSession(false));
 				store.dispatch(setIsLoading(false));
+
 				break;
 		}
 	}
