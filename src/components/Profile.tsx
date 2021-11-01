@@ -22,7 +22,7 @@ const Profile: React.FC<Prop> = ({ user }) => {
     const getPlayerHistory = () => {
         setIsLoadingMatchHistory(true);
 
-        axios.get<any>(`${process.env.REACT_APP_API_URL}/user/match-history?userId=${user.userId}`).then(({ data }) => {
+        axios.get<any>(`/${process.env.REACT_APP_API_URL}/user/match-history?userId=${user.userId}`).then(({ data }) => {
             setMatchHistory(JSON.parse(data.payload));
             setIsLoadingMatchHistory(false);
         });
