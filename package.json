@@ -1,7 +1,7 @@
 {
-  "homepage": "http://LeightonHo.github.io/Badminton",
-  "name": "round-robin",
-  "version": "0.1.0",
+  "homepage": "./",
+  "name": "crosscourt",
+  "version": "1.0.0",
   "private": true,
   "dependencies": {
     "@emotion/react": "^11.5.0",

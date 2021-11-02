@@ -16,13 +16,13 @@ const Profile: React.FC<Prop> = ({ userId }) => {
     const { matchHistory } = useSelector((state: RootState) => state.profile);
     const [isLoadingMatchHistory, setIsLoadingMatchHistory] = useState(false);
 
-    useEffect(() => {
-        // TODO: Fetch the user.
+    // useEffect(() => {
+    //     // TODO: Fetch the user.
 
-        if (!matchHistory || !matchHistory.length) {
-            getPlayerHistory();
-        }
-    }, [matchHistory]);
+    //     if (!matchHistory || !matchHistory.length) {
+    //         getPlayerHistory();
+    //     }
+    // }, [matchHistory]);
 
     const getPlayerHistory = () => {
         console.log("Fetching match history...");
@@ -82,7 +82,7 @@ const Profile: React.FC<Prop> = ({ userId }) => {
                 </CardContent>
             </Card>
 
-            <MatchHistory matchHistory={matchHistory} isLoading={isLoadingMatchHistory} />
+            {/* <MatchHistory matchHistory={matchHistory} isLoading={isLoadingMatchHistory} /> */}
 
             <Box className="config-buttons">
                 <Button
