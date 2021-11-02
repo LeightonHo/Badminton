@@ -37,7 +37,7 @@ const Login: React.FC<Props> = ({ setUser }) => {
                         userId: userData.UserId,
                         email: userData.Email,
                         name: userData.Name,
-                        alias: getDefaultAlias(userData.Name),
+                        alias: userData.Alias,
                         avatarUrl: userData.AvatarUrl,
                         currentSessionId: userData.CurrentSessionId,
                         isGuest: false
