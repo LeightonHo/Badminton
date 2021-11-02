@@ -20,6 +20,7 @@ const Login: React.FC<Props> = ({ setUser }) => {
             const payload = {
                 facebookUserId: response.userID,
                 name: response.name,
+                alias: getDefaultAlias(response.name),
                 email: response.email,
                 avatarUrl: response.picture?.data.url,
             };
@@ -51,8 +52,8 @@ const Login: React.FC<Props> = ({ setUser }) => {
         }
     }
 
-    const getDefaultAlias = (name: string): string => {
-        const indexOfSpace = name.indexOf(" ");
+    const getDefaultAlias = (name: any): string => {
+        const indexOfSpace = name?.indexOf(" ");
 
         if (indexOfSpace === -1) {
             return name;
