@@ -36,8 +36,8 @@
     "build:test": "env-cmd -f .env react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d build"
+    "deploy:test": "npm run build:test && aws s3 sync build/ s3://test-app.crosscourt.net --acl public-read",
+    "deploy:production": "npm run build:test && aws s3 sync build/ s3://app.crosscourt.net --acl public-read"
   },
   "eslintConfig": {
     "extends": [
