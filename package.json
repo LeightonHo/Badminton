@@ -32,8 +32,8 @@
   },
   "scripts": {
     "start": "set HTTPS=true&&react-scripts start",
-    "build:production": "env-cmd -f .env.production react-scripts build",
     "build:test": "env-cmd -f .env react-scripts build",
+    "build:production": "env-cmd -f .env.production react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "deploy:test": "npm run build:test && aws s3 sync build/ s3://test-app.crosscourt.net --acl public-read",

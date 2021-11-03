@@ -47,7 +47,6 @@ const MatchHistory:React.FC<Props> = ({ matchHistory, isLoading }) => {
                         }
                     </Box>
                 }
-                
             </CardContent>
         </Card>
     );
