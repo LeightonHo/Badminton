@@ -37,7 +37,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "deploy:test": "npm run build:test && aws s3 sync build/ s3://test-app.crosscourt.net --acl public-read",
-    "deploy:production": "npm run build:test && aws s3 sync build/ s3://app.crosscourt.net --acl public-read"
+    "deploy:production": "npm run build:production && aws s3 sync build/ s3://app.crosscourt.net --acl public-read"
   },
   "eslintConfig": {
     "extends": [
