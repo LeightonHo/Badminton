@@ -115,6 +115,7 @@ const Lobby = () => {
                     
                     <TextField
                         id="inputSession"
+                        label="Code"
                         type="text"
                         variant="outlined"
                         size="small"

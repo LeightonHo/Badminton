@@ -1,7 +1,7 @@
-import { Box, Card, CardContent, Typography } from "@material-ui/core";
+import { Box, Card, CardContent, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@material-ui/core";
 import { useSelector } from "react-redux";
 import { RootState } from "../redux/Store";
-import MatchHistoryItem from "./MatchHistoryItem";
+import MatchHistoryRow from "./MatchHistoryItem";
 
 interface Props {
     matchHistory: any[]
@@ -13,9 +13,6 @@ const MatchHistory:React.FC<Props> = ({ matchHistory }) => {
     return (
         <Card 
             className="card"
-            style={{
-                maxHeight: isMobile ? "400px" : "100%"
-            }}
         >
             <CardContent>
                 <Typography
@@ -26,34 +23,43 @@ const MatchHistory:React.FC<Props> = ({ matchHistory }) => {
                     History
                 </Typography>
 
-                <Box style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    justifyContent: "space-around",
-                    fontWeight: "bold"
-
+                <TableContainer style={{
+                    maxHeight: 400
                 }}>
-                    <span>Date</span>
-                    <span>Duration</span>
-                    <span>Result</span>
-                </Box>
-
-                <Box style={{
-                    height: "330px",
-                    overflowY: "scroll"
-                }}>
-                    {
-                        [...matchHistory].reverse().map((matchHistoryItem, key) => {
-                            return (
-                                <MatchHistoryItem 
-                                    key={key}
-                                    index={key}
-                                    data={matchHistoryItem}
-                                />
-                            )
-                        })
-                    }
-                </Box>
+                    <Table stickyHeader>
+                        <TableHead>
+                            <TableRow style={{
+                                paddingTop: 15
+                            }}>
+                                <TableCell style={{ fontWeight: "bold" }}>Date</TableCell>
+                                <TableCell style={{ 
+                                    fontWeight: "bold", textAlign: "center" 
+                                }}>
+                                    <Box>
+                                        Rounds
+                                    </Box>
+                                </TableCell>
+                                <TableCell style={{ fontWeight: "bold", textAlign: "center" }}>W - L</TableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody style={{
+                            maxHeight: 200,
+                            overflow: "auto"
+                        }}>
+                            {
+                                [...matchHistory].reverse().map((matchHistoryItem, key) => {
+                                    return (
+                                        <MatchHistoryRow 
+                                            key={key}
+                                            index={key}
+                                            data={matchHistoryItem}
+                                        />
+                                    )
+                                })
+                            }
+                        </TableBody>
+                    </Table>
+                </TableContainer>
             </CardContent>
         </Card>
     );

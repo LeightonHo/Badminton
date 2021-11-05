@@ -1,5 +1,5 @@
 import { Box, Button, Card, CardContent, TextField, Typography } from "@material-ui/core";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setIsLoading, setIsLoggedIn } from "../redux/General";
 import axios from "axios";
@@ -7,11 +7,11 @@ import MatchHistory from "./MatchHistory";
 import { RootState } from "../redux/Store";
 import { setProfileData } from "../redux/Profile";
 import queryString from "query-string";
-import { useLocation } from "react-router-dom";
-import Progress from "./Progress";
+import { useHistory, useLocation } from "react-router-dom";
 
 const Profile = () => {
     const dispatch = useDispatch();
+    const history = useHistory();
     const { userId } = useSelector((state: RootState) => state.general);
     const { data } = useSelector((state: RootState) => state.profile);
     const { search } = useLocation();
@@ -33,6 +33,7 @@ const Profile = () => {
 
     const handleLogoutClick = () => {
         localStorage.removeItem("crosscourt_user");
+        history.push("/login");
         dispatch(setIsLoggedIn(false));
     }
 
@@ -40,17 +41,19 @@ const Profile = () => {
         <>
             <Card className="card">
                 <CardContent>
+                    
+
                     <Typography
                         variant="h5"
                         gutterBottom
                         className="config-card-header"
                     >
-                        {data.Alias}'s Profile
+                        Profile
                     </Typography>
 
                     <TextField 
                         id="txtName" 
-                        label="Name" 
+                        label="Name"
                         variant="outlined" 
                         size="small"
                         type="text"
@@ -73,7 +76,23 @@ const Profile = () => {
                         value={data.Alias}
                         fullWidth
                         disabled
+                        // style={{
+                        //     marginBottom: "15px"
+                        // }}
                     />
+
+                    {/* <TextField
+                        id="inputBio"
+                        label="Bio"
+                        variant="outlined"
+                        size="small"
+                        type="text"
+                        name="bio"
+                        multiline
+                        fullWidth
+                    >
+
+                    </TextField> */}
                 </CardContent>
             </Card>
 

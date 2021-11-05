@@ -1,16 +1,17 @@
+import { TableCell, TableRow } from "@material-ui/core";
 import { Box } from "@mui/system";
 import moment from "moment";
+import { useDispatch } from "react-redux";
+import { setIsLoading } from "../redux/General";
 
 interface Props {
     index: number,
     data: any
 }
 
-const MatchHistoryItem:React.FC<Props> = ({ index, data }) => {
+const MatchHistoryRow:React.FC<Props> = ({ index, data }) => {
+    const dispatch = useDispatch();
     const WEEKS_IN_THREE_MONTHS = 12;
-    const SECONDS_IN_ONE_HOUR = 3600;
-
-    console.log(data);
 
     const calculateSessionDuration = (start: number, end: number) => {
         const duration = moment.duration(end - start, "milliseconds").asMilliseconds();
@@ -18,17 +19,6 @@ const MatchHistoryItem:React.FC<Props> = ({ index, data }) => {
         const minutes = moment.utc(duration).format("m");
 
         return `${hours}h ${minutes}m`;
-    }
-
-    const calculateSessionDurationText = (start: number, end: number) => {
-        const durationAsMinutes = Math.round((end - start) / 1000 / 60);
-        const durationAsHours = Math.round(durationAsMinutes / 60);
-
-        if (durationAsMinutes < 60) {
-            return `${durationAsMinutes} minute${durationAsMinutes === 1 ? "" : "s"}`;
-        } else {
-            return `${durationAsHours} hour${durationAsHours === 1 ? "" : "s"}`;
-        }
     }
 
     const getRelativeSessionStart = (datetime: string): string => {
@@ -65,49 +55,43 @@ const MatchHistoryItem:React.FC<Props> = ({ index, data }) => {
             return `${durationAsMonths} months ago`;
         }
     }
+    
+    const handleRowClick = () => {
+        console.log(`Loading session archive: ${data.sessionArchiveId}`);
+        dispatch(setIsLoading(true));
+
+        // TODO: Get the archive session details and render on screen.
+
+        setTimeout(() => {
+            dispatch(setIsLoading(false));
+        }, 1000);
+    }
 
     return (
-        <Box style={{
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "space-between",
-            padding: "5px 15px 5px 15px",
-            backgroundColor: index % 2 === 0 ? "#f1f1f1" : "#fafafa",
-            textAlign: "center"
-        }}>
-            <Box style={{
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-                alignContent: "center"
-            }}>
-                <span>{moment(data.start).format("ddd Do MMM")}</span>
-                <span style={{
+        <TableRow 
+            key={index}
+            onClick={handleRowClick}
+        >
+            <TableCell>
+                <Box>{moment(data.start).format("ddd DD/MM")}</Box>
+                <Box style={{
                     fontSize: "12px"
-                }}>{getRelativeSessionStart(data.start)}</span>
-            </Box>
-            <Box style={{
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center"
+                }}>{getRelativeSessionStart(data.start)}</Box>
+            </TableCell>
+            <TableCell style={{
+                textAlign: "center"
             }}>
-                <span>{data.rounds} rounds</span>
-                <span style={{
-                    fontSize: "12px"
-                }}>{calculateSessionDuration(data.start, data.end)}</span>
-            </Box>
-            <Box style={{
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center"
-            }}>
-                {/* <span>W : L</span> */}
-                <span style={{
+                <Box>
+                    {data.rounds} <span>({calculateSessionDuration(data.start, data.end)})</span>
+                </Box>
+            </TableCell>
+            <TableCell style={{ textAlign: "center" }}>
+                <Box style={{
                     fontStyle: "bold"
-                }}>{data.win} / {data.loss}</span>
-            </Box>
-        </Box>
+                }}>{data.win} - {data.loss}</Box>
+            </TableCell>
+        </TableRow>
     );
 }
 
-export default MatchHistoryItem;
+export default MatchHistoryRow;

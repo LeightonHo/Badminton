@@ -9,7 +9,7 @@ const Progress = () => {
         <>
             <Backdrop
                 style={{ 
-                    opacity: "50%",
+                    opacity: "0%",
                     zIndex: 10
                 }}
                 open={true}
