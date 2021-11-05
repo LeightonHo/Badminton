@@ -1,4 +1,4 @@
-import { Box, Button, Card, CardContent, TextField, Typography } from "@material-ui/core";
+import { Box, Button, Card, CardContent, TextField, Typography, Paper } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
 import { createSession, joinSession, leaveSession, endSession } from "../helpers/Socket";
 import Configuration from "./Configuration";
@@ -78,7 +78,6 @@ const Lobby = () => {
                         }).catch(() => {
                             console.log("There was a problem ending the session.");
                         });
-                        
                     }
                 },
                 {
@@ -94,7 +93,7 @@ const Lobby = () => {
             return `Guests can only join sessions.  Log in with Facebook to create sessions.`;
         }
 
-        return `If you have a session code, enter it below and click "Join".  Otherwise click "Create" to start a new session.`;
+        return `If you have a session code, enter it below and click Join.  Alternatively, click Create to start a new session.`;
     }
 
     return (
@@ -116,7 +115,6 @@ const Lobby = () => {
                     
                     <TextField
                         id="inputSession"
-                        label="Code"
                         type="text"
                         variant="outlined"
                         size="small"
@@ -136,6 +134,7 @@ const Lobby = () => {
                 ? <Configuration />
                 : ""
             }
+
             <Box className="config-buttons">
                 {
                     !joinedSession
@@ -145,6 +144,7 @@ const Lobby = () => {
                             color="primary"
                             onClick={handleJoinSessionClick}
                             disabled={isLoading}
+                            fullWidth
                         >
                             Join Session
                         </Button>
@@ -155,6 +155,7 @@ const Lobby = () => {
                                 color="primary"
                                 onClick={handleCreateSessionClick}
                                 disabled={isLoading}
+                                fullWidth
                             >
                                 Create Session
                             </Button>
@@ -171,6 +172,7 @@ const Lobby = () => {
                         color="secondary"
                         onClick={handleEndSessionClick}
                         disabled={isLoading}
+                        fullWidth
                     >
                         End Session
                     </Button>
@@ -184,6 +186,7 @@ const Lobby = () => {
                         color="secondary"
                         onClick={handleLeaveSessionClick}
                         disabled={isLoading}
+                        fullWidth
                     >
                         Leave Session
                     </Button>

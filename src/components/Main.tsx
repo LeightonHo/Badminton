@@ -12,7 +12,7 @@ import Lobby from "./Lobby";
 import { initSocket } from "../helpers/Socket";
 import Profile from "./Profile";
 import { Avatar, BottomNavigation, BottomNavigationAction, Paper } from "@material-ui/core";
-import SettingsIcon from "@mui/icons-material/Settings";
+import PeopleIcon from "@mui/icons-material/People";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
 import { RootState } from "../redux/Store";
@@ -93,7 +93,7 @@ const Main: React.FC<Prop> = ({ user }) => {
 							<IconButton
 								color="inherit"
 								onClick={() => { 
-									handleNavigation("/profile");
+									handleNavigation(`/profile?userId=${userId}`);
 									dispatch(setNavigation("profile"));
 								}}
 							>
@@ -136,7 +136,7 @@ const Main: React.FC<Prop> = ({ user }) => {
 								</IconButton>
 								<IconButton 
 									color="inherit" 
-									onClick={(() => { handleNavigation("/profile"); })}
+									onClick={(() => { handleNavigation(`/profile?userId=${userId}`); })}
 								>
 									<Avatar>
 										<img 
@@ -216,7 +216,7 @@ const Main: React.FC<Prop> = ({ user }) => {
 								<Scoreboard />
 							</Route>
 							<Route path="/profile">
-								<Profile userId={userId} />
+								<Profile />
 							</Route>
 						</Switch>
 					</Box>
@@ -243,7 +243,7 @@ const Main: React.FC<Prop> = ({ user }) => {
 						<BottomNavigationAction
 							label="Lobby"
 							value="lobby"
-							icon={<SettingsIcon />}
+							icon={<PeopleIcon />}
 						/>
 					</BottomNavigation>
 				</Paper>

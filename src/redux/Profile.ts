@@ -1,21 +1,21 @@
 import { createSlice } from '@reduxjs/toolkit'
 
 const initialState: any = {
-    matchHistory: []
+    data: {}
 }
 
 export const configSlice = createSlice({
 	name: "profile",
 	initialState,
 	reducers: {
-        setMatchHistory: (state, action) => {
-            state.matchHistory = action.payload;
+        setProfileData: (state, action) => {
+            state.data = JSON.parse(action.payload);
         }
 	},
 })
 
 export const { 
-    setMatchHistory
+    setProfileData
 } = configSlice.actions;
 
 export default configSlice.reducer;

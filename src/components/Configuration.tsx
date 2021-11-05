@@ -157,6 +157,7 @@ const Configuration = () => {
                             color="primary"
                             onClick={handleGenerateRound}
                             disabled={disableGenerateRoundButton()}
+                            fullWidth
                         >
                             Generate Round
                         </Button>
@@ -170,6 +171,7 @@ const Configuration = () => {
                             variant="contained"
                             color="primary"
                             onClick={handleExport}
+                            fullWidth
                         >
                             Export Data
                         </Button>

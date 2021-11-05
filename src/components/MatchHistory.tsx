@@ -4,13 +4,12 @@ import { RootState } from "../redux/Store";
 import MatchHistoryItem from "./MatchHistoryItem";
 
 interface Props {
-    matchHistory: any[],
-    isLoading: boolean
+    matchHistory: any[]
 }
 
-const MatchHistory:React.FC<Props> = ({ matchHistory, isLoading }) => {
+const MatchHistory:React.FC<Props> = ({ matchHistory }) => {
     const { isMobile } = useSelector((state: RootState) => state.general);
-
+    
     return (
         <Card 
             className="card"
@@ -27,26 +26,34 @@ const MatchHistory:React.FC<Props> = ({ matchHistory, isLoading }) => {
                     History
                 </Typography>
 
-                {
-                    isLoading
-                    ? "Loading..."
-                    : <Box style={{
-                        height: "330px",
-                        overflowY: "scroll"
-                    }}>
-                        {
-                            [...matchHistory].reverse().map((matchHistoryItem, key) => {
-                                return (
-                                    <MatchHistoryItem 
-                                        key={key}
-                                        index={key}
-                                        data={matchHistoryItem}
-                                    />
-                                )
-                            })
-                        }
-                    </Box>
-                }
+                <Box style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "space-around",
+                    fontWeight: "bold"
+
+                }}>
+                    <span>Date</span>
+                    <span>Duration</span>
+                    <span>Result</span>
+                </Box>
+
+                <Box style={{
+                    height: "330px",
+                    overflowY: "scroll"
+                }}>
+                    {
+                        [...matchHistory].reverse().map((matchHistoryItem, key) => {
+                            return (
+                                <MatchHistoryItem 
+                                    key={key}
+                                    index={key}
+                                    data={matchHistoryItem}
+                                />
+                            )
+                        })
+                    }
+                </Box>
             </CardContent>
         </Card>
     );

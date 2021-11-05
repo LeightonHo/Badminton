@@ -1,37 +1,33 @@
 import { Box, Button, Card, CardContent, TextField, Typography } from "@material-ui/core";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setIsLoggedIn } from "../redux/General";
+import { setIsLoading, setIsLoggedIn } from "../redux/General";
 import axios from "axios";
 import MatchHistory from "./MatchHistory";
 import { RootState } from "../redux/Store";
-import { setMatchHistory } from "../redux/Profile";
+import { setProfileData } from "../redux/Profile";
+import queryString from "query-string";
+import { useLocation } from "react-router-dom";
+import Progress from "./Progress";
 
-interface Prop {
-    userId: string
-}
-
-const Profile: React.FC<Prop> = ({ userId }) => {
+const Profile = () => {
     const dispatch = useDispatch();
-    const { matchHistory } = useSelector((state: RootState) => state.profile);
-    const [isLoadingMatchHistory, setIsLoadingMatchHistory] = useState(false);
+    const { userId } = useSelector((state: RootState) => state.general);
+    const { data } = useSelector((state: RootState) => state.profile);
+    const { search } = useLocation();
+    const profileUserId = queryString.parse(search).userId;
 
     useEffect(() => {
-        // TODO: Fetch the user.
-        console.log(userId)
+        getPlayerProfile(profileUserId);
+        console.log(data);
+    }, []);
 
-        // if (!matchHistory || !matchHistory.length) {
-        //     getPlayerHistory();
-        // }
-    }, [matchHistory]);
+    const getPlayerProfile = (userId: any) => {
+        dispatch(setIsLoading(true));
 
-    const getPlayerHistory = () => {
-        console.log("Fetching match history...");
-        setIsLoadingMatchHistory(true);
-
-        axios.get<any>(`${process.env.REACT_APP_API_URL}/user/match-history?userId=${userId}`).then(({ data }) => {
-            dispatch(setMatchHistory(JSON.parse(data.payload)));
-            setIsLoadingMatchHistory(false);
+        axios.get<any>(`${process.env.REACT_APP_API_URL}/user?userId=${userId}`).then(({ data }) => {
+            dispatch(setProfileData(data.payload));
+            dispatch(setIsLoading(false));
         });
     }
 
@@ -49,7 +45,7 @@ const Profile: React.FC<Prop> = ({ userId }) => {
                         gutterBottom
                         className="config-card-header"
                     >
-                        Profile
+                        {data.Alias}'s Profile
                     </Typography>
 
                     <TextField 
@@ -58,12 +54,12 @@ const Profile: React.FC<Prop> = ({ userId }) => {
                         variant="outlined" 
                         size="small"
                         type="text"
-                        // value={user.name} 
+                        value={data.Name} 
                         name="name"
                         disabled
+                        fullWidth
                         style={{
-                            marginBottom: "15px",
-                            width: "100%"
+                            marginBottom: "15px"
                         }}
                     />
 
@@ -74,26 +70,28 @@ const Profile: React.FC<Prop> = ({ userId }) => {
                         size="small"
                         type="text" 
                         name="alias"
-                        // value={user.alias}
+                        value={data.Alias}
+                        fullWidth
                         disabled
-                        style={{
-                            width: "100%"
-                        }}
                     />
                 </CardContent>
             </Card>
 
-            <MatchHistory matchHistory={matchHistory} isLoading={isLoadingMatchHistory} />
+            <MatchHistory matchHistory={data.MatchHistory || []} />
 
-            <Box className="config-buttons">
-                <Button
-                    variant="contained"
-                    color="secondary"
-                    onClick={handleLogoutClick}
-                >
-                    Log Out
-                </Button>
-            </Box>
+            {
+                userId === profileUserId
+                ? <Box className="config-buttons">
+                    <Button
+                        variant="contained"
+                        color="secondary"
+                        onClick={handleLogoutClick}
+                    >
+                        Log Out
+                    </Button>
+                </Box>
+                : ""
+            }
         </>
     );
 }
