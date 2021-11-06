@@ -1,12 +1,15 @@
 import "./App.css";
 import store from "./redux/Store";
 import { Provider } from "react-redux";
-import Wrapper from "./components/Wrapper";
+import { HashRouter } from "react-router-dom";
+import Home from "./components/Home";
 
 function App() {
 	return (
 		<Provider store={store}>
-			<Wrapper />
+			<HashRouter>
+				<Home />
+			</HashRouter>
 		</Provider>
 	);
 }

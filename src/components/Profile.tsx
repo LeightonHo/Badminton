@@ -41,8 +41,6 @@ const Profile = () => {
         <>
             <Card className="card">
                 <CardContent>
-                    
-
                     <Typography
                         variant="h5"
                         gutterBottom

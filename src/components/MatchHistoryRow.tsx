@@ -9,7 +9,7 @@ interface Props {
     data: any
 }
 
-const MatchHistoryRow:React.FC<Props> = ({ index, data }) => {
+const MatchHistoryRow: React.FC<Props> = ({ index, data }) => {
     const dispatch = useDispatch();
     const WEEKS_IN_THREE_MONTHS = 12;
 
@@ -71,6 +71,9 @@ const MatchHistoryRow:React.FC<Props> = ({ index, data }) => {
         <TableRow 
             key={index}
             onClick={handleRowClick}
+            style={{
+                cursor: "pointer"
+            }}
         >
             <TableCell>
                 <Box>{moment(data.start).format("ddd DD/MM")}</Box>

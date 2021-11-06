@@ -5,6 +5,7 @@ import FacebookLogin, { ReactFacebookLoginInfo } from "react-facebook-login";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { setIsLoggedIn } from "../redux/General";
+import { useHistory } from "react-router";
 
 interface Props {
     setUser: React.Dispatch<React.SetStateAction<IUser>>
@@ -12,6 +13,7 @@ interface Props {
 
 const Login: React.FC<Props> = ({ setUser }) => {
     const dispatch = useDispatch();
+    const history = useHistory();
     const [isLoggingIn, setIsLoggingIn] = useState<boolean>(false);
 
     const responseFacebook = (response: ReactFacebookLoginInfo) => {
@@ -44,6 +46,7 @@ const Login: React.FC<Props> = ({ setUser }) => {
                     }
 
                     setUser(user);
+                    history.push("/home");
                     localStorage.setItem("crosscourt_user", JSON.stringify(user));
                 } else {
                     dispatch(setIsLoggedIn(false));

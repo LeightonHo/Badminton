@@ -1,7 +1,7 @@
 import { Box, Card, CardContent, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@material-ui/core";
 import { useSelector } from "react-redux";
 import { RootState } from "../redux/Store";
-import MatchHistoryRow from "./MatchHistoryItem";
+import MatchHistoryRow from "./MatchHistoryRow";
 
 interface Props {
     matchHistory: any[]
