@@ -1,16 +1,58 @@
 import ByeContainer from "./ByeContainer";
 import Match from "./Match";
-import { Box, Card, CardContent, Divider, Grid, Typography } from "@material-ui/core";
+import { Box, Card, CardContent, Checkbox, Divider, Grid, Typography } from "@material-ui/core";
 import { useSelector } from "react-redux";
 import { RootState } from "../redux/Store";
+import { useState } from "react";
+import { IRound } from "../types";
 
 const RoundRobin = () => {
+    const [compactView, setCompactView] = useState<boolean>(false);
+    const { userId } = useSelector((state: RootState) => state.general);
     const { rounds } = useSelector((state: RootState) => state.gameState);
+
+    const getFilteredRounds = () => {
+        let result: IRound[] = JSON.parse(JSON.stringify(rounds));
+
+        if (compactView) {
+            for (let round of result) {
+                round.matches = [];
+            }
+
+            for (let i = 0; i < rounds.length; i++) {
+                let round = rounds[i];
+
+                for (let j = 0; j < round.matches.length; j++) {
+                    let match = round.matches[j];
+
+                    if ([match.team1.player1.userId, match.team1.player2.userId, match.team2.player3.userId, match.team2.player4.userId].indexOf(userId) > 0) {
+                        result[i].matches.push(match);
+                    }
+                }
+            }
+        }
+
+        return result.reverse();
+    }
 
     const renderRoundRobin = () => {
         return (
             <>
-                {[...rounds].reverse().map((round, roundKey) => {
+                <Card className="card round-card">
+                    <CardContent style={{
+                        display: "flex",
+                        flexDirection: "row",
+                        justifyContent: "center",
+                        alignItems: "center"
+                    }}>
+                        <Box>Compact view </Box>
+                        <Checkbox 
+                            color="primary" 
+                            onClick={() => { setCompactView(!compactView); }}
+                        />
+                    </CardContent>
+                </Card>
+                {getFilteredRounds().map((round, roundKey) => {
                     return (
                         <Card 
                             key={roundKey}
