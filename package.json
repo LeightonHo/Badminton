@@ -1,5 +1,5 @@
 {
-  "homepage": "./login",
+  "homepage": "./",
   "name": "crosscourt",
   "version": "1.0.0",
   "private": true,
@@ -18,6 +18,7 @@
     "@types/react": "^17.0.19",
     "@types/react-dom": "^17.0.9",
     "axios": "^0.22.0",
+    "env-cmd": "^10.1.0",
     "gh-pages": "^3.2.3",
     "moment": "^2.29.1",
     "query-string": "^7.0.1",

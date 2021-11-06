@@ -22,10 +22,6 @@ import { setIsGuest, setSessionId, setUserId, setIsMobile, setNavigation } from 
 import Disconnected from "./Disconnected";
 import Login from "./Login";
 
-interface Prop {
-	user: IUser
-}
-
 const Home = () => {
 	const MOBILE_TOP_NAVBAR_HEIGHT = 50;
 	const MOBILE_BOTTOM_NAVBAR_HEIGHT = 56;
@@ -264,7 +260,7 @@ const Home = () => {
 
 				{
 					isLoggedIn
-					? <Paper className="bottom-navigation" style={{ position: "fixed", bottom: 0, left: 0, right: 0 }} elevation={1}>
+					? <Paper className="bottom-navigation" style={{ position: "fixed", bottom: 0, left: 0, right: 0, zIndex: 99 }} elevation={1}>
 						<BottomNavigation
 							showLabels
 							value={navigation}
