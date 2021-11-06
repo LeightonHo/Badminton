@@ -7,13 +7,6 @@ const Progress = () => {
 
     return (
         <>
-            <Backdrop
-                style={{ 
-                    opacity: "0%",
-                    zIndex: 10
-                }}
-                open={true}
-            />
             <LinearProgress 
                 style={{
                     position: "absolute",

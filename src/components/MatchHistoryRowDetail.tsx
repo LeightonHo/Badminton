@@ -72,7 +72,7 @@ const MatchHistoryRowDetail: React.FC<Prop> = ({ sessionArchiveId }) => {
     const showProgress = () => {
         return (
             <TableRow>
-                <TableCell colSpan={4}>
+                <TableCell colSpan={4} >
                     <LinearProgress />
                 </TableCell>
             </TableRow>

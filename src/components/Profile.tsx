@@ -19,7 +19,6 @@ const Profile = () => {
 
     useEffect(() => {
         getPlayerProfile(profileUserId);
-        console.log(data);
     }, []);
 
     const getPlayerProfile = (userId: any) => {
@@ -55,7 +54,7 @@ const Profile = () => {
                         variant="outlined" 
                         size="small"
                         type="text"
-                        value={data.Name} 
+                        value={data.Name || ""} 
                         name="name"
                         disabled
                         fullWidth
@@ -71,7 +70,7 @@ const Profile = () => {
                         size="small"
                         type="text" 
                         name="alias"
-                        value={data.Alias}
+                        value={data.Alias || ""}
                         fullWidth
                         disabled
                         // style={{

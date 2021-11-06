@@ -2,7 +2,6 @@ import { IconButton, TableCell, TableRow } from "@material-ui/core";
 import { Box } from "@mui/system";
 import moment from "moment";
 import { useState } from "react";
-import { useDispatch } from "react-redux";
 import MatchHistoryRowDetail from "./MatchHistoryRowDetail";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
@@ -13,7 +12,6 @@ interface Props {
 }
 
 const MatchHistoryRow: React.FC<Props> = ({ index, data }) => {
-    const dispatch = useDispatch();
     const WEEKS_IN_THREE_MONTHS = 12;
     const [showDetail, setShowDetail] = useState<boolean>(false);
 
@@ -65,7 +63,6 @@ const MatchHistoryRow: React.FC<Props> = ({ index, data }) => {
     }
     
     const handleRowClick = () => {
-        console.log(`Loading session archive: ${data.sessionArchiveId}`);
         setShowDetail(!showDetail);
     }
 
