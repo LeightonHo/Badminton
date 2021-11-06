@@ -1,4 +1,4 @@
-import { TableRow, TableCell, Box, Table, TableHead, TableBody, Avatar } from "@material-ui/core";
+import { TableRow, TableCell, Box, Table, TableHead, TableBody, Avatar, LinearProgress } from "@material-ui/core";
 import axios from "axios";
 import { useEffect, useState } from "react";
 
@@ -19,14 +19,17 @@ const MatchHistoryRowDetail: React.FC<Prop> = ({ sessionArchiveId }) => {
         axios.get<any>(`${process.env.REACT_APP_API_URL}/session-archive?sessionArchiveId=${sessionArchiveId}`).then(({ data }) => {
             setSessionArchive(JSON.parse(data.payload));
             setIsLoading(false);
+        }).catch((error) => {
+            console.log(error);
+            setIsLoading(false);
         });
     };
 
     const renderScoreboard = () => {
         return (
             <TableRow>
-                <TableCell colSpan={3}>
-                    <Table padding="none">
+                <TableCell colSpan={4}>
+                    <Table>
                         <TableHead>
                             <TableRow>
                                 <TableCell />
@@ -47,10 +50,10 @@ const MatchHistoryRowDetail: React.FC<Prop> = ({ sessionArchiveId }) => {
                                         }}>
                                             {
                                                 data.avatarUrl
-                                                ? <Avatar style={{ height: 20, width: 20, margin: "0 5px 0 0" }}>
-                                                    <img src={data.avatarUrl} alt="avatar" height="20px" width="20px" />
+                                                ? <Avatar style={{ height: 25, width: 25, margin: "0 5px 0 0" }}>
+                                                    <img src={data.avatarUrl} alt="avatar" height="25px" width="25px" />
                                                 </Avatar>
-                                                : <Avatar style={{ height: 20, width: 20, margin: "0 5px 0 0" }} />
+                                                : <Avatar style={{ fontSize: "14px", height: 25, width: 25, margin: "0 5px 0 0" }}>{data.alias[0]}</Avatar>
                                             }
                                             <Box>{data.alias}</Box>
                                         </TableCell>
@@ -66,11 +69,21 @@ const MatchHistoryRowDetail: React.FC<Prop> = ({ sessionArchiveId }) => {
         );
     }
 
+    const showProgress = () => {
+        return (
+            <TableRow>
+                <TableCell colSpan={4}>
+                    <LinearProgress />
+                </TableCell>
+            </TableRow>
+        );
+    }
+
     return (
         <>
             {
                 isLoading
-                ? "loading..."
+                ? showProgress()
                 : renderScoreboard()
             }
         </>

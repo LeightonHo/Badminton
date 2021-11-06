@@ -1,10 +1,11 @@
-import { TableCell, TableRow } from "@material-ui/core";
+import { IconButton, TableCell, TableRow } from "@material-ui/core";
 import { Box } from "@mui/system";
 import moment from "moment";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { setIsLoading } from "../redux/General";
 import MatchHistoryRowDetail from "./MatchHistoryRowDetail";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 
 interface Props {
     index: number,
@@ -21,7 +22,11 @@ const MatchHistoryRow: React.FC<Props> = ({ index, data }) => {
         const hours = moment.utc(duration).format("H");
         const minutes = moment.utc(duration).format("m");
 
-        return `${hours}h ${minutes}m`;
+        if (parseInt(hours) > 0) {
+            return `${hours}h ${minutes}m`;
+        }
+
+        return `${minutes}m`;
     }
 
     const getRelativeSessionStart = (datetime: string): string => {
@@ -68,12 +73,20 @@ const MatchHistoryRow: React.FC<Props> = ({ index, data }) => {
         <>
             <TableRow 
                 key={index}
-                onClick={handleRowClick}
                 style={{
                     cursor: "pointer",
                     backgroundColor: index % 2 ? "#fafafa" : "#f1f1f1"
                 }}
             >
+                <TableCell width={1}>
+                    <IconButton
+                        aria-label="expand row"
+                        size="small"
+                        onClick={handleRowClick}
+                    >
+                        {showDetail ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+                    </IconButton>
+                </TableCell>
                 <TableCell>
                     <Box>{moment(data.start).format("ddd DD/MM")}</Box>
                     <Box style={{
