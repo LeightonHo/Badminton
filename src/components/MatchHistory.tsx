@@ -24,7 +24,7 @@ const MatchHistory:React.FC<Props> = ({ matchHistory }) => {
                 </Typography>
 
                 <TableContainer style={{
-                    maxHeight: 400
+                    maxHeight: isMobile ? 350 : 500
                 }}>
                     <Table stickyHeader>
                         <TableHead>
@@ -44,7 +44,7 @@ const MatchHistory:React.FC<Props> = ({ matchHistory }) => {
                         </TableHead>
                         <TableBody style={{
                             maxHeight: 200,
-                            overflow: "auto"
+                            overflowY: "auto"
                         }}>
                             {
                                 [...matchHistory].reverse().map((matchHistoryItem, key) => {

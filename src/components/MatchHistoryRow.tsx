@@ -1,8 +1,10 @@
 import { TableCell, TableRow } from "@material-ui/core";
 import { Box } from "@mui/system";
 import moment from "moment";
+import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { setIsLoading } from "../redux/General";
+import MatchHistoryRowDetail from "./MatchHistoryRowDetail";
 
 interface Props {
     index: number,
@@ -12,6 +14,7 @@ interface Props {
 const MatchHistoryRow: React.FC<Props> = ({ index, data }) => {
     const dispatch = useDispatch();
     const WEEKS_IN_THREE_MONTHS = 12;
+    const [showDetail, setShowDetail] = useState<boolean>(false);
 
     const calculateSessionDuration = (start: number, end: number) => {
         const duration = moment.duration(end - start, "milliseconds").asMilliseconds();
@@ -58,42 +61,45 @@ const MatchHistoryRow: React.FC<Props> = ({ index, data }) => {
     
     const handleRowClick = () => {
         console.log(`Loading session archive: ${data.sessionArchiveId}`);
-        dispatch(setIsLoading(true));
-
-        // TODO: Get the archive session details and render on screen.
-
-        setTimeout(() => {
-            dispatch(setIsLoading(false));
-        }, 1000);
+        setShowDetail(!showDetail);
     }
 
     return (
-        <TableRow 
-            key={index}
-            onClick={handleRowClick}
-            style={{
-                cursor: "pointer"
-            }}
-        >
-            <TableCell>
-                <Box>{moment(data.start).format("ddd DD/MM")}</Box>
-                <Box style={{
-                    fontSize: "12px"
-                }}>{getRelativeSessionStart(data.start)}</Box>
-            </TableCell>
-            <TableCell style={{
-                textAlign: "center"
-            }}>
-                <Box>
-                    {data.rounds} <span>({calculateSessionDuration(data.start, data.end)})</span>
-                </Box>
-            </TableCell>
-            <TableCell style={{ textAlign: "center" }}>
-                <Box style={{
-                    fontStyle: "bold"
-                }}>{data.win} - {data.loss}</Box>
-            </TableCell>
-        </TableRow>
+        <>
+            <TableRow 
+                key={index}
+                onClick={handleRowClick}
+                style={{
+                    cursor: "pointer",
+                    backgroundColor: index % 2 ? "#fafafa" : "#f1f1f1"
+                }}
+            >
+                <TableCell>
+                    <Box>{moment(data.start).format("ddd DD/MM")}</Box>
+                    <Box style={{
+                        fontSize: "12px"
+                    }}>{getRelativeSessionStart(data.start)}</Box>
+                </TableCell>
+                <TableCell style={{
+                    textAlign: "center"
+                }}>
+                    <Box>
+                        {data.rounds} <span>({calculateSessionDuration(data.start, data.end)})</span>
+                    </Box>
+                </TableCell>
+                <TableCell style={{ textAlign: "center" }}>
+                    <Box style={{
+                        fontStyle: "bold"
+                    }}>{data.win} - {data.loss}</Box>
+                </TableCell>
+            </TableRow>
+
+            {
+                showDetail
+                ? <MatchHistoryRowDetail sessionArchiveId={data.sessionArchiveId} />
+                : ""
+            }
+        </>
     );
 }
 
