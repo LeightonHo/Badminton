@@ -10,7 +10,7 @@ interface Props {
 const useStyles = makeStyles({
     mobileTable: {
         "& .MuiTableCell-root": {
-            padding: "8px",
+            padding: "4px",
         }
     }
 });
@@ -34,7 +34,7 @@ const MatchHistory:React.FC<Props> = ({ matchHistory }) => {
                     <TableRow style={{
                         paddingTop: 15
                     }}>
-                        <TableCell style={{ maxWidth: "5px" }} />
+                        <TableCell />
                         <TableCell style={{ fontWeight: "bold" }}>Date</TableCell>
                         <TableCell style={{ 
                             fontWeight: "bold", textAlign: "center" 
@@ -42,6 +42,7 @@ const MatchHistory:React.FC<Props> = ({ matchHistory }) => {
                             <Box>Rounds</Box>
                         </TableCell>
                         <TableCell style={{ fontWeight: "bold", textAlign: "center" }}>W - L</TableCell>
+                        <TableCell />
                     </TableRow>
                 </TableHead>
                 <TableBody style={{

@@ -27,10 +27,22 @@ const MatchHistoryRowDetail: React.FC<Prop> = ({ sessionArchiveId }) => {
         });
     };
 
+    const displayPosition = (key: number): string => {
+        if (key === 0) {
+            return "🥇";
+        } else if (key === 1) {
+            return "🥈";
+        } else if (key === 2) {
+            return "🥉";
+        }
+
+        return `${key + 1}.`;
+    }
+
     const renderScoreboard = () => {
         return (
             <TableRow>
-                <TableCell colSpan={4}>
+                <TableCell colSpan={5}>
                     <Table>
                         <TableHead>
                             <TableRow>
@@ -47,7 +59,7 @@ const MatchHistoryRowDetail: React.FC<Prop> = ({ sessionArchiveId }) => {
                                         key={key}
                                         hover
                                     >
-                                        <TableCell>{key + 1}.</TableCell>
+                                        <TableCell align="center">{displayPosition(key)}</TableCell>
                                         <TableCell style={{
                                             display: "flex",
                                             flexDirection: "row",
@@ -81,7 +93,7 @@ const MatchHistoryRowDetail: React.FC<Prop> = ({ sessionArchiveId }) => {
     const showProgress = () => {
         return (
             <TableRow>
-                <TableCell colSpan={4}>
+                <TableCell colSpan={5}>
                     <LinearProgress />
                     <Skeleton 
                         variant="text"

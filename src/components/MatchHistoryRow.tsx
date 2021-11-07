@@ -66,6 +66,18 @@ const MatchHistoryRow: React.FC<Props> = ({ index, data }) => {
         setShowDetail(!showDetail);
     }
 
+    const displayTrophy = (position: number): string => {
+        if (position === 1) {
+            return "🥇";
+        } else if (position === 2) {
+            return "🥈";
+        } else if (position === 3) {
+            return "🥉";
+        }
+
+        return "";
+    }
+
     return (
         <>
             <TableRow 
@@ -102,8 +114,9 @@ const MatchHistoryRow: React.FC<Props> = ({ index, data }) => {
                 <TableCell style={{ textAlign: "center" }}>
                     <Box style={{
                         fontStyle: "bold"
-                    }}>{data.win} - {data.loss}</Box>
+                    }}> {data.win} - {data.loss}</Box>
                 </TableCell>
+                <TableCell>{displayTrophy(data.position)}</TableCell>
             </TableRow>
 
             {

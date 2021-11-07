@@ -1,4 +1,4 @@
-import { Card, CardContent, Typography } from "@material-ui/core";
+import { Card, CardContent, makeStyles, Typography } from "@material-ui/core";
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -18,9 +18,19 @@ interface IPlayerStats {
     }
 }
 
+const useStyles = makeStyles({
+    mobileTable: {
+        "& .MuiTableCell-root": {
+            padding: "8px",
+        }
+    }
+});
+
 const Scoreboard = () => {
     const playerList: IPlayer[] = [];
+    const { isMobile } = useSelector((state: RootState) => state.general);
     const { rounds } = useSelector((state: RootState) => state.gameState);
+    const classes = useStyles();
 
     const initPlayers = () => {
         // Get all the unique players in the game data
@@ -78,13 +88,14 @@ const Scoreboard = () => {
         }
 
         return (
-            <TableBody>
+            <TableBody classes={{ root: isMobile ? classes.mobileTable : "" }}>
                 {sortPlayerStats(result).map((player, key) => {
                     return (
                         <TableRow
                             key={key}
                             hover
                         >
+                            <TableCell align="center">{displayPosition(key)}</TableCell>
                             <TableCell style={{ 
                                 display: "flex", 
                                 flexDirection: "row",
@@ -99,7 +110,7 @@ const Scoreboard = () => {
                                     }}
                                 />
 
-                                <Typography>{player.alias} {displayEmoji(key, playerList.length)}</Typography>
+                                <Typography>{player.alias}</Typography>
                             </TableCell>
                             <TableCell align="right">{player.win}</TableCell>
                             <TableCell align="right">{player.loss}</TableCell>
@@ -111,24 +122,16 @@ const Scoreboard = () => {
         );
     }
 
-    const displayEmoji = (key: number, players: number): string => {
+    const displayPosition = (key: number): string => {
         if (key === 0) {
             return "🥇";
-        }
-
-        if (key === 1) {
+        } else if (key === 1) {
             return "🥈";
-        }
-
-        if (key === 2) {
+        } else if (key === 2) {
             return "🥉";
         }
 
-        if (key === players - 1) {
-            return "🍀";
-        }
-
-        return "";
+        return `${key + 1}.`;
     }
 
     const sortPlayerStats = (playerStats: IPlayerStats) => {
@@ -334,9 +337,10 @@ const Scoreboard = () => {
                         Scoreboard
                     </Typography>
                     <TableContainer>
-                        <Table padding="none" className="scoreboard-table">
+                        <Table className="scoreboard-table">
                             <TableHead className="scoreboard-header">
                                 <TableRow>
+                                    <TableCell />
                                     <TableCell>Player</TableCell>
                                     <TableCell align="right">Win</TableCell>
                                     <TableCell align="right">Loss</TableCell>
