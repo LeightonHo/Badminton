@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Redirect, Route, Switch, useHistory, useLocation } from "react-router-dom";
 import Box from "@material-ui/core/Box";
 import AppBar from '@material-ui/core/AppBar';
@@ -11,7 +11,7 @@ import { IUser } from "../types";
 import Lobby from "./Lobby";
 import { initSocket } from "../helpers/Socket";
 import Profile from "./Profile";
-import { Avatar, BottomNavigation, BottomNavigationAction, Paper } from "@material-ui/core";
+import { BottomNavigation, BottomNavigationAction, Paper } from "@material-ui/core";
 import PeopleIcon from "@mui/icons-material/People";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
@@ -21,6 +21,7 @@ import Progress from "./Progress";
 import { setIsGuest, setSessionId, setUserId, setIsMobile, setNavigation } from "../redux/General";
 import Disconnected from "./Disconnected";
 import Login from "./Login";
+import PlayerAvatar from "./PlayerAvatar";
 
 const Home = () => {
 	const MOBILE_TOP_NAVBAR_HEIGHT = 50;
@@ -107,22 +108,15 @@ const Home = () => {
 							</Typography>
 							<IconButton
 								color="inherit"
-								onClick={() => { 
-									handleNavigation(`/profile?userId=${userId}`);
-									dispatch(setNavigation("profile"));
-								}}
 							>
-								<Avatar style={{
-									height: "30px",
-									width: "30px"
-								}}>
-									<img 
-										src={user.avatarUrl} 
-										alt="avatar" 
-										height="30px"
-										width="30px"
-									/>
-								</Avatar>
+								<PlayerAvatar
+									id={userId}
+									src={user.avatarUrl}
+									style={{
+										height: "30px",
+										width: "30px"
+									}}
+								/>
 							</IconButton>
 						</Box>
 						: <>
@@ -136,15 +130,15 @@ const Home = () => {
 							}}>
 								{
 									joinedSession && rounds.length > 0
-										? <>
-											<IconButton color="inherit" onClick={(() => { handleNavigation("/round-robin"); })}>
-												<Typography>Games</Typography>
-											</IconButton>
-											<IconButton color="inherit" onClick={(() => { handleNavigation("/scoreboard"); })}>
-												<Typography>Scoreboard</Typography>
-											</IconButton>
-										</>
-										: ""
+									? <>
+										<IconButton color="inherit" onClick={(() => { handleNavigation("/round-robin"); })}>
+											<Typography>Games</Typography>
+										</IconButton>
+										<IconButton color="inherit" onClick={(() => { handleNavigation("/scoreboard"); })}>
+											<Typography>Scoreboard</Typography>
+										</IconButton>
+									</>
+									: ""
 								}
 								<IconButton color="inherit" onClick={(() => { handleNavigation("/lobby"); })}>
 									<Typography>Lobby</Typography>
@@ -153,12 +147,10 @@ const Home = () => {
 									color="inherit" 
 									onClick={(() => { handleNavigation(`/profile?userId=${userId}`); })}
 								>
-									<Avatar>
-										<img 
-											src={user.avatarUrl} 
-											alt="avatar"
-										/>
-									</Avatar>
+									<PlayerAvatar
+										id={userId}
+										src={user.avatarUrl}
+									/>
 								</IconButton>
 							</Box>
 						</>

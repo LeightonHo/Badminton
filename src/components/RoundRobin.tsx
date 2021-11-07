@@ -22,7 +22,9 @@ const RoundRobin = () => {
     }
 
     const handleFilterViewChange = (event: React.MouseEvent<HTMLElement>, newFilterView: string) => {
-        dispatch(setFilterView(newFilterView));
+        if (newFilterView) {
+            dispatch(setFilterView(newFilterView));
+        }
     }
 
     const renderRoundRobin = () => {

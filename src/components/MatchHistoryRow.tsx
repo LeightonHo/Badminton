@@ -81,7 +81,11 @@ const MatchHistoryRow: React.FC<Props> = ({ index, data }) => {
                         aria-label="expand row"
                         size="small"
                     >
-                        {showDetail ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+                        {
+                            showDetail 
+                            ? <KeyboardArrowUpIcon /> 
+                            : <KeyboardArrowDownIcon />
+                        }
                     </IconButton>
                 </TableCell>
                 <TableCell>
@@ -93,9 +97,7 @@ const MatchHistoryRow: React.FC<Props> = ({ index, data }) => {
                 <TableCell style={{
                     textAlign: "center"
                 }}>
-                    <Box>
-                        {data.rounds} <span>({calculateSessionDuration(data.start, data.end)})</span>
-                    </Box>
+                    <Box>{data.rounds} <span>({calculateSessionDuration(data.start, data.end)})</span></Box>
                 </TableCell>
                 <TableCell style={{ textAlign: "center" }}>
                     <Box style={{

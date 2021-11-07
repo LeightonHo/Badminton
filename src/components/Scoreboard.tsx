@@ -1,4 +1,4 @@
-import { Avatar, Card, CardContent, Typography } from "@material-ui/core";
+import { Card, CardContent, Typography } from "@material-ui/core";
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -8,6 +8,7 @@ import TableRow from '@material-ui/core/TableRow';
 import { RootState } from "../redux/Store";
 import { useSelector } from "react-redux";
 import { IPlayer } from "../types";
+import PlayerAvatar from "./PlayerAvatar";
 
 interface IPlayerStats {
     [id: string]: {
@@ -78,31 +79,31 @@ const Scoreboard = () => {
 
         return (
             <TableBody>
-                {sortPlayerStats(result).map((playerStat, key) => {
+                {sortPlayerStats(result).map((player, key) => {
                     return (
                         <TableRow
-                            hover
                             key={key}
+                            hover
                         >
                             <TableCell style={{ 
                                 display: "flex", 
                                 flexDirection: "row",
                                 alignItems: "center"
                             }}>
-                                {
-                                    playerStat.avatarUrl
-                                    ? <Avatar style={{ margin: "0 10px 0 0" }}>
-                                        <img src={playerStat.avatarUrl} alt="avatar" height="50px" width="50px" />
-                                    </Avatar>
-                                    : <Avatar style={{ margin: "0 10px 0 0" }}>{playerStat.alias[0]}</Avatar>
-                                }
-                                <Typography>
-                                    {playerStat.alias} {displayEmoji(key, playerList.length)}
-                                </Typography>
+                                <PlayerAvatar
+                                    id={player.userId}
+                                    name={player.alias}
+                                    src={player.avatarUrl}
+                                    style={{
+                                        margin: "0 10px 0 0"
+                                    }}
+                                />
+
+                                <Typography>{player.alias} {displayEmoji(key, playerList.length)}</Typography>
                             </TableCell>
-                            <TableCell align="right">{playerStat.win}</TableCell>
-                            <TableCell align="right">{playerStat.loss}</TableCell>
-                            <TableCell align="right">{playerStat.winrate}%</TableCell>
+                            <TableCell align="right">{player.win}</TableCell>
+                            <TableCell align="right">{player.loss}</TableCell>
+                            <TableCell align="right">{player.winrate}%</TableCell>
                         </TableRow>
                     );
                 })}

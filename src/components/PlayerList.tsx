@@ -1,5 +1,5 @@
 import DeleteIcon from "@mui/icons-material/Delete";
-import { Avatar, ListItemAvatar, ListItemText, Switch, IconButton, List, ListItem, ListItemSecondaryAction, Badge, makeStyles } from "@material-ui/core";
+import { ListItemAvatar, ListItemText, Switch, IconButton, List, ListItem, ListItemSecondaryAction, Badge, makeStyles } from "@material-ui/core";
 import { removePlayer } from "../helpers/Socket";
 import { IPlayer } from "../types";
 import { confirmAlert } from "react-confirm-alert";
@@ -7,6 +7,7 @@ import "react-confirm-alert/src/react-confirm-alert.css";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../redux/Store";
 import { updatePlayer } from "../redux/Config";
+import PlayerAvatar from "./PlayerAvatar";
 
 const useStyles = makeStyles({
     activeBadge: {
@@ -74,7 +75,11 @@ const PlayerList = () => {
                             variant="dot"
                             classes={{ badge: player.active ? classes.activeBadge : classes.inactiveBadge }}
                         >
-                            <Avatar src={player.avatarUrl}>{player.alias[0]}</Avatar>
+                            <PlayerAvatar 
+                                id={player.userId}
+                                name={player.alias}
+                                src={player.avatarUrl}
+                            />
                         </Badge>
                     </ListItemAvatar>
                     <ListItemText>{player.alias}</ListItemText>

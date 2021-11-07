@@ -1,7 +1,8 @@
-import { TableRow, TableCell, Box, Table, TableHead, TableBody, Avatar, LinearProgress } from "@material-ui/core";
+import { TableRow, TableCell, Box, Table, TableHead, TableBody, LinearProgress } from "@material-ui/core";
 import { Skeleton } from "@mui/material";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import PlayerAvatar from "./PlayerAvatar";
 
 interface Prop {
     sessionArchiveId: string
@@ -42,20 +43,27 @@ const MatchHistoryRowDetail: React.FC<Prop> = ({ sessionArchiveId }) => {
                         <TableBody>
                             {sessionArchive.scoreboard?.map((data: any, key: number) => {
                                 return (
-                                    <TableRow key={key}>
+                                    <TableRow 
+                                        key={key}
+                                        hover
+                                    >
                                         <TableCell>{key + 1}.</TableCell>
                                         <TableCell style={{
                                             display: "flex",
                                             flexDirection: "row",
                                             alignItems: "center"
                                         }}>
-                                            {
-                                                data.avatarUrl
-                                                ? <Avatar style={{ height: 25, width: 25, margin: "0 5px 0 0" }}>
-                                                    <img src={data.avatarUrl} alt="avatar" height="25px" width="25px" />
-                                                </Avatar>
-                                                : <Avatar style={{ fontSize: "14px", height: 25, width: 25, margin: "0 5px 0 0" }}>{data.alias[0]}</Avatar>
-                                            }
+                                            <PlayerAvatar 
+                                                id={data.userId}
+                                                src={data.avatarUrl} 
+                                                name={data.alias}
+                                                style={{ 
+                                                    height: 25, 
+                                                    width: 25, 
+                                                    margin: "0 5px 0 0",
+                                                    fontSize: "14px"
+                                                }}
+                                            />
                                             <Box>{data.alias}</Box>
                                         </TableCell>
                                         <TableCell align="right">{data.win} - {data.loss}</TableCell>

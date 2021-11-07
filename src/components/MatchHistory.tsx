@@ -1,4 +1,4 @@
-import { Box, Card, CardContent, makeStyles, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, withStyles } from "@material-ui/core";
+import { Box, makeStyles, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, withStyles } from "@material-ui/core";
 import { useSelector } from "react-redux";
 import { RootState } from "../redux/Store";
 import MatchHistoryRow from "./MatchHistoryRow";
@@ -39,9 +39,7 @@ const MatchHistory:React.FC<Props> = ({ matchHistory }) => {
                         <TableCell style={{ 
                             fontWeight: "bold", textAlign: "center" 
                         }}>
-                            <Box>
-                                Rounds
-                            </Box>
+                            <Box>Rounds</Box>
                         </TableCell>
                         <TableCell style={{ fontWeight: "bold", textAlign: "center" }}>W - L</TableCell>
                     </TableRow>
