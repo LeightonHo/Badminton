@@ -108,6 +108,7 @@ const Home = () => {
 							</Typography>
 							<IconButton
 								color="inherit"
+								onClick={() => { dispatch(setNavigation("profile")); }}
 							>
 								<PlayerAvatar
 									id={userId}
@@ -143,9 +144,8 @@ const Home = () => {
 								<IconButton color="inherit" onClick={(() => { handleNavigation("/lobby"); })}>
 									<Typography>Lobby</Typography>
 								</IconButton>
-								<IconButton 
-									color="inherit" 
-									onClick={(() => { handleNavigation(`/profile?userId=${userId}`); })}
+								<IconButton
+									onClick={() => { dispatch(setNavigation("profile")); }}
 								>
 									<PlayerAvatar
 										id={userId}
@@ -173,7 +173,7 @@ const Home = () => {
 				: ""
 			}
 
-			<Box className="App">
+			<Box>
 				{
 					isLoggedIn
 					? renderNavBar()
@@ -194,8 +194,6 @@ const Home = () => {
 						exact
 						path={["/", "/login", "/home"]}
 						render={() => {
-							console.log("rendering..")
-							console.log(isLoggedIn, joinedSession, rounds.length)
 							if (!isLoggedIn) {
 								return (
 									<Redirect to="/login" />
@@ -219,7 +217,7 @@ const Home = () => {
 						}}
 					/>
 					<Box style={{
-						position: "absolute",
+						position: "relative",
 						overflow: "auto",
 						top: isMobile ? "50px" : "64px",
 						left: "0px",
@@ -241,11 +239,6 @@ const Home = () => {
 							<Route path="/profile">
 								<Profile />
 							</Route>
-							<Route path="/oops">
-								
-							</Route>
-							{/* <Redirect exact from="/" to={isLoggedIn ? "/home" : "/login"} /> */}
-							{/* <Redirect to="/oops" /> */}
 						</Box>
 					</Box>
 				</Switch>
@@ -285,7 +278,3 @@ const Home = () => {
 }
 
 export default Home;
-
-function useStyles(arg0: { position: string; overflow: string; top: string; left: string; right: string; height: number; paddingBottom: string; backgroundColor: string; }) {
-	throw new Error("Function not implemented.");
-}

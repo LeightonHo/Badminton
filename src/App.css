@@ -1,7 +1,7 @@
 /* LOGIN */
 .login-screen {
 	height: 100vh;
-	background: #00264c;
+	background: linear-gradient(150deg, rgba(0,39,78,1) 25%, rgba(28,77,126,1) 75%);;
 }
 
 .login-card {
@@ -67,8 +67,6 @@
 .facebook-button {
   width: 100%;
 }
-
-/* LOBBY */
 
 /* GENERAL */
 .card {
@@ -156,50 +154,9 @@
   }
 }
 
-.avatar {
-  height: 30px;
-  border-radius: 50%;
-}
-
 /* CONFIGURATION SCREEN */
 .general-card > div {
   margin-top: 15px;
-}
-
-.config-card-header {
-  text-align: left;
-  margin-bottom: 20px;
-}
-
-.courts-card {
-  min-height: 100px;
-}
-
-.players-card {
-  min-height: 200px;
-}
-
-.player-list-grid {
-  width: 100% !important;
-  margin: auto;
-}
-
-.player-list-grid li:nth-of-type(odd) {
-  background-color: rgb(241, 241, 241);
-}
-
-.player-list-grid li:nth-of-type(even) {
-  background-color: rgb(250, 250, 250);
-}
-
-.box-text-input {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.text-input {
-  width: 100%;
 }
 
 @media (max-width:960px) {
@@ -225,22 +182,10 @@
   padding: 10px 15px 10px 15px !important;
 }
 
-.score-input-grid-item {
-  margin-top: 10px;
-}
-
 .score-input > div > input {
   width: 50px;
   text-align: center;
   height: 5px;
-}
-
-.match {
-  padding-top: 10px;
-}
-
-.games {
-  font-size: 14px;
 }
 
 /* SCOREBOARD SCREEN */
@@ -255,12 +200,6 @@
 
 .scoreboard-table > tbody > tr > td {
   font-size: 16px;
-}
-
-.scoreboard-avatar {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
 }
 
 .statistics-box {

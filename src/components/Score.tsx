@@ -46,7 +46,7 @@ const Score: React.FC<IProps> = ({ team, score, roundKey, matchKey }) => {
     }
 
     return (
-        <Grid item xs className="score-input-grid-item">
+        <Grid item xs>
             <TextField
                 variant="outlined"
                 type="number"

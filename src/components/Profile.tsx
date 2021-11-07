@@ -1,4 +1,4 @@
-import { Box, Button, Card, CardContent, TextField, Typography } from "@material-ui/core";
+import { Box, Button, Card, CardContent, LinearProgress, TextField, Typography } from "@material-ui/core";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setIsLoggedIn } from "../redux/General";
@@ -8,13 +8,12 @@ import { RootState } from "../redux/Store";
 import { setProfileData } from "../redux/Profile";
 import queryString from "query-string";
 import { useHistory, useLocation } from "react-router-dom";
-import { Skeleton } from "@mui/material";
 
 const Profile = () => {
     const dispatch = useDispatch();
     const history = useHistory();
     const [isLoading, setIsLoading] = useState<boolean>(false);
-    const { userId, isMobile } = useSelector((state: RootState) => state.general);
+    const { userId } = useSelector((state: RootState) => state.general);
     const { data } = useSelector((state: RootState) => state.profile);
     const { search } = useLocation();
     const profileUserId = queryString.parse(search).userId;
@@ -40,6 +39,12 @@ const Profile = () => {
 
     return (
         <>
+            {
+                isLoading
+                ? <LinearProgress />
+                : ""
+            }
+
             <Card className="card">
                 <CardContent>
                     <Typography
@@ -50,52 +55,35 @@ const Profile = () => {
                         Profile
                     </Typography>
 
-                    {
-                        isLoading
-                        ? <>
-                            <Skeleton
-                                variant="text"
-                                height={40}
-                                animation="wave"
-                            />
-                            <Skeleton
-                                variant="text"
-                                height={40}
-                                animation="wave"
-                            />
-                        </>
-                        : <>
-                            <TextField 
-                                id="txtName" 
-                                label="Name"
-                                variant="outlined" 
-                                size="small"
-                                type="text"
-                                value={data.Name || ""} 
-                                name="name"
-                                disabled
-                                fullWidth
-                                style={{
-                                    marginBottom: "15px"
-                                }}
-                            />
+                    <TextField 
+                        id="txtName" 
+                        label="Name"
+                        variant="outlined" 
+                        size="small"
+                        type="text"
+                        value={data.Name || ""} 
+                        name="name"
+                        disabled
+                        fullWidth
+                        style={{
+                            marginBottom: "15px"
+                        }}
+                    />
 
-                            <TextField 
-                                id="inputAlias" 
-                                label="Alias" 
-                                variant="outlined" 
-                                size="small"
-                                type="text" 
-                                name="alias"
-                                value={data.Alias || ""}
-                                fullWidth
-                                disabled
-                                // style={{
-                                //     marginBottom: "15px"
-                                // }}
-                            />
-                        </>
-                    }
+                    <TextField 
+                        id="inputAlias" 
+                        label="Alias" 
+                        variant="outlined" 
+                        size="small"
+                        type="text" 
+                        name="alias"
+                        value={data.Alias || ""}
+                        fullWidth
+                        disabled
+                        // style={{
+                        //     marginBottom: "15px"
+                        // }}
+                    />
 
                     {/* <TextField
                         id="inputBio"
@@ -123,17 +111,7 @@ const Profile = () => {
                     >
                         History
                     </Typography>
-
-                    {
-                        isLoading
-                        ? <Skeleton 
-                            variant="rectangular"
-                            width="100%"
-                            height={isMobile ? 350 : 500}
-                            animation="wave"
-                        />
-                        : <MatchHistory matchHistory={data.MatchHistory || []} />
-                    }
+                    <MatchHistory matchHistory={data.MatchHistory || []} />
                 </CardContent>
             </Card>
 

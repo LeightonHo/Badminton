@@ -67,6 +67,9 @@ const PlayerList = () => {
             return (
                 <ListItem
                     key={key}
+                    style={{
+                        backgroundColor: key % 2 ? "#fafafa" : "#f1f1f1"
+                    }}
                 >
                     <ListItemAvatar>
                         <Badge
@@ -108,7 +111,7 @@ const PlayerList = () => {
     }
 
     return (
-        <List className="player-list-grid">
+        <List>
             {renderList()}
         </List>
     );

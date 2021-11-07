@@ -1,5 +1,5 @@
-import { Box, TextField } from "@material-ui/core";
-import React, { useState, KeyboardEvent} from "react";
+import { TextField } from "@material-ui/core";
+import { useState, KeyboardEvent} from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../redux/Store";
 import { addCourt } from "../helpers/Socket";
@@ -39,23 +39,20 @@ const CourtForm = () => {
     }
 
     return (
-        <Box
-            className="box-text-input"
-        >
-            <TextField 
-                id="inputCourt" 
-                className="text-input" 
-                label="Court" 
-                variant="outlined" 
-                size="small"
-                type="text" 
-                value={input}
-                onChange={handleChange}
-                onKeyPress={handleKeyPress}
-                name="court"
-                helperText="Press enter to add"
-            />
-        </Box>
+        <TextField 
+            id="inputCourt" 
+            className="text-input" 
+            label="Court" 
+            variant="outlined" 
+            size="small"
+            type="text" 
+            value={input}
+            onChange={handleChange}
+            onKeyPress={handleKeyPress}
+            name="court"
+            helperText="Press enter to add"
+            fullWidth
+        />
     );
 }
 

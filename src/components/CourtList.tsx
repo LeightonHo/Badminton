@@ -13,9 +13,14 @@ const CourtList = () => {
     }
 
     const renderList = (): JSX.Element[] => {
-        return courts.map((court, i) => {
+        return courts.map((court, key) => {
             return (
-                <ListItem key={i}>
+                <ListItem 
+                    key={key}
+                    style={{
+                        backgroundColor: key % 2 ? "#fafafa" : "#f1f1f1"
+                    }}
+                >
                     <ListItemText>{court}</ListItemText>
                     <ListItemSecondaryAction>
                         {
@@ -36,7 +41,7 @@ const CourtList = () => {
     }
 
     return (
-        <List className="player-list-grid">
+        <List>
             {renderList()}
         </List>
     );

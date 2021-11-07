@@ -22,7 +22,7 @@ const MatchHistory:React.FC<Props> = ({ matchHistory }) => {
     return (
         <TableContainer style={{
             width: "100%",
-            maxHeight: isMobile ? 350 : 500
+            minHeight: isMobile ? 350 : 500
         }}>
             <Table 
                 stickyHeader

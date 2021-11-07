@@ -1,5 +1,5 @@
 import React, { useState, KeyboardEvent } from "react";
-import { Box, TextField } from "@material-ui/core";
+import { TextField } from "@material-ui/core";
 import { addPlayer } from "../helpers/Socket";
 import { useSelector } from "react-redux";
 import { RootState } from "../redux/Store";
@@ -46,21 +46,20 @@ const PlayerForm = () => {
     }
 
     return (
-        <Box className="box-text-input">
-            <TextField 
-                id="inputPlayer" 
-                className="text-input" 
-                label="Name" 
-                variant="outlined" 
-                size="small"
-                type="text" 
-                value={input.name}
-                onChange={handleChange}
-                onKeyPress={handleKeyPress}
-                name="name"
-                helperText="Press enter to add"
-            />
-        </Box>
+        <TextField 
+            id="inputPlayer" 
+            className="text-input" 
+            label="Name" 
+            variant="outlined" 
+            size="small"
+            type="text" 
+            value={input.name}
+            onChange={handleChange}
+            onKeyPress={handleKeyPress}
+            name="name"
+            helperText="Press enter to add"
+            fullWidth
+        />
     );
 }
 

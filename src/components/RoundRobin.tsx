@@ -1,9 +1,9 @@
 import ByeContainer from "./ByeContainer";
 import Match from "./Match";
-import { Box, Card, CardContent, Checkbox, Divider, Grid, Typography } from "@material-ui/core";
+import { Box, Card, CardContent, Divider, Grid, Typography } from "@material-ui/core";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../redux/Store";
-import { IMatch, IRound } from "../types";
+import { IMatch } from "../types";
 import { setFilterView } from "../redux/General";
 import { useEffect } from "react";
 import { ToggleButton, ToggleButtonGroup } from "@mui/material";
@@ -12,10 +12,6 @@ const RoundRobin = () => {
     const dispatch = useDispatch();
     const { userId, filterView } = useSelector((state: RootState) => state.general);
     const { rounds } = useSelector((state: RootState) => state.gameState);
-
-    useEffect(() => {
-
-    }, [filterView]);
 
     const shouldShowMatch = (match: IMatch): boolean => {
         return [match.team1.player1.userId, match.team1.player2.userId, match.team2.player3.userId, match.team2.player4.userId].indexOf(userId) > 0;

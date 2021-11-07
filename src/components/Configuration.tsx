@@ -135,7 +135,6 @@ const Configuration = () => {
                     <Typography
                         variant="h5"
                         gutterBottom
-                        className="config-card-header"
                     >
                         Players ({players.length - getInactivePlayers().length})
                     </Typography>
