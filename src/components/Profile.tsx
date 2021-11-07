@@ -27,7 +27,7 @@ const Profile = () => {
         setIsLoading(true);
 
         axios.get<any>(`${process.env.REACT_APP_API_URL}/user?userId=${userId}`).then(({ data }) => {
-            if (data.statusCode == 200) {
+            if (data.statusCode === 200) {
                 dispatch(setProfileData(data.payload));
             }
 
@@ -91,7 +91,7 @@ const Profile = () => {
 
                     <TextField 
                         id="inputAlias" 
-                        label="Alias" 
+                        label="Nickname" 
                         variant="outlined" 
                         size="small"
                         type="text" 

@@ -17,7 +17,6 @@ const Configuration = () => {
     const { sessionId, isHost, isSessionActive } = useSelector((state: RootState) => state.general);
     const { players, courts } = useSelector((state: RootState) => state.config);
     const { rounds } = useSelector((state: RootState) => state.gameState);
-    const hasGameStarted: boolean = rounds.length > 0;
 
     const getInactivePlayers = (): IPlayer[] => {
         let result: IPlayer[] = [];

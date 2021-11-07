@@ -10,11 +10,11 @@ interface Props {
 
 const PlayerAvatar: React.FC<Props> = ({ id, name, src, style }) => {
     const history = useHistory();
-    const isGuest = id === name;
+    const clickable = id && (id !== name) && name !== "Deleted User";
 
     const handleClick = () => {
         // If this is not a guest, then open their profile.
-        if (id && !isGuest) {
+        if (clickable) {
             history.push(`profile?userId=${id}`)
         }
     }
@@ -24,7 +24,7 @@ const PlayerAvatar: React.FC<Props> = ({ id, name, src, style }) => {
             src={src}
             alt={name}
             style={{ 
-                cursor: !id || isGuest ? "auto" : "pointer",
+                cursor: clickable ? "pointer" : "auto",
                 margin: "auto",
                 ...style
             }}

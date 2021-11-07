@@ -1,4 +1,4 @@
-import { Backdrop, LinearProgress } from "@material-ui/core";
+import { LinearProgress } from "@material-ui/core";
 import { useSelector } from "react-redux";
 import { RootState } from "../redux/Store";
 

@@ -1,4 +1,4 @@
-import { Box, Button, Card, CardContent, TextField, Typography, Paper } from "@material-ui/core";
+import { Box, Button, Card, CardContent, TextField, Typography, IconButton } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
 import { createSession, joinSession, leaveSession, endSession } from "../helpers/Socket";
 import Configuration from "./Configuration";
@@ -10,6 +10,7 @@ import { setIsLoading, setJoinedSession, setSessionId } from "../redux/General";
 import { confirmAlert } from "react-confirm-alert";
 import { setError } from "../redux/Lobby";
 import axios from "axios";
+import { ContentCopy } from "@mui/icons-material";
 
 const Lobby = () => {
     const dispatch = useDispatch();
@@ -100,34 +101,43 @@ const Lobby = () => {
         <>
             <Card className="card">
                 <CardContent className="general-card">
-                    <Typography
-                        variant="h5"
-                    >
-                        Session
-                    </Typography>
+                    <Typography variant="h5">Session</Typography>
+
                     {
                         !joinedSession
-                        ? <Typography variant="subtitle2">
-                            {getDescription()}
-                        </Typography>
+                        ? <Typography variant="subtitle2">{getDescription()}</Typography>
                         : ""
                     }
                     
-                    <TextField
-                        id="inputSession"
-                        label="Code"
-                        type="text"
-                        variant="outlined"
-                        size="small"
-                        onChange={handleSessionChange}
-                        name="session"
-                        className="general-input"
-                        value={sessionCode}
-                        fullWidth
-                        disabled={joinedSession}
-                        error={error ? true : false}
-                        helperText={error}
-                    />
+                    <Box style={{
+                        display: "flex",
+                        flexDirection: "row",
+                        alignItems: "center"
+                    }}>
+                        <TextField
+                            id="inputSession"
+                            label="Code"
+                            type="text"
+                            variant="outlined"
+                            size="small"
+                            onChange={handleSessionChange}
+                            name="session"
+                            className="general-input"
+                            value={sessionCode}
+                            fullWidth
+                            disabled={joinedSession}
+                            error={error ? true : false}
+                            helperText={error}
+                        />
+                        {
+                            joinedSession && false
+                            ? <IconButton>
+                                <ContentCopy />
+                            </IconButton>
+                            : ""
+                        }
+                    </Box>
+                    
                 </CardContent>
             </Card>
             {

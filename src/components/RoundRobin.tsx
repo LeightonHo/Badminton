@@ -5,7 +5,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../redux/Store";
 import { IMatch } from "../types";
 import { setFilterView } from "../redux/General";
-import { useEffect } from "react";
 import { ToggleButton, ToggleButtonGroup } from "@mui/material";
 
 const RoundRobin = () => {

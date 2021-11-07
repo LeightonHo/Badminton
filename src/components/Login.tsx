@@ -70,35 +70,8 @@ const Login: React.FC<Props> = ({ setUser }) => {
         setIsLoggingIn(true);
     }
 
-    // const handleGuestClick = () => {
-    //     setIsLoggingIn(true);
-    //     setUser({
-    //         userId: crypto.randomBytes(16).toString("hex"),
-    //         email: "",
-    //         name: "Guest ",
-    //         avatarUrl: "",
-    //         currentSessionId: "",
-    //         isGuest: true
-    //     });
-    //     setIsLoggedIn(true);
-    // }
-
-    const styles = {
-        paperContainer: {
-            height: "100vh",
-            width: "100%",
-            backgroundImage: `url(${Image})`,
-            backgroundSize: "contain",
-            filter: "brightness(50%)"
-        },
-        subtitle: {
-            "margin-bottom": "20px"
-        }
-    }
-
     return (
         <Box className="login-screen">
-            {/* <Box style={styles.paperContainer} /> */}
             <Paper className="login-card">
                 <Box className="login-header">
                     <Typography variant="h5">
@@ -110,13 +83,7 @@ const Login: React.FC<Props> = ({ setUser }) => {
                 </Box>
                 {
                     isLoggingIn
-                        ? <LinearProgress
-                            className="login-progress"
-                            // classes={{
-                            //     colorPrimary: classes.colorPrimary,
-                            //     bar: classes.bar
-                            // }}
-                        />
+                        ? <LinearProgress className="login-progress" />
                         : ""
                 }
                 <Box className="login-body">
@@ -134,17 +101,7 @@ const Login: React.FC<Props> = ({ setUser }) => {
                     />
                 </Box>
 
-                <Box
-                    className="login-footer" 
-                    // onClick={handleGuestClick}
-                >
-                    {/* <Typography 
-                        className="login-guest-button"
-                        variant="overline"
-                    >
-                        Continue as guest
-                    </Typography> */}
-                </Box>
+                <Box className="login-footer" />
 
                 <span id="git-commit-hash" style={{ display: "none" }}>{generatedGitInfo.gitCommitHash}</span>
             </Paper>

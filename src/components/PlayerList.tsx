@@ -54,14 +54,6 @@ const PlayerList = () => {
         }));
     }
 
-    const sortPlayers = (a: IPlayer, b: IPlayer) => {
-        if (b.active === a.active) {
-            return a.alias.localeCompare(b.alias);
-        }
-
-        return Number(b.active) - Number(a.active);
-    }
-
     const renderList = (): JSX.Element[] => {
         return players.map((player, key) => {
             return (

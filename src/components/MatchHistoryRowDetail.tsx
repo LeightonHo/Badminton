@@ -15,7 +15,7 @@ const MatchHistoryRowDetail: React.FC<Prop> = ({ sessionArchiveId }) => {
     useEffect(() => {
         setIsLoading(true);
         getSessionArchive(sessionArchiveId);
-    }, []);
+    }, [sessionArchiveId]);
 
     const getSessionArchive = (sessionArchiveId: string) => {
         axios.get<any>(`${process.env.REACT_APP_API_URL}/session-archive?sessionArchiveId=${sessionArchiveId}`).then(({ data }) => {

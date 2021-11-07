@@ -1,7 +1,5 @@
 import { Box } from "@material-ui/core";
 import React from "react";
-import { useSelector } from "react-redux";
-import { RootState } from "../redux/Store";
 import { IPlayer } from "../types";
 import Bye from "./Bye";
 
@@ -11,8 +9,6 @@ interface IProps {
 }
 
 const ByeContainer: React.FC<IProps> = ({ players, roundKey }) => {
-    const { isMobile } = useSelector((state: RootState) => state.general);
-
     const renderByes = () => {
         return (players.map((player, key) => {
             return (
