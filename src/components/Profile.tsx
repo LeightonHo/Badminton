@@ -8,6 +8,7 @@ import { RootState } from "../redux/Store";
 import { setProfileData } from "../redux/Profile";
 import queryString from "query-string";
 import { useHistory, useLocation } from "react-router-dom";
+import PlayerAvatar from "./PlayerAvatar";
 
 const Profile = () => {
     const dispatch = useDispatch();
@@ -50,14 +51,29 @@ const Profile = () => {
 
             <Card className="card">
                 <CardContent>
-                    <Typography
-                        variant="h5"
-                        gutterBottom
-                        className="config-card-header"
-                    >
-                        Profile
-                    </Typography>
-
+                    <Box style={{
+                        display: "flex",
+                        flexDirection: "row",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        marginBottom: 10
+                    }}>
+                        <Typography
+                            variant="h5"
+                            gutterBottom
+                            className="config-card-header"
+                        >
+                            Profile
+                        </Typography>
+                        <PlayerAvatar
+                            name={data.Alias}
+                            src={data.AvatarUrl}
+                            style={{
+                                margin: 0
+                            }}
+                        />
+                    </Box>
+                    
                     <TextField 
                         id="txtName" 
                         label="Name"
