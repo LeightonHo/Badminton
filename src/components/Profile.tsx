@@ -20,7 +20,7 @@ const Profile = () => {
 
     useEffect(() => {
         getPlayerProfile(profileUserId);
-    }, []);
+    }, [profileUserId]);
 
     const getPlayerProfile = (userId: any) => {
         setIsLoading(true);
