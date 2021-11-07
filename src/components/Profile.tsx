@@ -26,7 +26,10 @@ const Profile = () => {
         setIsLoading(true);
 
         axios.get<any>(`${process.env.REACT_APP_API_URL}/user?userId=${userId}`).then(({ data }) => {
-            dispatch(setProfileData(data.payload));
+            if (data.statusCode == 200) {
+                dispatch(setProfileData(data.payload));
+            }
+
             setIsLoading(false);
         });
     }
