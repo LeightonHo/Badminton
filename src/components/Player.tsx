@@ -92,9 +92,9 @@ const Player: React.FC<IProps> = ({ playerKey, player, roundKey, matchKey }) => 
                     <Avatar 
                         src={player.avatarUrl} 
                         alt={player.alias}
+                        onClick={() => { }}
                         style={{ 
-                            margin: "auto",
-                            border: "2px solid #d1d1d1"
+                            margin: "auto"
                         }}>
                         {player.alias[0]}
                     </Avatar>

@@ -225,14 +225,6 @@
   padding: 10px 15px 10px 15px !important;
 }
 
-.match-box {
-  margin-top: 5px;
-}
-
-.match-box > div {
-  padding: 5px 0 5px 0 !important;
-}
-
 .score-input-grid-item {
   margin-top: 10px;
 }

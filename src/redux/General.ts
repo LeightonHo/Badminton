@@ -12,7 +12,8 @@ const initialState: any = {
     joinedSession: false,
     isMobile: false,
     isSessionActive: true,
-    navigation: ""
+    navigation: "",
+    filterView: localStorage.getItem("crosscourt_filter_view") || "detailed"
 }
 
 export const configSlice = createSlice({
@@ -51,6 +52,10 @@ export const configSlice = createSlice({
         },
         setIsSessionActive: (state, action) => {
             state.isSessionActive = action.payload;
+        },
+        setFilterView: (state, action) => {
+            state.filterView = action.payload;
+            localStorage.setItem("crosscourt_filter_view", action.payload);
         }
 	},
 })
@@ -66,7 +71,8 @@ export const {
     setJoinedSession,
     setIsMobile,
     setNavigation,
-    setIsSessionActive
+    setIsSessionActive,
+    setFilterView
 } = configSlice.actions;
 
 export default configSlice.reducer;

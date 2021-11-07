@@ -1,4 +1,5 @@
 import { TableRow, TableCell, Box, Table, TableHead, TableBody, Avatar, LinearProgress } from "@material-ui/core";
+import { Skeleton } from "@mui/material";
 import axios from "axios";
 import { useEffect, useState } from "react";
 
@@ -35,7 +36,7 @@ const MatchHistoryRowDetail: React.FC<Prop> = ({ sessionArchiveId }) => {
                                 <TableCell />
                                 <TableCell style={{ fontWeight: "bold" }}>Player</TableCell>
                                 <TableCell align="right" style={{ fontWeight: "bold" }}>W - L</TableCell>
-                                <TableCell align="right" style={{ fontWeight: "bold" }}>Win Rate</TableCell>
+                                <TableCell align="right" style={{ fontWeight: "bold" }}>Win %</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
@@ -72,8 +73,20 @@ const MatchHistoryRowDetail: React.FC<Prop> = ({ sessionArchiveId }) => {
     const showProgress = () => {
         return (
             <TableRow>
-                <TableCell colSpan={4} >
+                <TableCell colSpan={4}>
                     <LinearProgress />
+                    <Skeleton 
+                        variant="text"
+                        width="100%"
+                        height={40}
+                        animation="wave"
+                    />
+                    <Skeleton 
+                        variant="rectangular"
+                        width="100%"
+                        height={200}
+                        animation="wave"
+                    />
                 </TableCell>
             </TableRow>
         );

@@ -1,58 +1,53 @@
 import ByeContainer from "./ByeContainer";
 import Match from "./Match";
 import { Box, Card, CardContent, Checkbox, Divider, Grid, Typography } from "@material-ui/core";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../redux/Store";
-import { useState } from "react";
-import { IRound } from "../types";
+import { IMatch, IRound } from "../types";
+import { setFilterView } from "../redux/General";
+import { useEffect } from "react";
+import { ToggleButton, ToggleButtonGroup } from "@mui/material";
 
 const RoundRobin = () => {
-    const [compactView, setCompactView] = useState<boolean>(false);
-    const { userId } = useSelector((state: RootState) => state.general);
+    const dispatch = useDispatch();
+    const { userId, filterView } = useSelector((state: RootState) => state.general);
     const { rounds } = useSelector((state: RootState) => state.gameState);
 
-    const getFilteredRounds = () => {
-        let result: IRound[] = JSON.parse(JSON.stringify(rounds));
+    useEffect(() => {
 
-        if (compactView) {
-            for (let round of result) {
-                round.matches = [];
-            }
+    }, [filterView]);
 
-            for (let i = 0; i < rounds.length; i++) {
-                let round = rounds[i];
+    const shouldShowMatch = (match: IMatch): boolean => {
+        return [match.team1.player1.userId, match.team1.player2.userId, match.team2.player3.userId, match.team2.player4.userId].indexOf(userId) > 0;
+    }
 
-                for (let j = 0; j < round.matches.length; j++) {
-                    let match = round.matches[j];
-
-                    if ([match.team1.player1.userId, match.team1.player2.userId, match.team2.player3.userId, match.team2.player4.userId].indexOf(userId) > 0) {
-                        result[i].matches.push(match);
-                    }
-                }
-            }
-        }
-
-        return result.reverse();
+    const handleFilterViewChange = (event: React.MouseEvent<HTMLElement>, newFilterView: string) => {
+        dispatch(setFilterView(newFilterView));
     }
 
     const renderRoundRobin = () => {
         return (
             <>
-                <Card className="card round-card">
-                    <CardContent style={{
-                        display: "flex",
-                        flexDirection: "row",
-                        justifyContent: "center",
-                        alignItems: "center"
-                    }}>
-                        <Box>Compact view </Box>
-                        <Checkbox 
-                            color="primary" 
-                            onClick={() => { setCompactView(!compactView); }}
-                        />
-                    </CardContent>
-                </Card>
-                {getFilteredRounds().map((round, roundKey) => {
+                <Box style={{
+                    marginTop: "10px",
+                    marginRight: "10px",
+                    display: "flex",
+                    flexDirection: "row-reverse"
+                }}>
+                    <ToggleButtonGroup
+                        color="primary"
+                        value={filterView}
+                        exclusive
+                        onChange={handleFilterViewChange}
+                        style={{
+                            height: "30px"
+                        }}
+                    >
+                        <ToggleButton value="detailed">Detailed</ToggleButton>
+                        <ToggleButton value="compact">Compact</ToggleButton>
+                    </ToggleButtonGroup>
+                </Box>
+                {[...rounds].reverse().map((round, roundKey) => {
                     return (
                         <Card 
                             key={roundKey}
@@ -83,11 +78,18 @@ const RoundRobin = () => {
 
                                     {round.matches.map((match, matchKey) => {
                                         return (
-                                            <Box key={matchKey} className="match-box">
+                                            <Box 
+                                                key={matchKey} 
+                                                style={{
+                                                    marginTop: "5px",
+                                                    display: filterView === "detailed" || shouldShowMatch(match) ? "" : "none"
+                                                }}
+                                            >
                                                 <Grid 
                                                     item xs
                                                     style={{
-                                                        paddingBottom: "15px",
+                                                        paddingTop: "5px",
+                                                        paddingBottom: "5px",
                                                         marginBottom: "10px"
                                                     }}
                                                 >

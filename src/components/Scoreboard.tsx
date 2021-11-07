@@ -339,7 +339,7 @@ const Scoreboard = () => {
                                     <TableCell>Player</TableCell>
                                     <TableCell align="right">Win</TableCell>
                                     <TableCell align="right">Loss</TableCell>
-                                    <TableCell align="right">Win Rate</TableCell>
+                                    <TableCell align="right">Win %</TableCell>
                                 </TableRow>
                             </TableHead>
                             {generateTableBody()}

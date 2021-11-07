@@ -70,6 +70,7 @@ const MatchHistoryRow: React.FC<Props> = ({ index, data }) => {
         <>
             <TableRow 
                 key={index}
+                onClick={handleRowClick}
                 style={{
                     cursor: "pointer",
                     backgroundColor: index % 2 ? "#fafafa" : "#f1f1f1"
@@ -79,7 +80,6 @@ const MatchHistoryRow: React.FC<Props> = ({ index, data }) => {
                     <IconButton
                         aria-label="expand row"
                         size="small"
-                        onClick={handleRowClick}
                     >
                         {showDetail ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
                     </IconButton>
