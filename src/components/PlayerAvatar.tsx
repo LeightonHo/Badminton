@@ -2,7 +2,7 @@ import { Avatar } from "@material-ui/core";
 import { useHistory } from "react-router";
 
 interface Props {
-    id: string | undefined,
+    id?: string | undefined,
     name?: string,
     src: string | undefined,
     style?: any
@@ -14,7 +14,7 @@ const PlayerAvatar: React.FC<Props> = ({ id, name, src, style }) => {
 
     const handleClick = () => {
         // If this is not a guest, then open their profile.
-        if (!isGuest) {
+        if (id && !isGuest) {
             history.push(`profile?userId=${id}`)
         }
     }
@@ -24,7 +24,7 @@ const PlayerAvatar: React.FC<Props> = ({ id, name, src, style }) => {
             src={src}
             alt={name}
             style={{ 
-                cursor: isGuest ? "auto" : "pointer",
+                cursor: !id || isGuest ? "auto" : "pointer",
                 margin: "auto",
                 ...style
             }}

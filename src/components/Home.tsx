@@ -200,7 +200,6 @@ const Home = () => {
 								);
 							} else 
 							if (!joinedSession || (joinedSession && !rounds.length)) {
-								console.log("going to the lobby")
 								dispatch(setNavigation("lobby"));
 
 								history.push("/lobby");
