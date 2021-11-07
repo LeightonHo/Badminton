@@ -6,6 +6,7 @@ import axios from "axios";
 import { useDispatch } from "react-redux";
 import { setIsLoggedIn } from "../redux/General";
 import { useHistory } from "react-router";
+import generatedGitInfo from "../generatedGitInfo.json";
 
 interface Props {
     setUser: React.Dispatch<React.SetStateAction<IUser>>
@@ -144,6 +145,8 @@ const Login: React.FC<Props> = ({ setUser }) => {
                         Continue as guest
                     </Typography> */}
                 </Box>
+
+                <span id="git-commit-hash" style={{ display: "none" }}>{generatedGitInfo.gitCommitHash}</span>
             </Paper>
         </Box>
     );

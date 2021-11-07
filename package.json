@@ -19,7 +19,6 @@
     "@types/react-dom": "^17.0.9",
     "axios": "^0.22.0",
     "env-cmd": "^10.1.0",
-    "gh-pages": "^3.2.3",
     "moment": "^2.29.1",
     "query-string": "^7.0.1",
     "react": "^17.0.2",
@@ -33,9 +32,10 @@
     "web-vitals": "^1.1.2"
   },
   "scripts": {
-    "start": "set HTTPS=true&&react-scripts start",
-    "build:test": "env-cmd -f .env react-scripts build",
-    "build:production": "env-cmd -f .env.production react-scripts build",
+    "git-info": "node src/gitInfo.js",
+    "start": "npm run git-info && set HTTPS=true&&react-scripts start",
+    "build:test": "npm run git-info &&  env-cmd -f .env react-scripts build",
+    "build:production": "npm run git-info &&  env-cmd -f .env.production react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "deploy:test": "npm run build:test && aws s3 sync build/ s3://test-app.crosscourt.net --acl public-read && aws cloudfront create-invalidation --distribution-id EJ9OQ2EW38C8Q --paths \"/*\"",
