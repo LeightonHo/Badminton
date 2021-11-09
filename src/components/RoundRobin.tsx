@@ -3,7 +3,7 @@ import Match from "./Match";
 import { Box, Card, CardContent, Divider, Grid, Typography } from "@material-ui/core";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../redux/Store";
-import { IMatch } from "../types";
+import { IMatch, IPlayer } from "../types";
 import { setFilterView } from "../redux/General";
 import { ToggleButton, ToggleButtonGroup } from "@mui/material";
 
@@ -13,7 +13,11 @@ const RoundRobin = () => {
     const { rounds } = useSelector((state: RootState) => state.gameState);
 
     const shouldShowMatch = (match: IMatch): boolean => {
-        return [match.team1.player1.userId, match.team1.player2.userId, match.team2.player3.userId, match.team2.player4.userId].indexOf(userId) > 0;
+        return filterView === "detailed" || [match.team1.player1.userId, match.team1.player2.userId, match.team2.player3.userId, match.team2.player4.userId].indexOf(userId) >= 0;
+    }
+
+    const shouldShowByes = (byeList: IPlayer[]): boolean => {
+        return filterView === "detailed" || byeList.indexOf(userId) >= 0;
     }
 
     const handleFilterViewChange = (event: React.MouseEvent<HTMLElement>, newFilterView: string) => {
@@ -71,44 +75,44 @@ const RoundRobin = () => {
                                         </Typography>
                                     </Grid>
 
-                                    <Divider />
-
                                     {round.matches.map((match, matchKey) => {
                                         return (
                                             <Box 
                                                 key={matchKey} 
-                                                style={{
-                                                    marginTop: "5px",
-                                                    display: filterView === "detailed" || shouldShowMatch(match) ? "" : "none"
-                                                }}
+                                                style={{ display: shouldShowMatch(match) ? "" : "none" }}
                                             >
-                                                <Grid 
-                                                    item xs
-                                                    style={{
-                                                        paddingTop: "5px",
-                                                        paddingBottom: "5px",
-                                                        marginBottom: "10px"
-                                                    }}
-                                                >
-                                                    <Match 
-                                                        match={match} 
-                                                        roundKey={round.round - 1} 
-                                                        matchKey={matchKey} 
-                                                    />
-                                                </Grid>
-                                                {addMatchDivider(matchKey, round.matches.length)}
+                                                <Divider />
+                                                <Box style={{ marginTop: "5px" }}>
+                                                    <Grid 
+                                                        item xs
+                                                        style={{
+                                                            paddingTop: "5px",
+                                                            paddingBottom: "5px",
+                                                            marginBottom: "10px"
+                                                        }}
+                                                    >
+                                                        <Match 
+                                                            match={match} 
+                                                            roundKey={round.round - 1} 
+                                                            matchKey={matchKey} 
+                                                        />
+                                                    </Grid>
+                                                </Box>
                                             </Box>
                                         );
                                     })}
                                     
-                                    {round.byes.length > 0 ? <Divider /> : ""}
-
-                                    <Grid item xs>
-                                        <ByeContainer 
-                                            players={round.byes} 
-                                            roundKey={roundKey} 
-                                        />
-                                    </Grid>
+                                    {
+                                        round.byes.length > 0 
+                                        ? <Box style={{ display: shouldShowByes(round.byes) ? "" : "none" }}>
+                                            <Divider /> 
+                                            <ByeContainer 
+                                                players={round.byes} 
+                                                roundKey={roundKey}
+                                            />
+                                        </Box>
+                                        : ""
+                                    }
                                 </Grid>
                             </CardContent>
                         </Card>

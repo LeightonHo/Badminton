@@ -1,4 +1,4 @@
-import { Box } from "@material-ui/core";
+import { Box, Divider, Grid } from "@material-ui/core";
 import React from "react";
 import { IPlayer } from "../types";
 import Bye from "./Bye";
@@ -23,13 +23,15 @@ const ByeContainer: React.FC<IProps> = ({ players, roundKey }) => {
     }
 
     return (
-        <Box style={{
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "space-evenly"
-        }}>
-            {renderByes()}
-        </Box>
+        <Grid item xs>
+            <Box style={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "space-evenly"
+            }}>
+                {renderByes()}
+            </Box>
+        </Grid>
     );
 }
 
