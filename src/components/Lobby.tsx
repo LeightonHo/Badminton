@@ -60,6 +60,12 @@ const Lobby = () => {
         dispatch(setSessionId(""));
         dispatch(setJoinedSession(false));
         dispatch(setError(""));
+
+        // Clear out the current session ID.
+        localStorage.setItem("crosscourt_user", JSON.stringify({
+            ...JSON.parse(localStorage.getItem("crosscourt_user") || ""),
+            currentSessionId: ""
+        }));
     }
 
     const handleEndSessionClick = () => { 

@@ -26,113 +26,97 @@ const RoundRobin = () => {
         }
     }
 
-    const renderRoundRobin = () => {
-        return (
-            <>
-                <Box style={{
-                    marginTop: "10px",
-                    marginRight: "10px",
-                    display: "flex",
-                    flexDirection: "row-reverse"
-                }}>
-                    <ToggleButtonGroup
-                        color="primary"
-                        value={filterView}
-                        exclusive
-                        onChange={handleFilterViewChange}
-                        style={{
-                            height: "30px"
-                        }}
-                    >
-                        <ToggleButton value="detailed">Detailed</ToggleButton>
-                        <ToggleButton value="compact">Compact</ToggleButton>
-                    </ToggleButtonGroup>
-                </Box>
-                {[...rounds].reverse().map((round, roundKey) => {
-                    return (
-                        <Card 
-                            key={roundKey}
-                            className="card round-card"
-                        >
-                            <CardContent>
-                                <Grid 
-                                    container
-                                    direction="column"
-                                    className="divRound"
-                                    spacing={1}
-                                >
-                                    <Grid item>
-                                        <Typography 
-                                            variant="h6"
-                                            gutterBottom
-                                            style={{
-                                                textAlign: "center",
-                                                fontSize: "16px",
-                                                fontWeight: "bold"
-                                            }}
-                                        >
-                                            ROUND {round.round}
-                                        </Typography>
-                                    </Grid>
-
-                                    {round.matches.map((match, matchKey) => {
-                                        return (
-                                            <Box 
-                                                key={matchKey} 
-                                                style={{ display: shouldShowMatch(match) ? "" : "none" }}
-                                            >
-                                                <Divider />
-                                                <Box style={{ marginTop: "5px" }}>
-                                                    <Grid 
-                                                        item xs
-                                                        style={{
-                                                            paddingTop: "5px",
-                                                            paddingBottom: "5px",
-                                                            marginBottom: "10px"
-                                                        }}
-                                                    >
-                                                        <Match 
-                                                            match={match} 
-                                                            roundKey={round.round - 1} 
-                                                            matchKey={matchKey} 
-                                                        />
-                                                    </Grid>
-                                                </Box>
-                                            </Box>
-                                        );
-                                    })}
-                                    
-                                    {
-                                        round.byes.length > 0 
-                                        ? <Box style={{ display: shouldShowByes(round.byes) ? "" : "none" }}>
-                                            <Divider /> 
-                                            <ByeContainer 
-                                                players={round.byes} 
-                                                roundKey={roundKey}
-                                            />
-                                        </Box>
-                                        : ""
-                                    }
-                                </Grid>
-                            </CardContent>
-                        </Card>
-                    );
-                })}
-            </>
-        );
-    }
-
-    const addMatchDivider = (matchKey: number, totalMatches: number) => {
-        if (matchKey !== totalMatches - 1) {
-            return (
-              <Divider />
-            );
-        }
-    }
-
     return (
         <>
-            {renderRoundRobin()}
+            <Box style={{
+                marginTop: "10px",
+                marginRight: "10px",
+                display: "flex",
+                flexDirection: "row-reverse"
+            }}>
+                <ToggleButtonGroup
+                    color="primary"
+                    value={filterView}
+                    exclusive
+                    onChange={handleFilterViewChange}
+                    style={{
+                        height: "30px"
+                    }}
+                >
+                    <ToggleButton value="detailed">Detailed</ToggleButton>
+                    <ToggleButton value="compact">Compact</ToggleButton>
+                </ToggleButtonGroup>
+            </Box>
+            {[...rounds]?.reverse().map((round, roundKey) => {
+                return (
+                    <Card 
+                        key={roundKey}
+                        className="card round-card"
+                    >
+                        <CardContent>
+                            <Grid 
+                                container
+                                direction="column"
+                                className="divRound"
+                                spacing={1}
+                            >
+                                <Grid item>
+                                    <Typography 
+                                        variant="h6"
+                                        gutterBottom
+                                        style={{
+                                            textAlign: "center",
+                                            fontSize: "16px",
+                                            fontWeight: "bold"
+                                        }}
+                                    >
+                                        ROUND {round.round}
+                                    </Typography>
+                                </Grid>
+
+                                {round.matches.map((match, matchKey) => {
+                                    return (
+                                        <Box 
+                                            key={matchKey} 
+                                            style={{ display: shouldShowMatch(match) ? "" : "none" }}
+                                        >
+                                            <Divider />
+                                            <Box style={{ marginTop: "5px" }}>
+                                                <Grid 
+                                                    item xs
+                                                    style={{
+                                                        paddingTop: "5px",
+                                                        paddingBottom: "5px",
+                                                        marginBottom: "10px"
+                                                    }}
+                                                >
+                                                    <Match 
+                                                        match={match} 
+                                                        roundKey={round.round - 1} 
+                                                        matchKey={matchKey} 
+                                                    />
+                                                </Grid>
+                                            </Box>
+                                        </Box>
+                                    );
+                                })}
+                                
+                                {
+                                    round.byes.length > 0 
+                                    ? <Box style={{ display: shouldShowByes(round.byes) ? "" : "none" }}>
+                                        <Divider /> 
+                                        <ByeContainer 
+                                            players={round.byes} 
+                                            roundKey={roundKey}
+                                        />
+                                    </Box>
+                                    : ""
+                                }
+                            </Grid>
+                        </CardContent>
+                    </Card>
+                );
+            })}
         </>
     );
 }

@@ -76,7 +76,7 @@ const Home = () => {
 		dispatch(setIsGuest(user.isGuest));
 		dispatch(setIsMobile(window.innerWidth <= 600 ? true : false));
 		initSocket();
-	}, [user, dispatch, location.pathname]);
+	}, [user, dispatch, location.pathname, isLoggedIn]);
 
 	const renderNavBar = () => {
 		return (

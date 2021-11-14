@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit'
 
 const initialState: any = {
     userId: "",
-    sessionId: "",
+    sessionId: JSON.parse(localStorage.getItem("crosscourt_user") || "{}").currentSessionId || "",
     isLoggedIn: !!localStorage.getItem("crosscourt_user"),
 	isGuest: true,
 	isHost: false,

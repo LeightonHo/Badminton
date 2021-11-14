@@ -121,7 +121,7 @@ const MatchHistoryRow: React.FC<Props> = ({ index, data }) => {
 
             {
                 showDetail
-                ? <MatchHistoryRowDetail sessionArchiveId={data.sessionArchiveId} />
+                ? <MatchHistoryRowDetail sessionArchiveId={data.sessionArchiveId} playerCount={data.playerCount} />
                 : ""
             }
         </>

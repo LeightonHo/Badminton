@@ -1,14 +1,15 @@
-import { TableRow, TableCell, Box, Table, TableHead, TableBody, LinearProgress } from "@material-ui/core";
+import { TableRow, TableCell, Box, Table, TableHead, TableBody } from "@material-ui/core";
 import { Skeleton } from "@mui/material";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import PlayerAvatar from "./PlayerAvatar";
 
 interface Prop {
-    sessionArchiveId: string
+    sessionArchiveId: string,
+    playerCount: number
 }
 
-const MatchHistoryRowDetail: React.FC<Prop> = ({ sessionArchiveId }) => {
+const MatchHistoryRowDetail: React.FC<Prop> = ({ sessionArchiveId, playerCount}) => {
     const [sessionArchive, setSessionArchive] = useState<any>({});
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -94,7 +95,7 @@ const MatchHistoryRowDetail: React.FC<Prop> = ({ sessionArchiveId }) => {
         return (
             <TableRow>
                 <TableCell colSpan={5}>
-                    <LinearProgress />
+                    {/* <LinearProgress /> */}
                     <Skeleton 
                         variant="text"
                         width="100%"
@@ -104,7 +105,7 @@ const MatchHistoryRowDetail: React.FC<Prop> = ({ sessionArchiveId }) => {
                     <Skeleton 
                         variant="rectangular"
                         width="100%"
-                        height={200}
+                        height={playerCount * 40}
                         animation="wave"
                     />
                 </TableCell>
