@@ -16,8 +16,12 @@ const RoundRobin = () => {
         return filterView === "detailed" || [match.team1.player1.userId, match.team1.player2.userId, match.team2.player3.userId, match.team2.player4.userId].indexOf(userId) >= 0;
     }
 
-    const shouldShowByes = (byeList: IPlayer[]): boolean => {
-        return filterView === "detailed" || byeList.indexOf(userId) >= 0;
+    const playersOnBye = (players: IPlayer[]) => {
+        if (filterView === "detailed") {
+            return players;
+        } else {
+            return players.filter(x => x.userId === userId);
+        }
     }
 
     const handleFilterViewChange = (event: React.MouseEvent<HTMLElement>, newFilterView: string) => {
@@ -102,11 +106,11 @@ const RoundRobin = () => {
                                 })}
                                 
                                 {
-                                    round.byes.length > 0 
-                                    ? <Box style={{ display: shouldShowByes(round.byes) ? "" : "none" }}>
+                                    playersOnBye(round.byes).length > 0 
+                                    ? <Box>
                                         <Divider /> 
                                         <ByeContainer 
-                                            players={round.byes} 
+                                            players={playersOnBye(round.byes)}
                                             roundKey={roundKey}
                                         />
                                     </Box>

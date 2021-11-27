@@ -54,18 +54,22 @@ export const initSocket = () => {
 
 		switch (data.action) {
 			case "add_player":
+				store.dispatch(setIsLoading(false));
 				store.dispatch(reduxAddPlayer(JSON.parse(data.player)));
 				break;
 			case "remove_player":
+				store.dispatch(setIsLoading(false));
 				store.dispatch(reduxRemovePlayer(JSON.parse(data.player)));
 				break;
 			case "update_player":
 				store.dispatch(reduxUpdatePlayer(JSON.parse(data.player)));
 				break;
 			case "add_court":
+				store.dispatch(setIsLoading(false));
 				store.dispatch(reduxAddCourt(data.court));
 				break;
 			case "remove_court":
+				store.dispatch(setIsLoading(false));
 				store.dispatch(reduxRemoveCourt(data.court));
 				break;
 			case "update_config":
@@ -116,7 +120,6 @@ export const initSocket = () => {
 				store.dispatch(setSessionId(""));
 				store.dispatch(setJoinedSession(false));
 				store.dispatch(setIsLoading(false));
-
 				break;
 		}
 	}
@@ -131,10 +134,10 @@ export const initSocket = () => {
 
 		console.log("WebSocket is connected.");
 		store.dispatch(setIsConnected(true));
+		store.dispatch(setIsLoading(true));
 
 		if (sessionId) {
 			console.log("Joining session.");
-			store.dispatch(setIsLoading(true));
 			joinSession(sessionId);
 		}
 	}
@@ -183,6 +186,7 @@ export const generateRound = (sessionId: string, config: IConfig) => {
 }
 
 export const addCourt = (sessionId: string, court: string) => {
+	store.dispatch(setIsLoading(true));
 	send({
 		action: "session",
 		method: "add_court",
@@ -193,6 +197,7 @@ export const addCourt = (sessionId: string, court: string) => {
 }
 
 export const removeCourt = (sessionId: string, court: string) => {
+	store.dispatch(setIsLoading(true));
 	send({
 		action: "session",
 		method: "remove_court",
@@ -203,6 +208,7 @@ export const removeCourt = (sessionId: string, court: string) => {
 }
 
 export const addPlayer = (sessionId: string, playerId: string, alias: string, avatarUrl: string) => {
+	store.dispatch(setIsLoading(true));
 	send({
 		action: "session",
 		method: "add_player",
@@ -215,6 +221,7 @@ export const addPlayer = (sessionId: string, playerId: string, alias: string, av
 }
 
 export const removePlayer = (sessionId: string, playerId: string) => {
+	store.dispatch(setIsLoading(true));
 	send({
 		action: "session",
 		method: "remove_player",
