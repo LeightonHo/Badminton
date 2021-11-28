@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { Redirect, Route, Switch, useHistory, useLocation } from "react-router-dom";
+import { useEffect } from "react";
+import { Route, Switch, useHistory, useLocation } from "react-router-dom";
 import Box from "@material-ui/core/Box";
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -7,9 +7,7 @@ import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import RoundRobin from "./RoundRobin";
 import Scoreboard from "./Scoreboard";
-import { IUser } from "../types";
 import Lobby from "./Lobby";
-import { initSocket } from "../helpers/Socket";
 import Profile from "./Profile";
 import { BottomNavigation, BottomNavigationAction, Paper } from "@material-ui/core";
 import PeopleIcon from "@mui/icons-material/People";
@@ -18,10 +16,10 @@ import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
 import { RootState } from "../redux/Store";
 import { useDispatch, useSelector } from "react-redux";
 import Progress from "./Progress";
-import { setIsGuest, setSessionId, setUserId, setIsMobile, setNavigation } from "../redux/General";
+import { setIsGuest, setIsMobile, setNavigation, setSessionId, setUserId } from "../redux/General";
 import Disconnected from "./Disconnected";
-import Login from "./Login";
 import PlayerAvatar from "./PlayerAvatar";
+import { initSocket } from "../helpers/Socket";
 
 const Home = () => {
 	const MOBILE_TOP_NAVBAR_HEIGHT = 50;
@@ -29,9 +27,8 @@ const Home = () => {
 	const DESKTOP_TOP_NAVBAR_HEIGHT = 64;
 	const DESKTOP_BOTTOM_NAVBAR_HEIGHT = 15;
 	const dispatch = useDispatch();
-	const location = useLocation();
 	const history = useHistory();
-	const { userId, isConnected, isLoading, joinedSession, navigation, sessionId, isMobile } = useSelector((state: RootState) => state.general);
+	const { user, userId, isConnected, isLoading, joinedSession, navigation, sessionId, isMobile } = useSelector((state: RootState) => state.general);
 	const { rounds } = useSelector((state: RootState) => state.gameState);
 
 	const handleNavigation = (path: string) => {
@@ -47,36 +44,19 @@ const Home = () => {
 		}
 	});
 
-	const { isLoggedIn } = useSelector((state: RootState) => state.general);
-	const [user, setUser] = useState<IUser>(() => {
-		const user = localStorage.getItem("crosscourt_user");
-
-		if (user) {
-			return JSON.parse(user);
-		} else {
-			return {
-				userId: "",
-				name: "",
-				email: "",
-				avatarUrl: "",
-				currentSessionId: "",
-				isGuest: true
-			}
-		}
-	});
-
 	useEffect(() => {
 		if (!user.userId) {
 			return;
 		}
 
-		dispatch(setNavigation(location.pathname.replace("/", "")));
 		dispatch(setUserId(user.userId));
 		dispatch(setSessionId(user.currentSessionId));
 		dispatch(setIsGuest(user.isGuest));
-		dispatch(setIsMobile(window.innerWidth <= 600 ? true : false));
+		dispatch(setIsMobile(window.innerWidth <= 600));
 		initSocket();
-	}, [user, dispatch, location.pathname, isLoggedIn]);
+	}, [user]);
+
+	const { isLoggedIn } = useSelector((state: RootState) => state.general);
 
 	const renderNavBar = () => {
 		return (
@@ -132,7 +112,7 @@ const Home = () => {
 								{
 									joinedSession && rounds.length > 0
 									? <>
-										<IconButton color="inherit" onClick={(() => { handleNavigation("/round-robin"); })}>
+										<IconButton color="inherit" onClick={(() => { handleNavigation("/games"); })}>
 											<Typography>Games</Typography>
 										</IconButton>
 										<IconButton color="inherit" onClick={(() => { handleNavigation("/scoreboard"); })}>
@@ -187,34 +167,6 @@ const Home = () => {
 				}
 
 				<Switch>
-					<Route path="/login">
-						<Login setUser={setUser} />
-					</Route>
-					<Route
-						exact
-						path={["/", "/login", "/home"]}
-						render={() => {
-							if (!isLoggedIn) {
-								return (
-									<Redirect to="/login" />
-								);
-							} else 
-							if (!joinedSession || (joinedSession && !rounds.length)) {
-								dispatch(setNavigation("lobby"));
-
-								history.push("/lobby");
-								return (
-									<Redirect to="/lobby" />
-								);
-							} else {
-								dispatch(setNavigation("round-robin"));
-
-								return (
-									<Redirect to="/round-robin" />
-								);
-							}
-						}}
-					/>
 					<Box 
 						id="home"
 						style={{
@@ -232,13 +184,16 @@ const Home = () => {
 							<Route path="/lobby">
 								<Lobby />
 							</Route>
-							<Route path="/round-robin">
+							<Route path="/games">
 								<RoundRobin />
 							</Route>
 							<Route path="/scoreboard">
 								<Scoreboard />
 							</Route>
 							<Route path="/profile">
+								<Profile />
+							</Route>
+							<Route path="/404">
 								<Profile />
 							</Route>
 						</Box>
@@ -261,7 +216,7 @@ const Home = () => {
 							/>
 							<BottomNavigationAction
 								label="Games"
-								value="round-robin"
+								value="games"
 								icon={<FavoriteIcon />}
 								disabled={!joinedSession || !rounds.length}
 							/>

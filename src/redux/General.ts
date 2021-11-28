@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
 
 const initialState: any = {
+    user: JSON.parse(localStorage.getItem("crosscourt_user") || "{}"),
     userId: "",
     sessionId: JSON.parse(localStorage.getItem("crosscourt_user") || "{}").currentSessionId || "",
     isLoggedIn: !!localStorage.getItem("crosscourt_user"),
@@ -20,6 +21,9 @@ export const configSlice = createSlice({
 	name: "general",
 	initialState,
 	reducers: {
+        setUser: (state, action) => {
+            state.user = action.payload;
+        },
         setUserId: (state, action) => {
             state.userId = action.payload;
         },
@@ -61,6 +65,7 @@ export const configSlice = createSlice({
 })
 
 export const { 
+    setUser,
     setUserId,
     setSessionId,
     setIsLoggedIn,

@@ -51,9 +51,9 @@ const Configuration = () => {
                             });
 
                             // TODO: Move this to the socket listener?
-                            history.push("/round-robin");
+                            history.push("/games");
                             window.scrollTo({ top: 0 });
-                            dispatch(setNavigation("round-robin"))
+                            dispatch(setNavigation("games"))
                         }
                     },
                     {
@@ -70,9 +70,9 @@ const Configuration = () => {
             });
 
             // TODO: Move this to the socket listener?
-            history.push("/round-robin");
+            history.push("/games");
             window.scrollTo({ top: 0 });
-            dispatch(setNavigation("round-robin"))
+            dispatch(setNavigation("games"))
         }
     }
 

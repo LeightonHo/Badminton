@@ -1,10 +1,14 @@
 import { Box, Button, Card, CardContent, LinearProgress, TextField, Typography } from "@material-ui/core";
+import MatchHistory from "./MatchHistory";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setIsLoggedIn } from "../redux/General";
 import axios from "axios";
-import MatchHistory from "./MatchHistory";
 import { RootState } from "../redux/Store";
+import { 
+    setIsLoggedIn,
+    setIsLoading as reduxSetIsLoading, 
+    setUser
+} from "../redux/General";
 import { setProfileData } from "../redux/Profile";
 import queryString from "query-string";
 import { useHistory, useLocation } from "react-router-dom";
@@ -36,9 +40,11 @@ const Profile = () => {
     }
 
     const handleLogoutClick = () => {
+        history.replace("/login");
         localStorage.removeItem("crosscourt_user");
-        history.push("/login");
+        dispatch(setUser(null));
         dispatch(setIsLoggedIn(false));
+        dispatch(reduxSetIsLoading(false));
     }
 
     return (

@@ -1,15 +1,15 @@
 import { IConfig } from "../types";
 import store from "../redux/Store";
-import { 
+import {
 	setIsConnected,
 	setIsHost,
 	setIsLoading,
 	setIsSessionActive,
 	setJoinedSession,
-	setSessionId, 
+	setSessionId,
 } from "../redux/General";
-import { 
-	addPlayer as reduxAddPlayer, 
+import {
+	addPlayer as reduxAddPlayer,
 	removePlayer as reduxRemovePlayer,
 	updatePlayer as reduxUpdatePlayer,
 	addCourt as reduxAddCourt,
@@ -17,9 +17,9 @@ import {
 	setConfig
 } from "../redux/Config";
 import {
-	addRound, 
+	addRound,
 	updateScore as reduxUpdateScore,
-	setGameState 
+	setGameState
 } from "../redux/GameState";
 import { setError } from "../redux/Lobby";
 
@@ -28,13 +28,21 @@ let sessionId: string;
 let socket: any = null;
 let keepAlive: boolean = true;
 
+const send = (payload: any, showSpinner: boolean) => {
+	if (showSpinner) {
+		store.dispatch(setIsLoading(true));
+	}
+
+	socket.send(JSON.stringify(payload));
+}
+
 const heartbeat = () => {
 	if (keepAlive) {
 		const payload: any = {
 			action: "ping"
 		}
-	
-		send(payload);
+
+		send(payload, false);
 		setTimeout(heartbeat, 30000);
 	}
 }
@@ -134,7 +142,6 @@ export const initSocket = () => {
 
 		console.log("WebSocket is connected.");
 		store.dispatch(setIsConnected(true));
-		store.dispatch(setIsLoading(true));
 
 		if (sessionId) {
 			console.log("Joining session.");
@@ -182,33 +189,30 @@ export const generateRound = (sessionId: string, config: IConfig) => {
 		userId: userId,
 		sessionId: sessionId,
 		config: JSON.stringify(config)
-	});
+	}, true);
 }
 
 export const addCourt = (sessionId: string, court: string) => {
-	store.dispatch(setIsLoading(true));
 	send({
 		action: "session",
 		method: "add_court",
 		userId: userId,
 		sessionId: sessionId,
 		court: court
-	});
+	}, true);
 }
 
 export const removeCourt = (sessionId: string, court: string) => {
-	store.dispatch(setIsLoading(true));
 	send({
 		action: "session",
 		method: "remove_court",
 		userId: userId,
 		sessionId: sessionId,
 		court: court
-	});
+	}, true);
 }
 
 export const addPlayer = (sessionId: string, playerId: string, alias: string, avatarUrl: string) => {
-	store.dispatch(setIsLoading(true));
 	send({
 		action: "session",
 		method: "add_player",
@@ -217,18 +221,17 @@ export const addPlayer = (sessionId: string, playerId: string, alias: string, av
 		playerId: playerId,
 		alias: alias,
 		avatarUrl: avatarUrl
-	});
+	}, true);
 }
 
 export const removePlayer = (sessionId: string, playerId: string) => {
-	store.dispatch(setIsLoading(true));
 	send({
 		action: "session",
 		method: "remove_player",
 		userId: userId,
 		sessionId: sessionId,
 		playerId: playerId
-	});
+	}, true);
 }
 
 export const updatePlayer = (sessionId: string, playerId: string) => {
@@ -238,7 +241,7 @@ export const updatePlayer = (sessionId: string, playerId: string) => {
 		userId: userId,
 		sessionId: sessionId,
 		playerId: playerId
-	});
+	}, true);
 }
 
 export const updateScore = (sessionId: string, roundKey: number, matchKey: number, team: number, score: number) => {
@@ -251,7 +254,7 @@ export const updateScore = (sessionId: string, roundKey: number, matchKey: numbe
 		matchKey: matchKey,
 		team: team,
 		score: score
-	});
+	}, true);
 }
 
 // export const updatePlayer = (sessionId: string, roundKey: number, matchKey: number, player: number, name: string) => {
@@ -276,28 +279,24 @@ export const updateBye = (sessionId: string, roundKey: number, byeKey: number, n
 		roundKey: roundKey,
 		byeKey: byeKey,
 		name: name
-	});
+	}, true);
 }
 
 export const createSession = () => {
-	store.dispatch(setIsLoading(true));
-
 	send({
 		action: "session",
 		method: "create",
 		userId: userId
-	});
+	}, true);
 }
 
 export const joinSession = (sessionId: string) => {
-	store.dispatch(setIsLoading(true));
-
 	send({
 		action: "session",
 		method: "join",
 		userId: userId,
 		sessionId: sessionId
-	});
+	}, true);
 }
 
 export const leaveSession = (sessionId: string) => {
@@ -306,7 +305,7 @@ export const leaveSession = (sessionId: string) => {
 		method: "leave",
 		userId: userId,
 		sessionId: sessionId
-	});
+	}, false);
 }
 
 export const endSession = (sessionId: string) => {
@@ -315,9 +314,5 @@ export const endSession = (sessionId: string) => {
 		method: "end",
 		userId: userId,
 		sessionId: sessionId
-	});
-}
-
-const send = (payload: any) => {
-	socket.send(JSON.stringify(payload));
+	}, true);
 }
