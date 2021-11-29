@@ -241,7 +241,7 @@ export const updatePlayer = (sessionId: string, playerId: string) => {
 		userId: userId,
 		sessionId: sessionId,
 		playerId: playerId
-	}, true);
+	}, false);
 }
 
 export const updateScore = (sessionId: string, roundKey: number, matchKey: number, team: number, score: number) => {
@@ -254,7 +254,7 @@ export const updateScore = (sessionId: string, roundKey: number, matchKey: numbe
 		matchKey: matchKey,
 		team: team,
 		score: score
-	}, true);
+	}, false);
 }
 
 // export const updatePlayer = (sessionId: string, roundKey: number, matchKey: number, player: number, name: string) => {

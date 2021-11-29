@@ -39,7 +39,7 @@ const Configuration = () => {
 
             confirmAlert({
                 title: "Confirm",
-                message: `The following players will be on bye: ${inactivePlayerAliases.join(", ")}`,
+                message: `The following players will not be playing: ${inactivePlayerAliases.join(", ")}`,
                 buttons: [
                     {
                         label: "Ok",

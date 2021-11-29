@@ -12,8 +12,6 @@ const Router = () => {
 		return user?.userId?.length > 0;
 	}
 
-    console.log(isLoggedIn());
-
     return (
         <HashRouter>
             <Switch>
