@@ -58,83 +58,113 @@ const Home = () => {
 
 	const renderNavBar = () => {
 		return (
-			<AppBar 
-				position="fixed" 
+			<AppBar
+				position="fixed"
 				style={{
-					height: isMobile ? "50px" :  "64px",
+					height: isMobile ? "50px" : "64px",
 					zIndex: 1
 				}}
 			>
 				<Toolbar>
 					{
 						isMobile
-						? <Box 
-							style={{
-								display: "flex",
-								flexDirection: "row",
-								alignItems: "center",
-								justifyContent: "space-between",
-								width: "100%"
-							}}
-						>
-							<Typography
+							? <Box
 								style={{
-									padding: "12px"
+									display: "flex",
+									flexDirection: "row",
+									alignItems: "center",
+									justifyContent: "space-between",
+									width: "100%"
 								}}
 							>
-								{sessionId}
-							</Typography>
-							<IconButton
-								color="inherit"
-								onClick={() => { dispatch(setNavigation("profile")); }}
-							>
-								<PlayerAvatar
-									id={userId}
-									src={user.avatarUrl}
+								<Typography
 									style={{
-										height: "30px",
-										width: "30px"
+										padding: "12px"
 									}}
-								/>
-							</IconButton>
-						</Box>
-						: <>
-							<Typography variant="h5" noWrap>
-								Cross Court
-							</Typography>
-							<Box style={{
-								display: "flex",
-								justifyContent: "flex-end",
-								flexGrow: 1
-							}}>
-								{
-									joinedSession && rounds.length > 0
-									? <>
-										<IconButton color="inherit" onClick={(() => { handleNavigation("/games"); })}>
-											<Typography>Games</Typography>
-										</IconButton>
-										<IconButton color="inherit" onClick={(() => { handleNavigation("/scoreboard"); })}>
-											<Typography>Scoreboard</Typography>
-										</IconButton>
-									</>
-									: ""
-								}
-								<IconButton color="inherit" onClick={(() => { handleNavigation("/lobby"); })}>
-									<Typography>Lobby</Typography>
-								</IconButton>
+								>
+									{sessionId}
+								</Typography>
 								<IconButton
+									color="inherit"
 									onClick={() => { dispatch(setNavigation("profile")); }}
 								>
 									<PlayerAvatar
 										id={userId}
 										src={user.avatarUrl}
+										style={{
+											height: "30px",
+											width: "30px"
+										}}
 									/>
 								</IconButton>
 							</Box>
-						</>
+							: <>
+								<Typography variant="h5" noWrap>
+									Cross Court
+								</Typography>
+								<Box style={{
+									display: "flex",
+									justifyContent: "flex-end",
+									flexGrow: 1
+								}}>
+									{
+										joinedSession && rounds.length > 0
+											? <>
+												<IconButton color="inherit" onClick={(() => { handleNavigation("/games"); })}>
+													<Typography>Games</Typography>
+												</IconButton>
+												<IconButton color="inherit" onClick={(() => { handleNavigation("/scoreboard"); })}>
+													<Typography>Scoreboard</Typography>
+												</IconButton>
+											</>
+											: ""
+									}
+									<IconButton color="inherit" onClick={(() => { handleNavigation("/lobby"); })}>
+										<Typography>Lobby</Typography>
+									</IconButton>
+									<IconButton
+										onClick={() => { dispatch(setNavigation("profile")); }}
+									>
+										<PlayerAvatar
+											id={userId}
+											src={user.avatarUrl}
+										/>
+									</IconButton>
+								</Box>
+							</>
 					}
 				</Toolbar>
 			</AppBar>
+		);
+	}
+
+	const renderBottomNavBar = () => {
+		return (
+			<Paper className="bottom-navigation" style={{ position: "fixed", bottom: 0, left: 0, right: 0, zIndex: 2 }} elevation={1}>
+				<BottomNavigation
+					showLabels
+					value={navigation}
+					onChange={handleNavigationChange}
+				>
+					<BottomNavigationAction
+						label="Scoreboard"
+						value="scoreboard"
+						icon={<EmojiEventsIcon />}
+						disabled={!joinedSession || !rounds.length}
+					/>
+					<BottomNavigationAction
+						label="Games"
+						value="games"
+						icon={<FavoriteIcon />}
+						disabled={!joinedSession || !rounds.length}
+					/>
+					<BottomNavigationAction
+						label="Lobby"
+						value="lobby"
+						icon={<PeopleIcon />}
+					/>
+				</BottomNavigation>
+			</Paper>
 		);
 	}
 
@@ -146,17 +176,13 @@ const Home = () => {
 	return (
 		<>
 			{
-				isLoggedIn && !isConnected
+				!isConnected
 				? <Disconnected />
 				: ""
 			}
 
 			<Box>
-				{
-					isLoggedIn
-					? renderNavBar()
-					: ""
-				}
+				{renderNavBar()}
 
 				{
 					isLoading
@@ -165,7 +191,7 @@ const Home = () => {
 				}
 
 				<Switch>
-					<Box 
+					<Box
 						id="home"
 						style={{
 							position: "relative",
@@ -198,35 +224,7 @@ const Home = () => {
 					</Box>
 				</Switch>
 
-				{
-					isLoggedIn
-					? <Paper className="bottom-navigation" style={{ position: "fixed", bottom: 0, left: 0, right: 0, zIndex: 99 }} elevation={1}>
-						<BottomNavigation
-							showLabels
-							value={navigation}
-							onChange={handleNavigationChange}
-						>
-							<BottomNavigationAction
-								label="Scoreboard"
-								value="scoreboard"
-								icon={<EmojiEventsIcon />}
-								disabled={!joinedSession || !rounds.length}
-							/>
-							<BottomNavigationAction
-								label="Games"
-								value="games"
-								icon={<FavoriteIcon />}
-								disabled={!joinedSession || !rounds.length}
-							/>
-							<BottomNavigationAction
-								label="Lobby"
-								value="lobby"
-								icon={<PeopleIcon />}
-							/>
-						</BottomNavigation>
-					</Paper>
-					: ""
-				}
+				{renderBottomNavBar()}
 			</Box>
 		</>
 	);

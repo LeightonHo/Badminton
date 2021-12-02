@@ -136,7 +136,7 @@ export const initSocket = () => {
 		// setTimeout(() => {
 		// 	console.log("Manually closing the socket");
 		// 	  socket.close();
-		// }, 5000);
+		// }, 2000);
 
 		heartbeat();
 
