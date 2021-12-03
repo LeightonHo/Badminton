@@ -1,4 +1,5 @@
 import { Avatar } from "@material-ui/core";
+import { useState } from "react";
 import { useHistory } from "react-router";
 
 interface Props {
@@ -10,6 +11,7 @@ interface Props {
 
 const PlayerAvatar: React.FC<Props> = ({ id, name, src, style }) => {
     const history = useHistory();
+    const [loaded, setLoaded] = useState<boolean>(false);
     const clickable = id && (id !== name) && name !== "Deleted User";
 
     const handleClick = () => {
@@ -19,20 +21,41 @@ const PlayerAvatar: React.FC<Props> = ({ id, name, src, style }) => {
         }
     }
 
+    const handleOnLoad = () => {
+        // Show the default avatar until the image loads from the server.
+        setLoaded(true);
+    }
+
     return (
-        <Avatar
-            src={src}
-            alt={name}
-            style={{ 
-                cursor: clickable ? "pointer" : "auto",
-                margin: "auto",
-                ...style
-            }}
-            onClick={handleClick}
-        >
-            { name ? name[0] : ""}
-        </Avatar>
-    )
+        <>
+            <Avatar
+                src={src}
+                alt={name}
+                style={{ 
+                    display: loaded ? "" : "none",
+                    cursor: clickable ? "pointer" : "auto",
+                    margin: "auto",
+                    ...style
+                }}
+                onClick={handleClick}
+                onLoad={handleOnLoad}
+            >
+                { name ? name[0] : ""}
+            </Avatar>
+            <Avatar
+                alt={name}
+                style={{ 
+                    display: loaded ? "none" : "",
+                    cursor: clickable ? "pointer" : "auto",
+                    margin: "auto",
+                    ...style
+                }}
+                onClick={handleClick}
+            >
+                { name ? name[0] : ""}
+            </Avatar>
+        </>
+    );
 }
 
 export default PlayerAvatar;
