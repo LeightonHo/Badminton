@@ -1,6 +1,6 @@
 import { Box, makeStyles, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@material-ui/core";
 import { useSelector } from "react-redux";
-import { RootState } from "../redux/Store";
+import { RootState } from "../../redux/Store";
 import MatchHistoryRow from "./MatchHistoryRow";
 
 interface Props {

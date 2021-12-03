@@ -2,7 +2,7 @@ import { useSelector } from "react-redux";
 import { HashRouter, Redirect, Route, Switch } from "react-router-dom";
 import { RootState } from "../redux/Store";
 import Home from "./Home";
-import Login from "./Login";
+import Login from "../features/login/Login";
 import NotFound from "./NotFound";
 
 const Router = () => {

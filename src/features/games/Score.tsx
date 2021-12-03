@@ -1,8 +1,8 @@
 import { Grid, TextField } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { updateScore } from "../helpers/Socket";
-import { RootState } from "../redux/Store";
+import { updateScore } from "../../helpers/Socket";
+import { RootState } from "../../redux/Store";
 
 interface IProps {
     team: number,

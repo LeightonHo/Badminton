@@ -1,8 +1,8 @@
 import React, { useState, KeyboardEvent } from "react";
 import { TextField } from "@material-ui/core";
-import { addPlayer } from "../helpers/Socket";
+import { addPlayer } from "../../helpers/Socket";
 import { useSelector } from "react-redux";
-import { RootState } from "../redux/Store";
+import { RootState } from "../../redux/Store";
 
 const PlayerForm = () => {
     const { sessionId } = useSelector((state: RootState) => state.general);

@@ -1,8 +1,8 @@
 import { TextField } from "@material-ui/core";
 import { useState, KeyboardEvent} from "react";
 import { useSelector } from "react-redux";
-import { RootState } from "../redux/Store";
-import { addCourt } from "../helpers/Socket";
+import { RootState } from "../../redux/Store";
+import { addCourt } from "../../helpers/Socket";
 
 const CourtForm = () => {
     const { sessionId } = useSelector((state: RootState) => state.general)

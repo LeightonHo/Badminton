@@ -4,12 +4,12 @@ import CourtList from "./CourtList";
 import PlayerForm from "./PlayerForm";
 import PlayerList from "./PlayerList";
 import { useHistory } from "react-router-dom";
-import { generateRound } from "../helpers/Socket";
+import { generateRound } from "../../helpers/Socket";
 import { confirmAlert } from "react-confirm-alert";
-import { IPlayer } from "../types";
+import { IPlayer } from "../../types";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../redux/Store";
-import { setIsLoading, setNavigation } from "../redux/General";
+import { RootState } from "../../redux/Store";
+import { setIsLoading, setNavigation } from "../../redux/General";
 
 const Configuration = () => {
     const history = useHistory();

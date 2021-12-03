@@ -1,8 +1,8 @@
 import { List, ListItem, ListItemSecondaryAction, ListItemText, IconButton } from "@material-ui/core";
-import { removeCourt } from "../helpers/Socket";
+import { removeCourt } from "../../helpers/Socket";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useSelector } from "react-redux";
-import { RootState } from "../redux/Store";
+import { RootState } from "../../redux/Store";
 
 const CourtList = () => {
     const { sessionId, isHost, isSessionActive } = useSelector((state: RootState) => state.general);

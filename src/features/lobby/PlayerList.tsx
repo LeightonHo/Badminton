@@ -1,13 +1,13 @@
 import DeleteIcon from "@mui/icons-material/Delete";
 import { ListItemAvatar, ListItemText, Switch, IconButton, List, ListItem, ListItemSecondaryAction, Badge, makeStyles } from "@material-ui/core";
-import { removePlayer } from "../helpers/Socket";
-import { IPlayer } from "../types";
+import { removePlayer } from "../../helpers/Socket";
+import { IPlayer } from "../../types";
 import { confirmAlert } from "react-confirm-alert";
 import "react-confirm-alert/src/react-confirm-alert.css";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../redux/Store";
-import { updatePlayer } from "../redux/Config";
-import PlayerAvatar from "./PlayerAvatar";
+import { RootState } from "../../redux/Store";
+import { updatePlayer } from "../../redux/Config";
+import PlayerAvatar from "../../components/PlayerAvatar";
 
 const useStyles = makeStyles({
     activeBadge: {

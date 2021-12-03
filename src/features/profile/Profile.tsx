@@ -3,16 +3,16 @@ import MatchHistory from "./MatchHistory";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
-import { RootState } from "../redux/Store";
+import { RootState } from "../../redux/Store";
 import { 
     setIsLoggedIn,
     setIsLoading as reduxSetIsLoading, 
     setUser
-} from "../redux/General";
-import { setProfileData } from "../redux/Profile";
+} from "../../redux/General";
+import { setProfileData } from "../../redux/Profile";
 import queryString from "query-string";
 import { useHistory, useLocation } from "react-router-dom";
-import PlayerAvatar from "./PlayerAvatar";
+import PlayerAvatar from "../../components/PlayerAvatar";
 
 const Profile = () => {
     const dispatch = useDispatch();

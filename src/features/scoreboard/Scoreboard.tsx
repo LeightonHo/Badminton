@@ -5,10 +5,10 @@ import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import { RootState } from "../redux/Store";
+import { RootState } from "../../redux/Store";
 import { useSelector } from "react-redux";
-import { IPlayer } from "../types";
-import PlayerAvatar from "./PlayerAvatar";
+import { IPlayer } from "../../types";
+import PlayerAvatar from "../../components/PlayerAvatar";
 
 interface IPlayerStats {
     [id: string]: {

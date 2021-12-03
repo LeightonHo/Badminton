@@ -1,6 +1,6 @@
 import { Box, Grid, Typography } from "@material-ui/core";
-import { IPlayer } from "../types";
-import PlayerAvatar from "./PlayerAvatar";
+import { IPlayer } from "../../types";
+import PlayerAvatar from "../../components/PlayerAvatar";
 
 interface IProps {
     playerKey: number,

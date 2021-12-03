@@ -3,9 +3,9 @@ import { useState } from "react";
 import FacebookLogin, { ReactFacebookLoginInfo } from "react-facebook-login";
 import axios from "axios";
 import { useDispatch } from "react-redux";
-import { setIsLoggedIn, setUser } from "../redux/General";
+import { setIsLoggedIn, setUser } from "../../redux/General";
 import { useHistory } from "react-router";
-import generatedGitInfo from "../generatedGitInfo.json";
+import generatedGitInfo from "../../generatedGitInfo.json";
 
 const Login = () => {
     const dispatch = useDispatch();
@@ -36,7 +36,6 @@ const Login = () => {
                         email: userData.Email,
                         name: userData.Name,
                         alias: userData.Alias,
-                        avatarUrl: userData.AvatarUrl,
                         currentSessionId: userData.CurrentSessionId,
                         isGuest: false
                     }

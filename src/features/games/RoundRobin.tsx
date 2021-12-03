@@ -2,9 +2,9 @@ import ByeContainer from "./ByeContainer";
 import Match from "./Match";
 import { Box, Card, CardContent, Divider, Grid, Typography } from "@material-ui/core";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../redux/Store";
-import { IMatch, IPlayer } from "../types";
-import { setFilterView } from "../redux/General";
+import { RootState } from "../../redux/Store";
+import { IMatch, IPlayer } from "../../types";
+import { setFilterView } from "../../redux/General";
 import { ToggleButton, ToggleButtonGroup } from "@mui/material";
 
 const RoundRobin = () => {

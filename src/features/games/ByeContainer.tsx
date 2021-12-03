@@ -1,6 +1,6 @@
 import { Box, Grid } from "@material-ui/core";
 import React from "react";
-import { IPlayer } from "../types";
+import { IPlayer } from "../../types";
 import Bye from "./Bye";
 
 interface IProps {

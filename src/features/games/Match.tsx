@@ -1,9 +1,9 @@
 import { Box, Grid, Typography } from "@material-ui/core";
 import Player from "./Player";
 import Score from "./Score";
-import { IMatch } from "../types";
+import { IMatch } from "../../types";
 import { useSelector } from "react-redux";
-import { RootState } from "../redux/Store";
+import { RootState } from "../../redux/Store";
 
 interface IProps {
     match: IMatch,

@@ -2,7 +2,7 @@ import { TableRow, TableCell, Box, Table, TableHead, TableBody } from "@material
 import { Skeleton } from "@mui/material";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import PlayerAvatar from "./PlayerAvatar";
+import PlayerAvatar from "../../components/PlayerAvatar";
 
 interface Prop {
     sessionArchiveId: string,

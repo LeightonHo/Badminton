@@ -1,14 +1,14 @@
 import { Box, Button, Card, CardContent, TextField, Typography, IconButton } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
-import { createSession, joinSession, leaveSession, endSession } from "../helpers/Socket";
+import { createSession, joinSession, leaveSession, endSession } from "../../helpers/Socket";
 import Configuration from "./Configuration";
 import { useDispatch, useSelector } from "react-redux";
-import { setConfig } from "../redux/Config";
-import { setGameState } from "../redux/GameState";
-import { RootState } from "../redux/Store";
-import { setIsLoading, setJoinedSession, setSessionId } from "../redux/General";
+import { setConfig } from "../../redux/Config";
+import { setGameState } from "../../redux/GameState";
+import { RootState } from "../../redux/Store";
+import { setIsLoading, setJoinedSession, setSessionId } from "../../redux/General";
 import { confirmAlert } from "react-confirm-alert";
-import { setError } from "../redux/Lobby";
+import { setError } from "../../redux/Lobby";
 import axios from "axios";
 import { ContentCopy } from "@mui/icons-material";
 
