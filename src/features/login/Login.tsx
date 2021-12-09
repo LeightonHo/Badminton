@@ -19,8 +19,7 @@ const Login = () => {
                 facebookUserId: response.userID,
                 name: response.name,
                 alias: getDefaultAlias(response.name),
-                email: response.email,
-                avatarUrl: response.picture?.data.url,
+                email: response.email
             };
 
             axios.post<any>(`${process.env.REACT_APP_API_URL}/login`, payload).then(({ data }) => {
@@ -37,8 +36,9 @@ const Login = () => {
                         name: userData.Name,
                         alias: userData.Alias,
                         currentSessionId: userData.CurrentSessionId,
-                        isGuest: false
-                    }
+                        isGuest: false,
+                        avatarUrl: userData.AvatarUrl
+                    };
 
                     dispatch(setUser(user));
                     history.push("/home");
