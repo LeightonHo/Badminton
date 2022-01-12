@@ -1,5 +1,5 @@
 import { Box, Button, Card, CardContent, TextField, Typography, IconButton } from "@material-ui/core";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, KeyboardEvent } from "react";
 import { createSession, joinSession, leaveSession, endSession } from "../../helpers/Socket";
 import Configuration from "./Configuration";
 import { useDispatch, useSelector } from "react-redux";
@@ -96,6 +96,12 @@ const Lobby = () => {
         });
     }
 
+    const handleKeyPress = (e: KeyboardEvent) => {
+        if (e.key === "Enter") {
+            handleJoinSessionClick();
+        }
+    }
+
     const getDescription = () => {
         if (isGuest) {
             return `Guests can only join sessions.  Log in with Facebook to create sessions.`;
@@ -128,6 +134,7 @@ const Lobby = () => {
                             variant="outlined"
                             size="small"
                             onChange={handleSessionChange}
+                            onKeyPress={handleKeyPress}
                             name="session"
                             className="general-input"
                             value={sessionCode}
