@@ -102,11 +102,25 @@ const Configuration = () => {
     }
 
     const handleExport = (): void => {
-        const data = `data:text/json;charsett=utf-8,${encodeURIComponent(JSON.stringify(rounds))}`;
+        let rows = [];
+
+        for (let i = 0; i < rounds.length; i++) {
+            let roundNumber = i + 1;
+            let round = rounds[i];
+            
+            for (let j = 0; j < round.matches.length; j++) {
+                let match = round.matches[j];
+
+                rows.push([roundNumber, match.team1.player1.alias, match.team1.player2.alias, match.team1.score, match.team1.score > match.team2.score ? "W" : "L"]);
+                rows.push([roundNumber, match.team2.player3.alias, match.team2.player4.alias, match.team2.score, match.team2.score > match.team1.score ? "W" : "L"]);
+            }
+        }
+        
+        const csvContent = "data:text/csv;charset=utf-8," + rows.map(e => e.join(",")).join("\n");
         let downloadAnchorElement = document.getElementById("downloadAnchorElement");
 
-        downloadAnchorElement?.setAttribute("href", data);
-        downloadAnchorElement?.setAttribute("download", `badminton-export-${new Date().toISOString().split("T")[0]}.json`);
+        downloadAnchorElement?.setAttribute("href", encodeURI(csvContent));
+        downloadAnchorElement?.setAttribute("download", `badminton-export-${new Date().toISOString().split("T")[0]}.csv`);
         downloadAnchorElement?.click();
     }
 
