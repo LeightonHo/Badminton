@@ -38,7 +38,7 @@ const Score: React.FC<IProps> = ({ team, score, roundKey, matchKey }) => {
     }
         
     const showScore = (score: number): string => {
-        if (isNaN(score) || score === 0) {
+        if (isNaN(score)) {
             return "";
         }
 
