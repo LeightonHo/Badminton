@@ -111,8 +111,8 @@ const Configuration = () => {
             for (let j = 0; j < round.matches.length; j++) {
                 let match = round.matches[j];
 
-                rows.push([roundNumber, match.team1.player1.alias, match.team1.player2.alias, match.team1.score, match.team1.score > match.team2.score ? "W" : "L"]);
-                rows.push([roundNumber, match.team2.player3.alias, match.team2.player4.alias, match.team2.score, match.team2.score > match.team1.score ? "W" : "L"]);
+                rows.push([roundNumber, match.team1.player1.userId, match.team1.player1.alias, match.team1.player2.userId, match.team1.player2.alias, match.team1.score, match.team1.score > match.team2.score ? "W" : "L"]);
+                rows.push([roundNumber, match.team2.player3.userId, match.team2.player3.alias, match.team2.player4.userId, match.team2.player4.alias, match.team2.score, match.team2.score > match.team1.score ? "W" : "L"]);
             }
         }
         

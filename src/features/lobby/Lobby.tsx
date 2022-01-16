@@ -13,6 +13,7 @@ import axios from "axios";
 import { ContentCopy } from "@mui/icons-material";
 import { useLocation } from "react-router";
 import queryString from "query-string";
+import { useHistory } from "react-router-dom";
 
 const Lobby = () => {
     const dispatch = useDispatch();
@@ -20,6 +21,7 @@ const Lobby = () => {
     const { error } = useSelector((state: RootState) => state.lobby);
     const [sessionCode, setSessionCode] = useState(sessionId);
     const location = useLocation();
+	const history = useHistory();
 
     useEffect(() => {
         console.log(sessionId.length);
@@ -80,6 +82,8 @@ const Lobby = () => {
             ...JSON.parse(localStorage.getItem("crosscourt_user") || ""),
             currentSessionId: ""
         }));
+
+        history.push("/lobby");
     }
 
     const handleEndSessionClick = () => { 
