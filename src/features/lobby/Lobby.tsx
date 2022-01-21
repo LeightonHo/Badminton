@@ -23,19 +23,19 @@ const Lobby = () => {
     const location = useLocation();
 	const history = useHistory();
 
-    useEffect(() => {
-        console.log(sessionId.length);
-        if (sessionId.length === 0 && error.length === 0 && queryString.parse(location.search).session_code) {
-            // Try get the session code from the query string parameter
-            console.log("Attempting to join: ", queryString.parse(location.search).session_code?.toString());
-            setSessionCode(queryString.parse(location.search).session_code);
-            setTimeout(() => {
-                handleJoinSessionClick(queryString.parse(location.search).session_code?.toString())
-            }, 1000);
-        } else {
-            setSessionCode(sessionId);
-        }
-    }, [sessionId]);
+    // useEffect(() => {
+    //     console.log(sessionId.length);
+    //     if (sessionId.length === 0 && error.length === 0 && queryString.parse(location.search).session_code) {
+    //         // Try get the session code from the query string parameter
+    //         console.log("Attempting to join: ", queryString.parse(location.search).session_code?.toString());
+    //         setSessionCode(queryString.parse(location.search).session_code);
+    //         setTimeout(() => {
+    //             handleJoinSessionClick(queryString.parse(location.search).session_code?.toString())
+    //         }, 1000);
+    //     } else {
+    //         setSessionCode(sessionId);
+    //     }
+    // }, [sessionId]);
 
     const handleSessionChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
         if (error) {
@@ -160,7 +160,7 @@ const Lobby = () => {
                             error={error ? true : false}
                             helperText={error}
                         />
-                        {
+                        {/* {
                             joinedSession
                             ? <IconButton>
                                 <ContentCopy 
@@ -171,7 +171,7 @@ const Lobby = () => {
                                 />
                             </IconButton>
                             : ""
-                        }
+                        } */}
                     </Box>
                     
                 </CardContent>
