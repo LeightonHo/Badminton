@@ -3,6 +3,7 @@ import { Skeleton } from "@mui/material";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import PlayerAvatar from "../../components/PlayerAvatar";
+import CloudDownloadOutlinedIcon from '@mui/icons-material/CloudDownloadOutlined';
 
 interface Prop {
     sessionArchiveId: string,
@@ -39,6 +40,30 @@ const MatchHistoryRowDetail: React.FC<Prop> = ({ sessionArchiveId, playerCount})
 
         return `${key + 1}.`;
     }
+    
+    const handleExport = (): void => {
+        let rows = [];
+        const rounds = sessionArchive.gameState;
+
+        for (let i = 0; i < rounds.length; i++) {
+            let roundNumber = i + 1;
+            let round = rounds[i];
+            
+            for (let j = 0; j < round.matches.length; j++) {
+                let match = round.matches[j];
+
+                rows.push([roundNumber, match.team1.player1.userId, match.team1.player1.alias, match.team1.player2.userId, match.team1.player2.alias, match.team1.score, match.team1.score > match.team2.score ? "W" : "L"]);
+                rows.push([roundNumber, match.team2.player3.userId, match.team2.player3.alias, match.team2.player4.userId, match.team2.player4.alias, match.team2.score, match.team2.score > match.team1.score ? "W" : "L"]);
+            }
+        }
+        
+        const csvContent = "data:text/csv;charset=utf-8," + rows.map(e => e.join(",")).join("\n");
+        let downloadAnchorElement = document.getElementById("downloadAnchorElement");
+
+        downloadAnchorElement?.setAttribute("href", encodeURI(csvContent));
+        downloadAnchorElement?.setAttribute("download", `badminton-export-${new Date().toISOString().split("T")[0]}.csv`);
+        downloadAnchorElement?.click();
+    }
 
     const renderScoreboard = () => {
         return (
@@ -47,7 +72,15 @@ const MatchHistoryRowDetail: React.FC<Prop> = ({ sessionArchiveId, playerCount})
                     <Table>
                         <TableHead>
                             <TableRow>
-                                <TableCell />
+                                <TableCell style={{
+                                    display: "flex",
+                                    justifyContent: "center"
+                                }}>
+                                    <CloudDownloadOutlinedIcon onClick={handleExport} style={{
+                                        cursor: "pointer"
+                                    }} />
+                                    <a id="downloadAnchorElement"></a>
+                                </TableCell>
                                 <TableCell style={{ fontWeight: "bold" }}>Player</TableCell>
                                 <TableCell align="right" style={{ fontWeight: "bold" }}>W - L</TableCell>
                                 <TableCell align="right" style={{ fontWeight: "bold" }}>Win %</TableCell>
