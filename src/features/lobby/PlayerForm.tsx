@@ -42,7 +42,7 @@ const PlayerForm = () => {
     }
 
     const getHelperText = () => {
-        if (error.length > 0) {
+        if (!!error) {
             return error;
         }
 
@@ -50,21 +50,23 @@ const PlayerForm = () => {
     }
 
     return (
-        <TextField 
-            id="inputPlayer" 
-            className="text-input" 
-            label="Name" 
-            variant="outlined" 
-            size="small"
-            type="text" 
-            value={input}
-            onChange={handleChange}
-            onKeyPress={handleKeyPress}
-            name="name"
-            helperText={getHelperText()}
-            fullWidth
-            error={error.length > 0}
-        />
+        <form onSubmit={() => { return false; }}>
+            <TextField 
+                id="inputPlayer" 
+                className="text-input" 
+                label="Name" 
+                variant="outlined" 
+                size="small"
+                type="text" 
+                value={input}
+                onChange={handleChange}
+                onKeyPress={handleKeyPress}
+                name="name"
+                helperText={getHelperText()}
+                fullWidth
+                error={!!error}
+            />
+        </form>
     );
 }
 

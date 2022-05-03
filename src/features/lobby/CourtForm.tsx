@@ -42,7 +42,7 @@ const CourtForm = () => {
     }
 
     const getHelperText = () => {
-        if (error.length > 0) {
+        if (!!error) {
             return error;
         }
 
@@ -50,21 +50,23 @@ const CourtForm = () => {
     }
 
     return (
-        <TextField 
-            id="inputCourt" 
-            className="text-input" 
-            label="Court" 
-            variant="outlined" 
-            size="small"
-            type="text" 
-            value={input}
-            onChange={handleChange}
-            onKeyPress={handleKeyPress}
-            name="court"
-            helperText={getHelperText()}
-            fullWidth
-            error={error.length > 0}
-        />
+        <form onSubmit={() => { return false; }}>
+            <TextField 
+                id="inputCourt" 
+                className="text-input" 
+                label="Court" 
+                variant="outlined" 
+                size="small"
+                type="text" 
+                value={input}
+                onChange={handleChange}
+                onKeyPress={handleKeyPress}
+                name="court"
+                helperText={getHelperText()}
+                fullWidth
+                error={!!error}
+            />
+        </form>
     );
 }
 
