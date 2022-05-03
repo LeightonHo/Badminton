@@ -8,6 +8,7 @@ const CourtForm = () => {
     const { sessionId } = useSelector((state: RootState) => state.general)
     const { courts } = useSelector((state: RootState) => state.config)
     const [input, setInput] = useState("");
+    const [error, setError] = useState("");
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
         setInput(e.target.value.trim());
@@ -20,11 +21,13 @@ const CourtForm = () => {
 
         addCourt(sessionId, input);
         setInput("");
+        setError("");
     }
 
     const isDuplicate = (input: string): boolean => {
         for (const court of courts) {
             if (court.toLowerCase() === input.toLowerCase()) {
+                setError("This court is already in the list");
                 return true;
             }
         }
@@ -36,6 +39,14 @@ const CourtForm = () => {
         if (e.key === "Enter") {
             handleClick();
         }
+    }
+
+    const getHelperText = () => {
+        if (error.length > 0) {
+            return error;
+        }
+
+        return "Press enter to add";
     }
 
     return (
@@ -50,8 +61,9 @@ const CourtForm = () => {
             onChange={handleChange}
             onKeyPress={handleKeyPress}
             name="court"
-            helperText="Press enter to add"
+            helperText={getHelperText()}
             fullWidth
+            error={error.length > 0}
         />
     );
 }

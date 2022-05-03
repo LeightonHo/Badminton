@@ -7,26 +7,21 @@ import { RootState } from "../../redux/Store";
 const PlayerForm = () => {
     const { sessionId } = useSelector((state: RootState) => state.general);
     const { players } = useSelector((state: RootState) => state.config);
-    const [input, setInput] = useState({
-        name: ""
-    });
+    const [input, setInput] = useState("");
+    const [error, setError] = useState("");
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-        setInput({
-            ...input,
-            [e.target.name]: e.target.value
-        });
+        setInput(e.target.value);
     }
 
     const handleClick = (): void => {
-        if (!input.name || isDuplicate(input.name)) {
+        if (!input || isDuplicate(input)) {
             return;
         }
 
-        addPlayer(sessionId, input.name.trim(), input.name.trim(), "");
-        setInput({
-            name: ""
-        });
+        addPlayer(sessionId, input.trim(), input.trim(), "");
+        setInput("");
+        setError("");
     }
 
     const handleKeyPress = (e: KeyboardEvent) => {
@@ -38,11 +33,20 @@ const PlayerForm = () => {
     const isDuplicate = (name: string): boolean => {
         for (const player of players) {
             if (player.alias.toLowerCase() === name.toLowerCase()) {
+                setError("This player is already in the list");
                 return true;
             }
         }
 
         return false;
+    }
+
+    const getHelperText = () => {
+        if (error.length > 0) {
+            return error;
+        }
+
+        return "Press enter to add";
     }
 
     return (
@@ -53,12 +57,13 @@ const PlayerForm = () => {
             variant="outlined" 
             size="small"
             type="text" 
-            value={input.name}
+            value={input}
             onChange={handleChange}
             onKeyPress={handleKeyPress}
             name="name"
-            helperText="Press enter to add"
+            helperText={getHelperText()}
             fullWidth
+            error={error.length > 0}
         />
     );
 }
