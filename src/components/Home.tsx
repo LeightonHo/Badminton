@@ -20,6 +20,7 @@ import { setIsGuest, setIsMobile, setNavigation, setSessionId, setUserId } from 
 import Disconnected from "./Disconnected";
 import PlayerAvatar from "./PlayerAvatar";
 import { initSocket } from "../helpers/Socket";
+import PrivacyPolicy from "./PrivacyPolicy";
 
 const Home = () => {
 	const MOBILE_TOP_NAVBAR_HEIGHT = 50;
@@ -215,9 +216,6 @@ const Home = () => {
 								<Scoreboard />
 							</Route>
 							<Route path="/profile">
-								<Profile />
-							</Route>
-							<Route path="/404">
 								<Profile />
 							</Route>
 						</Box>

@@ -95,7 +95,21 @@ const Login = () => {
                     />
                 </Box>
 
-                <Box className="login-footer" />
+                <Box className="login-footer" style={{ 
+                    display: "flex",
+                    alignItems: "center" 
+                }}>
+                    <Typography 
+                        variant="subtitle2" 
+                        style={{ 
+                            cursor: "pointer",
+                            fontSize: "11px"
+                        }}
+                        onClick={() => { window.location.href="#/privacy"; }}
+                    >
+                        Privacy Policy
+                    </Typography>
+                </Box>
 
                 <span id="git-commit-hash" style={{ display: "none" }}>{generatedGitInfo.gitCommitHash}</span>
             </Paper>
