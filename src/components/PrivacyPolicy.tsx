@@ -53,6 +53,12 @@ const PrivacyPolicy = () => {
                 </Typography>
             </Box>
             <Box>
+                <Typography variant="h5">Data removal</Typography>
+                <Typography>
+                    If you would like to request that we remove your personal information from our systems, please email us at <a href="mailto:crosscourtapp@gmail.com">crosscourtapp@gmail.com</a>.
+                </Typography>
+            </Box>
+            <Box>
                 <Typography variant="h5">Changes to our privacy policy</Typography>
                 <Typography>
                     What information we collect and how we use that information may change, meaning that this policy may change over time.
