@@ -1,20 +1,31 @@
 import { Box, Typography } from "@material-ui/core";
+import EmailIcon from '@mui/icons-material/Email';
+import LinkedInIcon from '@mui/icons-material/LinkedIn';
+import GitHubIcon from '@mui/icons-material/GitHub';
 
 const Footer: React.FC = () => {
     return (
         <Box 
             boxShadow={3}
             style={{
-                padding: "20px",
+                padding: "10px",
                 display: "flex",
-                flexDirection: "column",
+                flexDirection: "row",
                 alignItems: "center",
-                backgroundColor: "#009DDC",
-                color: "white"
-            }}>
-            <Typography variant="body2">
-                If you have any questions or suggestions, please feel free to contact us at <a href="mailto:crosscourtapp@gmail.com">crosscourtapp@gmail.com</a>
-            </Typography>
+                justifyContent: "center",
+                backgroundColor: "#03254E",
+                color: "white",
+                gap: "15px"
+        }}>
+            <EmailIcon onClick={() => { window.open("mailto:crosscourtapp@gmail.com"); }} style={{
+                cursor: "pointer"
+            }} />
+            <LinkedInIcon onClick={() => { window.open("https://www.linkedin.com/in/leighton-ho-88a724b5/", "_blank"); }} style={{
+                cursor: "pointer"
+            }} />
+            <GitHubIcon onClick={() => { window.open("https://github.com/LeightonHo", "_blank"); }} style={{
+                cursor: "pointer"
+            }} />
         </Box>
     );
 }

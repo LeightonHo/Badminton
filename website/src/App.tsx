@@ -130,9 +130,10 @@ function App() {
 						swipeScrollTolerance={30}
 						emulateTouch={true}
 						transitionTime={500}
+						infiniteLoop={true}
 					>
 						<ContentItem 
-							title="Configuration"
+							title="Configurable"
 							imageDescription="Configuration screen"
 							imageFilename="config_iphone.png" 
 							body={[
