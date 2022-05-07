@@ -51,18 +51,14 @@ function App() {
 	return (
 		<ThemeProvider theme={theme}>
 			<Box style={{
-				position: "relative",
-				display: "flex",
-				flexDirection: "column",
-				// scrollSnapType: "y mandatory",
 				height: "100vh",
-				overflowY: "scroll"
+				display: "flex",
+				flexDirection: "column"
 			}}>
 				<Box boxShadow={12} style={{
 					paddingBottom: "20px",
 					backgroundColor: "#03254E",
-					color: "#ffffff",
-					scrollSnapAlign: "start"
+					color: "#ffffff"
 				}}>
 					{/* <Box style={{
 						height: "50px",
@@ -94,10 +90,11 @@ function App() {
 							gap: "15px"
 						}}>
 							<Typography variant="h2">
-								CROSS COURT
+								Cross Court
 							</Typography>
 							<Typography variant="h6" style={{
 								padding: "0 10px 20px 10px",
+								fontSize: "1.1rem"
 							}}>
 								An interactive way of organising your badminton sessions.
 							</Typography>
@@ -107,18 +104,17 @@ function App() {
 								onClick={() => { window.open("https://app.crosscourt.net/", "_blank"); }}
 								style={{
 									fontFamily: "Rubik",
-									fontSize: "1.5rem",
+									fontSize: "1.2rem",
 									backgroundColor: "#FFA62B",
 									color: "#03254E"
 							}}>
-								Open App
+								Launch App 🚀
 							</Button>
 						</Box>
 					</Box>
 				</Box>
 
 				<Box style={{
-					scrollSnapAlign: "start",
 					paddingBottom: "20px"
 				}}>
 					<Carousel
