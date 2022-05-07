@@ -122,6 +122,8 @@ function App() {
 					paddingBottom: "20px"
 				}}>
 					<Carousel
+						autoPlay={true}
+						interval={8000}
 						showThumbs={false} 
 						stopOnHover={true}
 						preventMovementUntilSwipeScrollTolerance={true}
