@@ -19,9 +19,10 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "npm run env-cmd -f .env.production react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "deploy": "npm run build:production && aws s3 sync build/ s3://crosscourt.net --acl public-read && aws cloudfront create-invalidation --distribution-id E15OP13E56TJN7 --paths \"/*\""
   },
   "eslintConfig": {
     "extends": [
