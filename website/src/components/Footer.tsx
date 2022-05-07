@@ -10,8 +10,7 @@ const Footer: React.FC = () => {
                 flexDirection: "column",
                 alignItems: "center",
                 backgroundColor: "#009DDC",
-                color: "white",
-                scrollSnapAlign: "end"
+                color: "white"
             }}>
             <Typography variant="body2">
                 If you have any questions or suggestions, please feel free to contact us at <a href="mailto:crosscourtapp@gmail.com">crosscourtapp@gmail.com</a>
