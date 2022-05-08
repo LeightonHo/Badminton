@@ -1,12 +1,12 @@
 import { Box, Button, Card, CardContent, TextField, Typography } from "@material-ui/core";
-import React, { useState, KeyboardEvent } from "react";
+import React, { useState, KeyboardEvent, useEffect } from "react";
 import { createSession, joinSession, leaveSession, endSession } from "../../helpers/Socket";
 import Configuration from "./Configuration";
 import { useDispatch, useSelector } from "react-redux";
 import { setConfig } from "../../redux/Config";
 import { setGameState } from "../../redux/GameState";
 import { RootState } from "../../redux/Store";
-import { setIsLoading, setJoinedSession, setSessionId } from "../../redux/General";
+import { setIsLoading, setJoinedSession, setSessionId, setNavigation } from "../../redux/General";
 import { confirmAlert } from "react-confirm-alert";
 import { setError } from "../../redux/Lobby";
 import axios from "axios";
@@ -18,6 +18,10 @@ const Lobby = () => {
     const { error } = useSelector((state: RootState) => state.lobby);
     const [sessionCode, setSessionCode] = useState("");
 	const history = useHistory();
+
+    useEffect(() => {
+        dispatch(setNavigation("lobby"));
+    });
 
     const handleSessionChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
         if (e.target.value.length > 4) {

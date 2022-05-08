@@ -9,6 +9,9 @@ import { RootState } from "../../redux/Store";
 import { useSelector } from "react-redux";
 import { IPlayer } from "../../types";
 import PlayerAvatar from "../../components/PlayerAvatar";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { setNavigation } from "../../redux/General";
 
 interface IPlayerStats {
     [id: string]: {
@@ -27,10 +30,15 @@ const useStyles = makeStyles({
 });
 
 const Scoreboard = () => {
+    const dispatch = useDispatch();
     const playerList: IPlayer[] = [];
     const { isMobile } = useSelector((state: RootState) => state.general);
     const { rounds } = useSelector((state: RootState) => state.gameState);
     const classes = useStyles();
+
+    useEffect(() => {
+        dispatch(setNavigation("scoreboard"));
+    });
 
     const initPlayers = () => {
         // Get all the unique players in the game data

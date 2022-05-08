@@ -3,14 +3,20 @@ import Match from "./Match";
 import { Box, Card, CardContent, Divider, Grid, Typography } from "@material-ui/core";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux/Store";
+import { setNavigation } from "../../redux/General";
 import { IMatch, IPlayer } from "../../types";
 import { setFilterView } from "../../redux/General";
 import { ToggleButton, ToggleButtonGroup } from "@mui/material";
+import { useEffect } from "react";
 
 const RoundRobin = () => {
     const dispatch = useDispatch();
     const { userId, filterView } = useSelector((state: RootState) => state.general);
     const { rounds } = useSelector((state: RootState) => state.gameState);
+
+    useEffect(() => {
+        dispatch(setNavigation("games"));
+    });
 
     const shouldShowMatch = (match: IMatch): boolean => {
         return filterView === "detailed" || [match.team1.player1.userId, match.team1.player2.userId, match.team2.player3.userId, match.team2.player4.userId].indexOf(userId) >= 0;

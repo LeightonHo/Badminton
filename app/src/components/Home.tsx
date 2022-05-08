@@ -74,13 +74,17 @@ const Home = () => {
 									flexDirection: "row",
 									alignItems: "center",
 									justifyContent: "space-between",
-									width: "100%"
+									width: "100%",
+									marginBottom: "8px"
 								}}
 							>
-								<Typography style={{ padding: "12px" }}>{sessionId}</Typography>
+								<Typography style={{ marginLeft: "5px" }}>{sessionId}</Typography>
 								<IconButton
 									color="inherit"
 									onClick={() => { dispatch(setNavigation("profile")); }}
+									style={{
+										paddingRight: "0px"
+									}}
 								>
 									<PlayerAvatar
 										id={userId}

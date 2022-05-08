@@ -60,7 +60,8 @@ const PlayerList = () => {
                 <ListItem
                     key={key}
                     style={{
-                        backgroundColor: key % 2 ? "#fafafa" : "#f1f1f1"
+                        backgroundColor: key % 2 ? "#fafafa" : "#f1f1f1",
+                        borderRadius: "5px"
                     }}
                 >
                     <ListItemAvatar>
