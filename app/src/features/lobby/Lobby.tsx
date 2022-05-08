@@ -1,5 +1,5 @@
-import { Box, Button, Card, CardContent, TextField, Typography, IconButton } from "@material-ui/core";
-import React, { useEffect, useState, KeyboardEvent } from "react";
+import { Box, Button, Card, CardContent, TextField, Typography } from "@material-ui/core";
+import React, { useState, KeyboardEvent } from "react";
 import { createSession, joinSession, leaveSession, endSession } from "../../helpers/Socket";
 import Configuration from "./Configuration";
 import { useDispatch, useSelector } from "react-redux";
@@ -10,34 +10,20 @@ import { setIsLoading, setJoinedSession, setSessionId } from "../../redux/Genera
 import { confirmAlert } from "react-confirm-alert";
 import { setError } from "../../redux/Lobby";
 import axios from "axios";
-import { ContentCopy } from "@mui/icons-material";
-import { useLocation } from "react-router";
-import queryString from "query-string";
 import { useHistory } from "react-router-dom";
 
 const Lobby = () => {
     const dispatch = useDispatch();
     const { userId, sessionId, isHost, isGuest, isLoading, joinedSession, isSessionActive } = useSelector((state: RootState) => state.general);
     const { error } = useSelector((state: RootState) => state.lobby);
-    const [sessionCode, setSessionCode] = useState(sessionId);
-    const location = useLocation();
+    const [sessionCode, setSessionCode] = useState("");
 	const history = useHistory();
 
-    // useEffect(() => {
-    //     console.log(sessionId.length);
-    //     if (sessionId.length === 0 && error.length === 0 && queryString.parse(location.search).session_code) {
-    //         // Try get the session code from the query string parameter
-    //         console.log("Attempting to join: ", queryString.parse(location.search).session_code?.toString());
-    //         setSessionCode(queryString.parse(location.search).session_code);
-    //         setTimeout(() => {
-    //             handleJoinSessionClick(queryString.parse(location.search).session_code?.toString())
-    //         }, 1000);
-    //     } else {
-    //         setSessionCode(sessionId);
-    //     }
-    // }, [sessionId]);
-
     const handleSessionChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+        if (e.target.value.length > 4) {
+            return;
+        }
+
         if (error) {
             dispatch(setError(""));
         }
@@ -129,58 +115,38 @@ const Lobby = () => {
 
     return (
         <>
-            <Card className="card">
-                <CardContent className="general-card">
-                    <Typography variant="h5">Session</Typography>
-
-                    {
-                        !joinedSession
-                        ? <Typography variant="subtitle2">{getDescription()}</Typography>
-                        : ""
-                    }
-                    
-                    <Box style={{
-                        display: "flex",
-                        flexDirection: "row",
-                        alignItems: "center"
-                    }}>
-                        <TextField
-                            id="inputSession"
-                            label="Code"
-                            type="text"
-                            variant="outlined"
-                            size="small"
-                            onChange={handleSessionChange}
-                            onKeyPress={handleKeyPress}
-                            name="session"
-                            className="general-input"
-                            value={sessionId}
-                            fullWidth
-                            disabled={joinedSession}
-                            error={error ? true : false}
-                            helperText={error}
-                        />
-                        {/* {
-                            joinedSession
-                            ? <IconButton>
-                                <ContentCopy 
-                                    onClick={() => { 
-                                        // navigator.clipboard.writeText(`https://app.crosscourt.net/#/lobby?session_code=${sessionCode}`);
-                                        navigator.clipboard.writeText(`https://localhost:3000/#/lobby?session_code=${sessionCode}`);
-                                    }}
-                                />
-                            </IconButton>
-                            : ""
-                        } */}
-                    </Box>
-                    
-                </CardContent>
-            </Card>
-
             {
                 joinedSession
                 ? <Configuration />
-                : ""
+                : <Card className="card">
+                    <CardContent className="general-card">
+                        <Typography variant="h5">Session</Typography>
+                        <Typography variant="subtitle2">{getDescription()}</Typography>
+                        
+                        <Box style={{
+                            display: "flex",
+                            flexDirection: "row",
+                            alignItems: "center"
+                        }}>
+                            <TextField
+                                id="inputSession"
+                                label="Code"
+                                type="text"
+                                variant="outlined"
+                                size="small"
+                                onChange={handleSessionChange}
+                                onKeyPress={handleKeyPress}
+                                name="session"
+                                className="general-input"
+                                value={sessionCode}
+                                fullWidth
+                                disabled={joinedSession}
+                                error={error ? true : false}
+                                helperText={error}
+                            />
+                        </Box>
+                    </CardContent>
+                </Card>
             }
 
             <Box className="config-buttons">

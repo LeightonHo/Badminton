@@ -31,10 +31,10 @@ const Bye: React.FC<IProps> = ({ byeKey, player, roundKey }) => {
             />
             
             <Typography
-                variant="overline"
                 align="center"
                 style={{
                     fontSize: "15px",
+                    padding: "5px"
                 }}
             >
                 {player.alias}
