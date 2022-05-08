@@ -165,23 +165,6 @@ const updateLocalSessionId = (sessionId: string) => {
 	}));
 }
 
-// Mechanism for re-connecting automatically.
-// let scrollEventTriggered: boolean = false;
-
-// window.addEventListener("scroll", () => {
-// 	if (!socket) {
-// 		return;
-// 	}
-
-// 	if (!scrollEventTriggered && socket.readyState === WebSocket.CLOSED) {
-// 		scrollEventTriggered = true;
-// 		initSocket();
-// 		setTimeout(() => {
-// 			scrollEventTriggered = false;
-// 		}, 1000);
-// 	}
-// });
-
 // Public Socket Helper functions
 export const generateRound = (sessionId: string, config: IConfig) => {
 	send({

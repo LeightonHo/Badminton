@@ -41,7 +41,11 @@ const Disconnected = () => {
                             textAlign: "center"
                         }}
                     >
-                        Disconnected
+                        {
+                            isReconnecting
+                            ? "Reconnecting..."
+                            : "Disconnected"
+                        }
                     </Typography>
                 </CardContent>
                 <Button
@@ -53,11 +57,7 @@ const Disconnected = () => {
                     }}
                     disabled={isReconnecting ? true : false}
                 >
-                    {
-                        isReconnecting
-                        ? "Reconnecting..."
-                        : "Reconnect"
-                    }
+                    Reconnect
                 </Button>
             </Card>
         </>
