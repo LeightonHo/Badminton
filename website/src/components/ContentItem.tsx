@@ -11,7 +11,7 @@ interface Props {
 const ContentItem: React.FC<Props> = ({ title, imageDescription, imageFilename, body }) => {
     return (
         <Box style={{
-            padding: "0 20px 20px 20px",
+            padding: "0 20px 30px 20px",
             display: "flex",
             flexDirection: "row",
             flexWrap: "wrap",

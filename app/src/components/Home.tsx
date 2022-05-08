@@ -68,75 +68,75 @@ const Home = () => {
 				<Toolbar>
 					{
 						isMobile
-							? <Box
+						? <Box
+							style={{
+								display: "flex",
+								flexDirection: "row",
+								alignItems: "center",
+								justifyContent: "space-between",
+								width: "100%",
+								marginBottom: "8px"
+							}}
+						>
+							<Typography style={{ marginLeft: "10px" }}>{sessionId}</Typography>
+							<IconButton
+								color="inherit"
+								onClick={() => { dispatch(setNavigation("profile")); }}
 								style={{
-									display: "flex",
-									flexDirection: "row",
-									alignItems: "center",
-									justifyContent: "space-between",
-									width: "100%",
-									marginBottom: "8px"
+									paddingRight: "10px"
 								}}
 							>
-								<Typography style={{ marginLeft: "5px" }}>{sessionId}</Typography>
-								<IconButton
-									color="inherit"
-									onClick={() => { dispatch(setNavigation("profile")); }}
+								<PlayerAvatar
+									id={userId}
+									src={user.avatarUrl}
 									style={{
-										paddingRight: "0px"
+										height: "30px",
+										width: "30px"
 									}}
+								/>
+							</IconButton>
+						</Box>
+						: <>
+							<Typography 
+								variant="h5" 
+								onClick={() => { window.open("https://crosscourt.net/", "_blank"); }} 
+								noWrap 
+								style={{
+									cursor: "pointer"
+								}}
+							>
+								Cross Court
+							</Typography>
+							<Box style={{
+								display: "flex",
+								justifyContent: "flex-end",
+								flexGrow: 1
+							}}>
+								{
+									joinedSession && rounds.length > 0
+										? <>
+											<IconButton color="inherit" onClick={(() => { handleNavigation("/games"); })}>
+												<Typography>Games</Typography>
+											</IconButton>
+											<IconButton color="inherit" onClick={(() => { handleNavigation("/scoreboard"); })}>
+												<Typography>Scoreboard</Typography>
+											</IconButton>
+										</>
+										: ""
+								}
+								<IconButton color="inherit" onClick={(() => { handleNavigation("/lobby"); })}>
+									<Typography>Lobby</Typography>
+								</IconButton>
+								<IconButton
+									onClick={() => { dispatch(setNavigation("profile")); }}
 								>
 									<PlayerAvatar
 										id={userId}
 										src={user.avatarUrl}
-										style={{
-											height: "30px",
-											width: "30px"
-										}}
 									/>
 								</IconButton>
 							</Box>
-							: <>
-								<Typography 
-									variant="h5" 
-									onClick={() => { window.open("https://crosscourt.net/", "_blank"); }} 
-									noWrap 
-									style={{
-										cursor: "pointer"
-									}}
-								>
-									Cross Court
-								</Typography>
-								<Box style={{
-									display: "flex",
-									justifyContent: "flex-end",
-									flexGrow: 1
-								}}>
-									{
-										joinedSession && rounds.length > 0
-											? <>
-												<IconButton color="inherit" onClick={(() => { handleNavigation("/games"); })}>
-													<Typography>Games</Typography>
-												</IconButton>
-												<IconButton color="inherit" onClick={(() => { handleNavigation("/scoreboard"); })}>
-													<Typography>Scoreboard</Typography>
-												</IconButton>
-											</>
-											: ""
-									}
-									<IconButton color="inherit" onClick={(() => { handleNavigation("/lobby"); })}>
-										<Typography>Lobby</Typography>
-									</IconButton>
-									<IconButton
-										onClick={() => { dispatch(setNavigation("profile")); }}
-									>
-										<PlayerAvatar
-											id={userId}
-											src={user.avatarUrl}
-										/>
-									</IconButton>
-								</Box>
-							</>
+						</>
 					}
 				</Toolbar>
 			</AppBar>

@@ -16,7 +16,7 @@ const Lobby = () => {
     const dispatch = useDispatch();
     const { userId, sessionId, isHost, isGuest, isLoading, joinedSession, isSessionActive } = useSelector((state: RootState) => state.general);
     const { error } = useSelector((state: RootState) => state.lobby);
-    const [sessionCode, setSessionCode] = useState("");
+    const [sessionCode, setSessionCode] = useState(sessionId);
 	const history = useHistory();
 
     useEffect(() => {

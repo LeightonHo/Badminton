@@ -118,7 +118,7 @@ function App() {
 				</Box>
 
 				<Box style={{
-					paddingBottom: "20px"
+					backgroundColor: "#f8f9f9"
 				}}>
 					<Carousel
 						autoPlay={true}
@@ -162,7 +162,7 @@ function App() {
 						<ContentItem 
 							title="Session history"
 							imageDescription="Match history screen"
-							imageFilename="match_history_iphone.png" 
+							imageFilename="session_history_iphone.png" 
 							body={[
 								"Scroll through your match history to track your progress.",
 								"Records are expandable to see the final scoreboard of the session.",
