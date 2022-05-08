@@ -19,9 +19,9 @@ const Player: React.FC<IProps> = ({ playerKey, player, roundKey, matchKey }) => 
                     src={player.avatarUrl}
                 />
                 <Typography 
-                    variant="overline"
                     style={{
-                        fontSize: "15px",
+                        padding: "5px",
+                        fontSize: "1rem"
                     }}
                 >
                     {player.alias}

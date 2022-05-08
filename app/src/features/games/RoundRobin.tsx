@@ -47,8 +47,8 @@ const RoundRobin = () => {
                         height: "30px"
                     }}
                 >
-                    <ToggleButton value="detailed">Detailed</ToggleButton>
-                    <ToggleButton value="compact">Compact</ToggleButton>
+                    <ToggleButton value="detailed" style={{ fontFamily: "Rubik, Roboto, Arial, sans-serif" }}>Detailed</ToggleButton>
+                    <ToggleButton value="compact" style={{ fontFamily: "Rubik, Roboto, Arial, sans-serif" }}>Compact</ToggleButton>
                 </ToggleButtonGroup>
             </Box>
             {[...rounds]?.reverse().map((round, roundKey) => {
@@ -70,8 +70,7 @@ const RoundRobin = () => {
                                         gutterBottom
                                         style={{
                                             textAlign: "center",
-                                            fontSize: "16px",
-                                            fontWeight: "bold"
+                                            fontSize: "16px"
                                         }}
                                     >
                                         ROUND {round.round}

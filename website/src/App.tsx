@@ -5,13 +5,16 @@ import { createTheme, ThemeProvider } from "@material-ui/core/styles";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Carousel } from "react-responsive-carousel";
 
+const primaryColor = "#023047";
+const secondaryColor = "#FFB703";
+
 const theme = createTheme({
 	typography: {
 		fontFamily: [
 			"Rubik",
-			"Lora",
-			"Roboto",
-			"Arial",
+			"Roboto", 
+			"Helvetica", 
+			"Arial", 
 			"sans-serif"
 		].join(",")
 	}
@@ -57,8 +60,8 @@ function App() {
 			}}>
 				<Box boxShadow={12} style={{
 					paddingBottom: "20px",
-					backgroundColor: "#03254E",
-					color: "#ffffff"
+					backgroundColor: primaryColor,
+					color: "white"
 				}}>
 					{/* <Box style={{
 						height: "50px",
@@ -105,8 +108,8 @@ function App() {
 								style={{
 									fontFamily: "Rubik",
 									fontSize: "1.2rem",
-									backgroundColor: "#FFA62B",
-									color: "#03254E"
+									backgroundColor: secondaryColor,
+									color: primaryColor
 							}}>
 								Launch App 🚀
 							</Button>

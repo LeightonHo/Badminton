@@ -14,7 +14,7 @@ import { setIsLoading, setNavigation } from "../../redux/General";
 const Configuration = () => {
     const history = useHistory();
     const dispatch = useDispatch();
-    const { sessionId, isHost, isSessionActive } = useSelector((state: RootState) => state.general);
+    const { sessionId, isHost, isSessionActive, isLoading } = useSelector((state: RootState) => state.general);
     const { players, courts } = useSelector((state: RootState) => state.config);
     const { rounds } = useSelector((state: RootState) => state.gameState);
 
@@ -39,7 +39,7 @@ const Configuration = () => {
 
             confirmAlert({
                 title: "Confirm",
-                message: `The following players will not be playing: ${inactivePlayerAliases.join(", ")}`,
+                message: `The following players will not be included: ${inactivePlayerAliases.join(", ")}`,
                 buttons: [
                     {
                         label: "Ok",
@@ -77,6 +77,10 @@ const Configuration = () => {
     }
 
     const disableGenerateRoundButton = (): boolean => {
+        if (isLoading) {
+            return true;
+        }
+
         const inactivePlayers = getInactivePlayers();
         const numberOfPlayers = players.length - inactivePlayers.length;
         const numberOfCourts = courts.length;

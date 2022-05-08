@@ -16,8 +16,7 @@ const Bye: React.FC<IProps> = ({ byeKey, player, roundKey }) => {
             justifyContent: "center",
             alignItems: "center",
             minWidth: "200px",
-            paddingTop: "2px",
-            paddingBottom: "2px"
+            paddingTop: "2px"
         }}>
             <PlayerAvatar 
                 id={player.userId}

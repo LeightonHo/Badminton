@@ -154,7 +154,7 @@ const Lobby = () => {
                             onKeyPress={handleKeyPress}
                             name="session"
                             className="general-input"
-                            value={sessionCode}
+                            value={sessionId}
                             fullWidth
                             disabled={joinedSession}
                             error={error ? true : false}
@@ -176,6 +176,7 @@ const Lobby = () => {
                     
                 </CardContent>
             </Card>
+
             {
                 joinedSession
                 ? <Configuration />

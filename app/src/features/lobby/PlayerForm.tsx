@@ -50,7 +50,7 @@ const PlayerForm = () => {
     }
 
     return (
-        <form onSubmit={() => { return false; }}>
+        <form onSubmit={(event) => { event.preventDefault(); }}>
             <TextField 
                 id="inputPlayer" 
                 className="text-input" 

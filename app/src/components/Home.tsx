@@ -20,7 +20,6 @@ import { setIsGuest, setIsMobile, setNavigation, setSessionId, setUserId } from 
 import Disconnected from "./Disconnected";
 import PlayerAvatar from "./PlayerAvatar";
 import { initSocket } from "../helpers/Socket";
-import PrivacyPolicy from "./PrivacyPolicy";
 
 const Home = () => {
 	const MOBILE_TOP_NAVBAR_HEIGHT = 50;
@@ -78,13 +77,7 @@ const Home = () => {
 									width: "100%"
 								}}
 							>
-								<Typography
-									style={{
-										padding: "12px"
-									}}
-								>
-									{sessionId}
-								</Typography>
+								<Typography style={{ padding: "12px" }}>{sessionId}</Typography>
 								<IconButton
 									color="inherit"
 									onClick={() => { dispatch(setNavigation("profile")); }}
@@ -100,7 +93,14 @@ const Home = () => {
 								</IconButton>
 							</Box>
 							: <>
-								<Typography variant="h5" noWrap>
+								<Typography 
+									variant="h5" 
+									onClick={() => { window.open("https://crosscourt.net/", "_blank"); }} 
+									noWrap 
+									style={{
+										cursor: "pointer"
+									}}
+								>
 									Cross Court
 								</Typography>
 								<Box style={{

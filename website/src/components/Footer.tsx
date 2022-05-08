@@ -14,7 +14,7 @@ const Footer = () => {
                 flexDirection: "row",
                 alignItems: "center",
                 justifyContent: "center",
-                backgroundColor: "#03254E",
+                backgroundColor: "#219EBC",
                 color: "white",
                 gap: "15px"
         }}>

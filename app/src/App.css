@@ -1,7 +1,7 @@
 /* LOGIN */
 .login-screen {
 	height: 100vh;
-	background: linear-gradient(150deg, rgba(0,39,78,1) 25%, rgba(28,77,126,1) 75%);;
+	background: linear-gradient(150deg, rgba(0, 39, 78, 1) 25%, rgba(28, 77, 126, 1) 75%);
 }
 
 .login-card {
@@ -11,11 +11,11 @@
 	width: 300px;
 	height: 220px;
 	position: absolute;
-  top: 50%;
-  left: 50%;
-  -moz-transform: translateX(-50%) translateY(-50%);
-  -webkit-transform: translateX(-50%) translateY(-50%);
-  transform: translateX(-50%) translateY(-50%);
+	top: 50%;
+	left: 50%;
+	-moz-transform: translateX(-50%) translateY(-50%);
+	-webkit-transform: translateX(-50%) translateY(-50%);
+	transform: translateX(-50%) translateY(-50%);
 }
 
 .login-header {
@@ -38,11 +38,11 @@
 	background-color: #ffffff;
 }
 
-.login-body > span > button {
+.login-body>span>button {
 	border-radius: 5px !important;
 	height: 50px !important;
 	width: 275px !important;
-    font-size: 14px !important;
+	font-size: 14px !important;
 }
 
 .login-footer {
@@ -61,147 +61,156 @@
 .login-guest-button {
 	cursor: pointer;
 	font-style: italic;
-    font-size: 11px !important;
+	font-size: 11px !important;
 }
 
 .facebook-button {
-  width: 100%;
+	width: 100%;
 }
 
 /* GENERAL */
 .card {
-  margin-top: 15px;
-  margin-bottom: 10px;
-  padding-left: 5px;
-  padding-right: 5px;
+	margin-top: 15px;
+	margin-bottom: 10px;
+	padding-left: 5px;
+	padding-right: 5px;
 }
 
 .config-buttons {
-  padding-left: 5px;
-  padding-right: 5px;
+	padding-left: 5px;
+	padding-right: 5px;
 }
 
-.config-buttons > button {
-  width: 100%;
-  margin-bottom: 8px;
+.config-buttons>button {
+	width: 100%;
+	margin-bottom: 8px;
 }
 
 @media (min-width: 0px) {
-  .app-body {
-    top: 52px;
-    bottom: 52px;
-  }
-  
-  .bottom-navigation {
-    display: block;
-  }
+	.app-body {
+		top: 52px;
+		bottom: 52px;
+	}
 
-  .card {
-    margin-left: 10px;
-    margin-right: 10px;
-  }
+	.bottom-navigation {
+		display: block;
+	}
 
-  .config-buttons {
-    margin-left: 5px;
-    margin-right: 5px;
-  }
+	.card {
+		margin-left: 10px;
+		margin-right: 10px;
+	}
+
+	.config-buttons {
+		margin-left: 5px;
+		margin-right: 5px;
+	}
 }
 
 @media (min-width: 500px) {
-  .card {
-    margin-left: 10%;
-    margin-right: 10%;
-  }
+	.card {
+		margin-left: 10%;
+		margin-right: 10%;
+	}
 
-  .config-buttons {
-    margin-left: 10%;
-    margin-right: 10%;
-  }
+	.config-buttons {
+		margin-left: 10%;
+		margin-right: 10%;
+	}
 }
 
 @media (min-width: 600px) {
-  .app-body {
-    top: 64px;
-	  bottom: 0px;
-  }
+	.app-body {
+		top: 64px;
+		bottom: 0px;
+	}
 
-  .bottom-navigation { 
-    display: none;
-  }
+	.bottom-navigation {
+		display: none;
+	}
 }
 
 @media (min-width: 1000px) {
-  .card {
-    margin-left: 25%;
-    margin-right: 25%;
-  }
+	.card {
+		margin-left: 25%;
+		margin-right: 25%;
+	}
 
-  .config-buttons {
-    margin-left: 25%;
-    margin-right: 25%;
-  }
+	.config-buttons {
+		margin-left: 25%;
+		margin-right: 25%;
+	}
 }
 
 @media (min-width: 1500px) {
-  .card {
-    margin-left: 30%;
-    margin-right: 30%;
-  }
+	.card {
+		margin-left: 30%;
+		margin-right: 30%;
+	}
 
-  .config-buttons {
-    margin-left: 30%;
-    margin-right: 30%;
-  }
+	.config-buttons {
+		margin-left: 30%;
+		margin-right: 30%;
+	}
 }
 
 /* CONFIGURATION SCREEN */
-.general-card > div {
-  margin-top: 15px;
+.general-card>div {
+	margin-top: 15px;
 }
 
-@media (max-width:960px) {
-  .react-confirm-alert {
-    width: 100%;
-  }
+.react-confirm-alert-body {
+	font-family: "Rubik", "Roboto", "Arial", "sans-serif" !important;
+}
 
-  .react-confirm-alert > div {
-    width: initial;
-  }
+.react-confirm-alert-button-group>button {
+	font-family: "Rubik", "Roboto", "Arial", "sans-serif" !important;
+}
+
+
+@media (max-width:960px) {
+	.react-confirm-alert {
+		width: 100%;
+	}
+
+	.react-confirm-alert>div {
+		width: initial;
+	}
 }
 
 /* ROUND ROBIN SCREEN */
 .generate-round-button {
-  margin-top: 15px;
+	margin-top: 15px;
 }
 
 .round-card {
-  text-align: center;
+	text-align: center;
 }
 
-.round-card > div {
-  padding: 10px 15px 10px 15px !important;
+.round-card>div {
+	padding: 10px 15px 10px 15px !important;
 }
 
-.score-input > div > input {
-  width: 50px;
-  text-align: center;
-  height: 5px;
+.score-input>div>input {
+	width: 50px;
+	text-align: center;
+	height: 5px;
 }
 
 /* SCOREBOARD SCREEN */
-.scoreboard-table > thead > tr > th {
-  font-weight: bold;
-  padding: 5px 5px 5px 5px;
+.scoreboard-table>thead>tr>th {
+	font-weight: bold;
+	padding: 5px 5px 5px 5px;
 }
 
-.scoreboard-table > tbody > tr > td:nth-child(1) {
-  padding: 5px 5px 5px 5px;
+.scoreboard-table>tbody>tr>td:nth-child(1) {
+	padding: 5px 5px 5px 5px;
 }
 
-.scoreboard-table > tbody > tr > td {
-  font-size: 16px;
+.scoreboard-table>tbody>tr>td {
+	font-size: 16px;
 }
 
 .statistics-box {
-  font-size: 16px;
+	font-size: 16px;
 }
