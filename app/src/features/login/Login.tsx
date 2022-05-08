@@ -68,7 +68,11 @@ const Login = () => {
         <Box className="login-screen">
             <Paper className="login-card">
                 <Box className="login-header">
-                    <Typography variant="h5">
+                    <Typography 
+                        variant="h5" 
+                        onClick={() => { window.open("https://crosscourt.net/", "_blank"); }}
+                        style={{ cursor: "pointer" }}
+                    >
                         Cross Court
                     </Typography>
                     <Typography variant="subtitle2">
