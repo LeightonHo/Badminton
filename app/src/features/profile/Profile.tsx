@@ -42,6 +42,7 @@ const Profile = () => {
     const handleLogoutClick = () => {
         history.replace("/login");
         localStorage.removeItem("crosscourt_user");
+        localStorage.removeItem("crosscourt_token");
         dispatch(setUser(null));
         dispatch(setIsLoggedIn(false));
         dispatch(reduxSetIsLoading(false));

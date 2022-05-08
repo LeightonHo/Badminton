@@ -4,6 +4,8 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import PlayerAvatar from "../../components/PlayerAvatar";
 import CloudDownloadOutlinedIcon from '@mui/icons-material/CloudDownloadOutlined';
+import { RootState } from "../../redux/Store";
+import { useSelector } from "react-redux";
 
 interface Prop {
     sessionArchiveId: string,
@@ -11,6 +13,7 @@ interface Prop {
 }
 
 const MatchHistoryRowDetail: React.FC<Prop> = ({ sessionArchiveId, playerCount}) => {
+    const { token } = useSelector((state: RootState) => state.general);
     const [sessionArchive, setSessionArchive] = useState<any>({});
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -20,7 +23,11 @@ const MatchHistoryRowDetail: React.FC<Prop> = ({ sessionArchiveId, playerCount})
     }, [sessionArchiveId]);
 
     const getSessionArchive = (sessionArchiveId: string) => {
-        axios.get<any>(`${process.env.REACT_APP_API_URL}/session-archive?sessionArchiveId=${sessionArchiveId}`).then(({ data }) => {
+        axios.get<any>(`${process.env.REACT_APP_API_URL}/session-archive?sessionArchiveId=${sessionArchiveId}`, {
+            headers: {
+                "Authorization": token
+            }
+        }).then(({ data }) => {
             setSessionArchive(JSON.parse(data.payload));
             setIsLoading(false);
         }).catch((error) => {
