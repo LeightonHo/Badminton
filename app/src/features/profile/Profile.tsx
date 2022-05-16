@@ -41,7 +41,7 @@ const Profile = () => {
     }
 
     const filterMatchHistory = (matchHistory: []) => {
-        if (matchHistory.length > 10) {
+        if (matchHistory !== null && typeof(matchHistory) === 'object' && matchHistory.length > 10) {
             return matchHistory.slice(-10);
         }
         
@@ -150,7 +150,7 @@ const Profile = () => {
                     </Typography>
 
                     {
-                        data.MatchHistory.length > 10
+                        data.MatchHistory !== null && typeof(data.MatchHistory) === 'object' && data.MatchHistory.length > 10
                         ? <Typography gutterBottom style={{
                             fontSize: "0.9rem"
                         }}>
