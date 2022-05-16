@@ -23,6 +23,7 @@ import {
 } from "../redux/GameState";
 import { setError } from "../redux/Lobby";
 
+let token: string;
 let userId: string;
 let sessionId: string;
 let socket: any = null;
@@ -50,11 +51,12 @@ const heartbeat = () => {
 export const initSocket = () => {
 	console.log("Initialising web socket.");
 
+	token = store.getState().general.token;
 	userId = store.getState().general.userId;
 	sessionId = store.getState().general.sessionId;
 
 	if (!socket || (socket.readyState !== WebSocket.CONNECTING && socket.readyState === WebSocket.CLOSED)) {
-		socket = new WebSocket(process.env.REACT_APP_WEBSOCKET_URL || "");
+		socket = new WebSocket(`${process.env.REACT_APP_WEBSOCKET_URL}` || "");
 	}
 
 	socket.onmessage = (ev: MessageEvent<any>) => {
@@ -130,14 +132,13 @@ export const initSocket = () => {
 				store.dispatch(setIsLoading(false));
 				break;
 		}
-	}
+	};
 
 	socket.onopen = () => {
 		// setTimeout(() => {
 		// 	console.log("Manually closing the socket");
 		// 	  socket.close();
 		// }, 2000);
-
 		heartbeat();
 
 		console.log("WebSocket is connected.");
@@ -147,13 +148,13 @@ export const initSocket = () => {
 			console.log("Joining session.");
 			joinSession(sessionId);
 		}
-	}
+	};
 
 	socket.onclose = () => {
 		console.log("WebSocket is closed.");
 		keepAlive = false;
 		store.dispatch(setIsConnected(false));
-	}
+	};
 }
 
 const updateLocalSessionId = (sessionId: string) => {

@@ -28,7 +28,7 @@ const Home = () => {
 	const DESKTOP_BOTTOM_NAVBAR_HEIGHT = 15;
 	const dispatch = useDispatch();
 	const history = useHistory();
-	const { user, userId, isConnected, isLoggedIn, isLoading, joinedSession, navigation, sessionId, isMobile } = useSelector((state: RootState) => state.general);
+	const { user, userId, isConnected, isLoading, joinedSession, navigation, sessionId, isMobile } = useSelector((state: RootState) => state.general);
 	const { rounds } = useSelector((state: RootState) => state.gameState);
 
 	const handleNavigation = (path: string) => {

@@ -6,8 +6,10 @@ import { useDispatch } from "react-redux";
 import { setIsLoggedIn, setUser } from "../../redux/General";
 import { useHistory } from "react-router";
 import generatedGitInfo from "../../generatedGitInfo.json";
+import AuthHandler from "../../helpers/AuthHandler";
 
 const Login = () => {
+    const auth = AuthHandler();
     const dispatch = useDispatch();
     const history = useHistory();
     const [isLoggingIn, setIsLoggingIn] = useState<boolean>(false);
@@ -40,7 +42,11 @@ const Login = () => {
                         avatarUrl: userData.AvatarUrl
                     };
 
+                    console.log(userData);
+
                     dispatch(setUser(user));
+                    auth.saveToken(response.accessToken);
+
                     history.push("/home");
                     localStorage.setItem("crosscourt_user", JSON.stringify(user));
                 } else {

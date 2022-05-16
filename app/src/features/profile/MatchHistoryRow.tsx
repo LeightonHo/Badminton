@@ -109,7 +109,7 @@ const MatchHistoryRow: React.FC<Props> = ({ index, data }) => {
                 <TableCell style={{
                     textAlign: "center"
                 }}>
-                    <Box>{data.rounds} <span>({calculateSessionDuration(data.start, data.end)})</span></Box>
+                    <Box>{data.rounds}</Box>
                 </TableCell>
                 <TableCell style={{ textAlign: "center" }}>
                     <Box style={{

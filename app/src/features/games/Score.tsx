@@ -26,6 +26,10 @@ const Score: React.FC<IProps> = ({ team, score, roundKey, matchKey }) => {
             updatedValue = 0;
         }
 
+        if (updatedValue > 99) {
+            return;
+        }
+
         setInputScore(updatedValue);
     }
 

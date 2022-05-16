@@ -7,7 +7,8 @@ import { RootState } from "../../redux/Store";
 import { 
     setIsLoggedIn,
     setIsLoading as reduxSetIsLoading, 
-    setUser
+    setUser,
+    setToken
 } from "../../redux/General";
 import { setProfileData } from "../../redux/Profile";
 import queryString from "query-string";
@@ -39,13 +40,24 @@ const Profile = () => {
         });
     }
 
+    const filterMatchHistory = (matchHistory: []) => {
+        if (matchHistory.length > 10) {
+            return matchHistory.slice(-10);
+        }
+        
+        return matchHistory;
+    }
+
     const handleLogoutClick = () => {
-        history.replace("/login");
         localStorage.removeItem("crosscourt_user");
         localStorage.removeItem("crosscourt_token");
+
         dispatch(setUser(null));
         dispatch(setIsLoggedIn(false));
+        dispatch(setToken(""));
         dispatch(reduxSetIsLoading(false));
+
+        history.push("/login");
     }
 
     return (
@@ -132,12 +144,22 @@ const Profile = () => {
                 <CardContent>
                     <Typography
                         variant="h5"
-                        gutterBottom
                         className="config-card-header"
                     >
                         History
                     </Typography>
-                    <MatchHistory matchHistory={data.MatchHistory || []} />
+
+                    {
+                        data.MatchHistory.length > 10
+                        ? <Typography gutterBottom style={{
+                            fontSize: "0.9rem"
+                        }}>
+                            Showing the last {filterMatchHistory(data.MatchHistory).length} matches.
+                        </Typography>
+                        : ""
+                    }
+                    
+                    <MatchHistory matchHistory={filterMatchHistory(data.MatchHistory) || []} />
                 </CardContent>
             </Card>
 
