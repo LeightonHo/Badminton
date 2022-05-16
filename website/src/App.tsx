@@ -118,6 +118,7 @@ function App() {
 				</Box>
 
 				<Box style={{
+					flex: "1 0 auto",
 					backgroundColor: "#f8f9f9"
 				}}>
 					<Carousel
@@ -132,12 +133,12 @@ function App() {
 						infiniteLoop={true}
 					>
 						<ContentItem 
-							title="Configurable"
+							title="Customisable"
 							imageDescription="Configuration screen"
 							imageFilename="config_iphone.png" 
 							body={[
-								"Create a session and share the unique code with your friends, or join an existing session.",
-								"Each round generated can be customised by toggling active and inactive players."
+								"Join a session using the unique four letter code, or create a session and share the code with your friends.",
+								"Control who's included in the next auto-generated matchup by managing the active players."
 						]} />
 
 						<ContentItem 
@@ -145,7 +146,7 @@ function App() {
 							imageDescription="Games screen"
 							imageFilename="games_iphone.png" 
 							body={[
-								"Player matchups are generated based on previous rounds to maximise variety in the session.",
+								"Player matchups are generated based on previous rounds to maximise variety within the session.",
 								"Scores can be entered and viewed in real time by everyone in the session.",
 								"Individual players can enable compact view mode which will only show their games."
 						]} />
@@ -165,8 +166,8 @@ function App() {
 							imageFilename="session_history_iphone.png" 
 							body={[
 								"Scroll through your match history to track your progress.",
-								"Records are expandable to see the final scoreboard of the session.",
-								"Session data can be exported for you to use."
+								"Records are expandable to see the final results of the session.",
+								"Session data can be exported from the app."
 						]} />
 					</Carousel>
 				</Box>
