@@ -10,14 +10,14 @@ import { setIsLoading, setJoinedSession, setSessionId, setNavigation } from "../
 import { confirmAlert } from "react-confirm-alert";
 import { setError } from "../../redux/Lobby";
 import axios from "axios";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const Lobby = () => {
     const dispatch = useDispatch();
     const { userId, sessionId, isHost, isGuest, isLoading, joinedSession, isSessionActive } = useSelector((state: RootState) => state.general);
     const { error } = useSelector((state: RootState) => state.lobby);
     const [sessionCode, setSessionCode] = useState(sessionId);
-	const history = useHistory();
+	const navigate = useNavigate();
 
     useEffect(() => {
         dispatch(setNavigation("lobby"));
@@ -73,7 +73,7 @@ const Lobby = () => {
             currentSessionId: ""
         }));
 
-        history.push("/lobby");
+        navigate("/lobby");
     }
 
     const handleEndSessionClick = () => { 

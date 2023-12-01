@@ -4,14 +4,14 @@ import FacebookLogin, { ReactFacebookLoginInfo } from "react-facebook-login";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { setIsLoggedIn, setUser } from "../../redux/General";
-import { useHistory } from "react-router";
+import { useNavigate } from "react-router";
 import generatedGitInfo from "../../generatedGitInfo.json";
 import AuthHandler from "../../helpers/AuthHandler";
 
 const Login = () => {
     const auth = AuthHandler();
     const dispatch = useDispatch();
-    const history = useHistory();
+    const navigate = useNavigate();
     const [isLoggingIn, setIsLoggingIn] = useState<boolean>(false);
 
     const responseFacebook = (response: ReactFacebookLoginInfo) => {
@@ -47,7 +47,7 @@ const Login = () => {
                     dispatch(setUser(user));
                     auth.saveToken(response.accessToken);
 
-                    history.push("/home");
+                    navigate("/home");
                     localStorage.setItem("crosscourt_user", JSON.stringify(user));
                 } else {
                     dispatch(setIsLoggedIn(false));

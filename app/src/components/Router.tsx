@@ -1,4 +1,4 @@
-import { HashRouter, Redirect, Route, Switch } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Home from "./Home";
 import NotFound from "./NotFound";
 import PrivacyPolicy from "./PrivacyPolicy";
@@ -9,33 +9,28 @@ const Router = () => {
     const auth = AuthHandler();
 
     return (
-        <HashRouter>
-            <Switch>
-                <Route path="/privacy">
-                    <PrivacyPolicy />
-                </Route>
-                <Route path="/404">
-                    <NotFound />
-                </Route>
-                <Route path="/login">
-                    <Login />
-                </Route>
-                <Route exact path={["/lobby", "/games", "/scoreboard", "/profile"]}>
-                    {
-                        auth.isLoggedIn()
-                        ? <Home />
-                        : <Redirect to="/login" />
+        <BrowserRouter>
+            <Routes>
+                <Route path="/privacy" element={<PrivacyPolicy />} />
+                <Route path="/404" element={<NotFound />} />
+                <Route path="/login" element={<Login />} />
+                {["/lobby", "/games", "/scoreboard", "/profile"].map((path) => (
+                    <Route
+                        key={path}
+                        path={path}
+                        element={
+                            auth.isLoggedIn() ? <Home /> : <Navigate to="/login" />
+                        }
+                />
+                ))}
+                <Route
+                    path="*"
+                    element={
+                        auth.isLoggedIn() ? <Navigate to="/lobby" /> : <Navigate to="/login" />
                     }
-                </Route>
-                <Route path ="/*">
-                    { 
-                        auth.isLoggedIn()
-                        ? <Redirect to="/lobby" /> 
-                        : <Redirect to="/login" />
-                    }
-                </Route>
-            </Switch>
-        </HashRouter>
+                />
+            </Routes>
+        </BrowserRouter>
     );
 }
 

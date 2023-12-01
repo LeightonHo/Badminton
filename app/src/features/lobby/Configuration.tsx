@@ -3,7 +3,7 @@ import CourtForm from "./CourtForm";
 import CourtList from "./CourtList";
 import PlayerForm from "./PlayerForm";
 import PlayerList from "./PlayerList";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { generateRound } from "../../helpers/Socket";
 import { confirmAlert } from "react-confirm-alert";
 import { IPlayer } from "../../types";
@@ -12,7 +12,7 @@ import { RootState } from "../../redux/Store";
 import { setIsLoading, setNavigation } from "../../redux/General";
 
 const Configuration = () => {
-    const history = useHistory();
+    const navigate = useNavigate();
     const dispatch = useDispatch();
     const { sessionId, isHost, isSessionActive, isLoading } = useSelector((state: RootState) => state.general);
     const { players, courts } = useSelector((state: RootState) => state.config);
@@ -51,7 +51,7 @@ const Configuration = () => {
                             });
 
                             // TODO: Move this to the socket listener?
-                            history.push("/games");
+                            navigate("/games");
                             window.scrollTo({ top: 0 });
                             dispatch(setNavigation("games"))
                         }
@@ -70,7 +70,7 @@ const Configuration = () => {
             });
 
             // TODO: Move this to the socket listener?
-            history.push("/games");
+            navigate("/games");
             window.scrollTo({ top: 0 });
             dispatch(setNavigation("games"))
         }
@@ -123,9 +123,9 @@ const Configuration = () => {
         const csvContent = "data:text/csv;charset=utf-8," + rows.map(e => e.join(",")).join("\n");
         let downloadAnchorElement = document.getElementById("downloadAnchorElement");
 
-        downloadAnchorElement?.setAttribute("href", encodeURI(csvContent));
-        downloadAnchorElement?.setAttribute("download", `badminton-export-${new Date().toISOString().split("T")[0]}.csv`);
-        downloadAnchorElement?.click();
+        downloadAnchorElement!.setAttribute("href", encodeURI(csvContent));
+        downloadAnchorElement!.setAttribute("download", `badminton-export-${new Date().toISOString().split("T")[0]}.csv`);
+        downloadAnchorElement!.click();
     }
 
     return (

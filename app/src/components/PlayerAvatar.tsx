@@ -1,23 +1,23 @@
 import { Avatar } from "@material-ui/core";
 import { useState } from "react";
-import { useHistory } from "react-router";
+import { useNavigate } from "react-router";
 
 interface Props {
     id?: string | undefined,
     name?: string,
     src: string | undefined,
-    style?: any
+    style?: React.CSSProperties
 }
 
 const PlayerAvatar: React.FC<Props> = ({ id, name, src, style }) => {
-    const history = useHistory();
+    const navigate = useNavigate();
     const [loaded, setLoaded] = useState<boolean>(false);
     const clickable = id && (id !== name) && name !== "Deleted User";
 
     const handleClick = () => {
         // If this is not a guest, then open their profile.
         if (clickable) {
-            history.push(`profile?userId=${id}`)
+            navigate(`profile?userId=${id}`)
         }
     }
 

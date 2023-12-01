@@ -12,12 +12,12 @@ import {
 } from "../../redux/General";
 import { setProfileData } from "../../redux/Profile";
 import queryString from "query-string";
-import { useHistory, useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import PlayerAvatar from "../../components/PlayerAvatar";
 
 const Profile = () => {
     const dispatch = useDispatch();
-    const history = useHistory();
+    const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const { userId } = useSelector((state: RootState) => state.general);
     const { data } = useSelector((state: RootState) => state.profile);
@@ -57,7 +57,7 @@ const Profile = () => {
         dispatch(setToken(""));
         dispatch(reduxSetIsLoading(false));
 
-        history.push("/login");
+        navigate("/login");
     }
 
     return (

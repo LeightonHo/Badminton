@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Route, Switch, useHistory, useLocation } from "react-router-dom";
+import { Route, useNavigate, Routes } from "react-router-dom";
 import Box from "@material-ui/core/Box";
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -27,12 +27,12 @@ const Home = () => {
 	const DESKTOP_TOP_NAVBAR_HEIGHT = 64;
 	const DESKTOP_BOTTOM_NAVBAR_HEIGHT = 15;
 	const dispatch = useDispatch();
-	const history = useHistory();
+	const navigate = useNavigate();
 	const { user, userId, isConnected, isLoading, joinedSession, navigation, sessionId, isMobile } = useSelector((state: RootState) => state.general);
 	const { rounds } = useSelector((state: RootState) => state.gameState);
 
 	const handleNavigation = (path: string) => {
-		history.push(path);
+		navigate(path);
 		document.getElementById("home")?.scrollTo({ top: 0, behavior: "smooth" });
 	}
 
@@ -54,7 +54,7 @@ const Home = () => {
 		dispatch(setIsGuest(user.isGuest));
 		dispatch(setIsMobile(window.innerWidth <= 600));
 		initSocket();
-	}, [user]);
+	}, [user, dispatch]);
 
 	const renderNavBar = () => {
 		return (
@@ -173,7 +173,8 @@ const Home = () => {
 		);
 	}
 
-	const handleNavigationChange = (event: any, newValue: any) => {
+	/* eslint-disable  @typescript-eslint/no-explicit-any */
+	const handleNavigationChange = (event: React.ChangeEvent<any>, newValue: any) => {
 		dispatch(setNavigation(newValue));
 		handleNavigation(`/${newValue}`);
 	}
@@ -195,7 +196,7 @@ const Home = () => {
 					: ""
 				}
 
-				<Switch>
+				<Routes>
 					<Box
 						id="home"
 						style={{
@@ -224,7 +225,7 @@ const Home = () => {
 							</Route>
 						</Box>
 					</Box>
-				</Switch>
+				</Routes>
 
 				{renderBottomNavBar()}
 			</Box>

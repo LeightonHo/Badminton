@@ -14,19 +14,6 @@ interface Props {
 const MatchHistoryRow: React.FC<Props> = ({ index, data }) => {
     const WEEKS_IN_THREE_MONTHS = 12;
     const [showDetail, setShowDetail] = useState<boolean>(false);
-
-    const calculateSessionDuration = (start: number, end: number) => {
-        const duration = moment.duration(end - start, "milliseconds").asMilliseconds();
-        const hours = moment.utc(duration).format("H");
-        const minutes = moment.utc(duration).format("m");
-
-        if (parseInt(hours) > 0) {
-            return `${hours}h ${minutes}m`;
-        }
-
-        return `${minutes}m`;
-    }
-
     const getRelativeSessionStart = (datetime: string): string => {
         const duration = moment.duration(moment.utc().diff(datetime));
         const durationAsHours = Math.round(duration.asHours());
