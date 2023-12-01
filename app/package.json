@@ -33,7 +33,7 @@
   },
   "scripts": {
     "git-info": "node src/gitInfo.js",
-    "start": "npm run git-info && HTTPS=true && react-scripts start",
+    "start": "npm run git-info && react-scripts start",
     "build:test": "npm run git-info && env-cmd -f .env react-scripts build",
     "build:production": "npm run git-info &&  env-cmd -f .env.production react-scripts build",
     "test": "react-scripts test",

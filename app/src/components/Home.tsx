@@ -196,36 +196,28 @@ const Home = () => {
 					: ""
 				}
 
-				<Routes>
-					<Box
-						id="home"
-						style={{
-							position: "relative",
-							overflow: "auto",
-							top: isMobile ? "50px" : "64px",
-							left: "0px",
-							right: "0px",
-							height: isMobile ? window.innerHeight - (MOBILE_TOP_NAVBAR_HEIGHT + MOBILE_BOTTOM_NAVBAR_HEIGHT) : window.innerHeight - (DESKTOP_TOP_NAVBAR_HEIGHT + DESKTOP_BOTTOM_NAVBAR_HEIGHT),
-							paddingBottom: isMobile ? "56px" : "15px",
-							backgroundColor: "#f5f5f5"
-						}}
-					>
-						<Box style={{ position: "relative" }}>
-							<Route path="/lobby">
-								<Lobby />
-							</Route>
-							<Route path="/games">
-								<RoundRobin />
-							</Route>
-							<Route path="/scoreboard">
-								<Scoreboard />
-							</Route>
-							<Route path="/profile">
-								<Profile />
-							</Route>
-						</Box>
+				<Box
+					id="home"
+					style={{
+						position: "relative",
+						overflow: "auto",
+						top: isMobile ? "50px" : "64px",
+						left: "0px",
+						right: "0px",
+						height: isMobile ? window.innerHeight - (MOBILE_TOP_NAVBAR_HEIGHT + MOBILE_BOTTOM_NAVBAR_HEIGHT) : window.innerHeight - (DESKTOP_TOP_NAVBAR_HEIGHT + DESKTOP_BOTTOM_NAVBAR_HEIGHT),
+						paddingBottom: isMobile ? "56px" : "15px",
+						backgroundColor: "#f5f5f5"
+					}}
+				>
+					<Box style={{ position: "relative" }}>
+						<Routes>
+							<Route path="lobby" element={<Lobby />} />
+							<Route path="games" element={<RoundRobin />} />
+							<Route path="scoreboard" element={<Scoreboard />} />
+							<Route path="profile" element={<Profile />} />
+						</Routes>
 					</Box>
-				</Routes>
+				</Box>
 
 				{renderBottomNavBar()}
 			</Box>
