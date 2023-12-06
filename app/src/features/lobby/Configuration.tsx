@@ -51,7 +51,7 @@ const Configuration = () => {
                             });
 
                             // TODO: Move this to the socket listener?
-                            navigate("/games");
+                            navigate("/dashboard/games");
                             window.scrollTo({ top: 0 });
                             dispatch(setNavigation("games"))
                         }
@@ -70,7 +70,7 @@ const Configuration = () => {
             });
 
             // TODO: Move this to the socket listener?
-            navigate("/games");
+            navigate("/dashboard/games");
             window.scrollTo({ top: 0 });
             dispatch(setNavigation("games"))
         }

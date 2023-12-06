@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Route, useNavigate, Routes } from "react-router-dom";
+import { Route, useNavigate, Routes, Navigate } from "react-router-dom";
 import Box from "@material-ui/core/Box";
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -32,7 +32,7 @@ const Home = () => {
 	const { rounds } = useSelector((state: RootState) => state.gameState);
 
 	const handleNavigation = (path: string) => {
-		navigate(path);
+		navigate(`/dashboard/${path}`);
 		document.getElementById("home")?.scrollTo({ top: 0, behavior: "smooth" });
 	}
 
@@ -115,16 +115,16 @@ const Home = () => {
 								{
 									joinedSession && rounds.length > 0
 										? <>
-											<IconButton color="inherit" onClick={(() => { handleNavigation("/games"); })}>
+											<IconButton color="inherit" onClick={(() => { handleNavigation("games"); })}>
 												<Typography>Games</Typography>
 											</IconButton>
-											<IconButton color="inherit" onClick={(() => { handleNavigation("/scoreboard"); })}>
+											<IconButton color="inherit" onClick={(() => { handleNavigation("scoreboard"); })}>
 												<Typography>Scoreboard</Typography>
 											</IconButton>
 										</>
 										: ""
 								}
-								<IconButton color="inherit" onClick={(() => { handleNavigation("/lobby"); })}>
+								<IconButton color="inherit" onClick={(() => { handleNavigation("lobby"); })}>
 									<Typography>Lobby</Typography>
 								</IconButton>
 								<IconButton
@@ -176,7 +176,7 @@ const Home = () => {
 	/* eslint-disable  @typescript-eslint/no-explicit-any */
 	const handleNavigationChange = (event: React.ChangeEvent<any>, newValue: any) => {
 		dispatch(setNavigation(newValue));
-		handleNavigation(`/${newValue}`);
+		handleNavigation(`/dashboard/${newValue}`);
 	}
 
 	return (
@@ -215,6 +215,7 @@ const Home = () => {
 							<Route path="games" element={<RoundRobin />} />
 							<Route path="scoreboard" element={<Scoreboard />} />
 							<Route path="profile" element={<Profile />} />
+							<Route path="*" element={<Navigate to="/dashboard/lobby" />} />
 						</Routes>
 					</Box>
 				</Box>
