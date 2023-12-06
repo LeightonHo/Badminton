@@ -47,7 +47,7 @@ const Login = () => {
                     dispatch(setUser(user));
                     auth.saveToken(response.accessToken);
 
-                    navigate("/home");
+                    navigate("/");
                     localStorage.setItem("crosscourt_user", JSON.stringify(user));
                 } else {
                     dispatch(setIsLoggedIn(false));
